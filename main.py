@@ -14,7 +14,6 @@ setup_commands(bot)
 @tasks.loop(minutes=1)
 async def change_status():
     status = random.choice(discord_status)
-    print(status)
     await bot.change_presence(activity=discord.Game(name=status))
 
 @bot.event

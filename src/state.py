@@ -25,7 +25,7 @@ async def rename_vc(bot: discord.Bot) -> bool:
     train, destination, route, departure, via, station = random_connection()
     name = f"{train} nach {destination}"
 
-    print(f"Info:{name} from {station}")
+    print(f"Info: {name} from {station}\n via: {via}")
 
     await channel.edit(name=f"{config['formatting']}{name}")
     return True
