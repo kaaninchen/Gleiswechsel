@@ -25,7 +25,6 @@ async def rename_vc(bot: discord.Bot) -> bool:
         train = current['train'].split()[1]
     train_name = f"{train} nach {current['destination']}"
 
-    print(f"Info: {train_name} from {current['station']} \n via: {current['via']}")
-
+    print(f"Umstieg: {train_name} von {current['station']} \nüber: {current['via']}")
     await channel.edit(name=f"{config['formatting']}{train_name}",)
     return True

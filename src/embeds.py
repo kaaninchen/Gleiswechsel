@@ -20,6 +20,7 @@ def build_info_embed() -> discord.Embed | None:
 
     conn = handlers.current
     operator = operator_infos(conn["train"])
+
     embed = discord.Embed(
         title=handlers.train_name,
         description=f"Abfahrt von {conn['station']} um {format_timestamp(conn['departure'])}",
@@ -29,7 +30,14 @@ def build_info_embed() -> discord.Embed | None:
     if len(conn['via']) > 0:
         embed.add_field(name="Über", value=format_via_list(conn['via']), inline=False)
 
-    embed.set_author(name=operator["name"])
+    if operator["name"] == "Unbekannter Anbieter": 
+        anbieter = conn['train'].split()[0]
+        print(f"INFO: Unbekannter Anbieter für Typ {anbieter}")
+        operator_name = f"{operator['name']} (Typ: {anbieter})"
+    else:
+        operator_name = operator["name"]
+    
+    embed.set_author(name=operator_name)
     embed.set_thumbnail(url=operator["logo"])
 
     route_lines = []

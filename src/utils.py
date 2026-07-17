@@ -39,7 +39,6 @@ def operator_infos(train):
         return OPERATORS["fallback"]
 
     train_type = train.split()[0]
-    print(train_type)
     return OPERATORS.get(train_type, OPERATORS["fallback"])
 
 def format_via_list(via: list[str]):

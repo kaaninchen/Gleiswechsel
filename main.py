@@ -7,7 +7,6 @@ from src.commands import setup_commands
 from src.embeds import build_error_embed
 from src.data.status import discord_status
 
-
 bot = discord.Bot(intents=discord.Intents.all())
 setup_commands(bot)
 
@@ -27,7 +26,6 @@ async def on_ready():
 async def on_application_command_error(ctx, error):
     embed = build_error_embed(f"Ein Fehler ist aufgetreten: {error}")
     await ctx.respond(embed=embed)
-
 
 try: 
     bot.run(config['token'])
