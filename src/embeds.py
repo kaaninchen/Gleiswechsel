@@ -20,9 +20,8 @@ def build_info_embed() -> discord.Embed | None:
 
     conn = handlers.current
     operator = operator_infos(conn["train"])
-    name = f"{conn['train']} nach {conn['destination']}"
     embed = discord.Embed(
-        title=name,
+        title=handlers.train_name,
         description=f"Abfahrt von {conn['station']} um {format_timestamp(conn['departure'])}",
         color=operator["color"]
     )

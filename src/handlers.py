@@ -5,7 +5,7 @@ from src.utils import random_connection
 current = None
 
 async def rename_vc(bot: discord.Bot) -> bool:
-    global current, name
+    global current, train_name
 
     guild = bot.get_guild(int(config["server"]))
     if guild is None:
@@ -18,9 +18,14 @@ async def rename_vc(bot: discord.Bot) -> bool:
         return False
     
     current = random_connection()
-    name = f"{current['train']} nach {current['destination']}"
 
-    print(f"Info: {name} from {current['station']} \n via: {current['via']}")
+    if current['train'].split()[0] == "IC" or current['train'].split()[0] == "ICE":
+        train = current['train']
+    else:
+        train = current['train'].split()[1]
+    train_name = f"{train} nach {current['destination']}"
 
-    await channel.edit(name=f"{config['formatting']}{name}",)
+    print(f"Info: {train_name} from {current['station']} \n via: {current['via']}")
+
+    await channel.edit(name=f"{config['formatting']}{train_name}",)
     return True
