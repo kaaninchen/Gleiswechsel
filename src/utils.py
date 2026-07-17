@@ -1,6 +1,6 @@
 import requests
 import random
-from config import config
+from src.config import config
 from src.data.operators import OPERATORS
 
 def random_connection():

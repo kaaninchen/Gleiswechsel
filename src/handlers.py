@@ -1,6 +1,6 @@
 import discord
 import time
-from config import config
+from src.config import config
 from src.utils import random_connection
 
 current = None
@@ -10,12 +10,12 @@ async def rename_vc(bot: discord.Bot) -> bool:
 
     guild = bot.get_guild(int(config["server"]))
     if guild is None:
-        print(f"Guild {config['server']} not found! Is the bot a member?")
+        print(f"Es konnte kein Server mit der ID {config['server']} gefunden werden! Ist der Bot ein Member?")
         return False
 
     channel = guild.get_channel(int(config["vc"]))
     if not isinstance(channel, discord.VoiceChannel):
-        print(f"Unable to find voice-Channel {config['vc']} on the server")
+        print(f"Es konnte kein VC mit der ID {config['vc']} auf dem Server gefunden werden")
         return False
     
     current = random_connection()
@@ -32,5 +32,4 @@ async def rename_vc(bot: discord.Bot) -> bool:
     print(f"{current_time}: Wenn hier keine Nachricht mehr kommt bin ich im Cooldown")
     await channel.edit(name=f"{config['formatting']}{train_name}",)
     print(f"{current_time}: Name geändert!")
-    print("-----------------------------------------")
     return True
