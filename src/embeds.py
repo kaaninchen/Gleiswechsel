@@ -2,7 +2,7 @@ import random
 import discord
 from datetime import datetime, timedelta
 import src.handlers as handlers
-from src.utils import operator_infos, format_via_list, logger
+from src.utils import operator_metadata, format_via_list, logger
 
 def format_timestamp(timestr):
     parsed_time = datetime.strptime(timestr, "%H:%M")
@@ -30,28 +30,30 @@ def build_info_embed() -> discord.Embed | None:
     conn = handlers.current
     info = handlers.train_info
 
+    current_operator = info["operators"][0]
+
     arrival = format_iso_timestamp(info["arrival"])
     departure = format_timestamp(conn['departure'])
-    operator = operator_infos(conn["train"])
+
+    if current_operator.split()[0] == "DB":
+        operator_infos = operator_metadata("DB") # die haben auch 500 tochterkonzerne da blickt keiner durch
+    else: 
+        operator_infos = operator_metadata(current_operator)
 
     embed = discord.Embed(
         title=handlers.train_name,
         description=f"Abfahrt von {conn['station']} um {departure}. Ankunft um {arrival}",
-        color=operator["color"]
+        color=operator_infos["color"]
     )
-    
+
     if len(conn['via']) > 0:
         embed.add_field(name="Über", value=format_via_list(conn['via']), inline=False)
 
-    if operator["name"] == "Unbekannter Anbieter": 
-        anbieter = conn['train'].split()[0]
-        logger(f"INFO: Unbekannter Anbieter für Typ {anbieter}")
-        operator_name = f"{operator['name']} (Typ: {anbieter})"
-    else:
-        operator_name = operator["name"]
+    if operator_infos.get("unknown"): 
+        logger(f"WARNING: {current_operator} nicht in operators.py gefunden")
     
-    embed.set_author(name=operator_name)
-    embed.set_thumbnail(url=operator["logo"])
+    embed.set_author(name=current_operator)
+    embed.set_thumbnail(url=operator_infos["logo"])
 
     route_lines = []
     for stop in conn['route']:
@@ -63,7 +65,7 @@ def build_info_embed() -> discord.Embed | None:
 
     embed.add_field(name="Route", value="\n".join(route_lines))
 
-    slogans = operator.get("slogan")
+    slogans = operator_infos.get("slogan")
     footer_text = (
         f"{random.choice(slogans)} • Daten großzügig bereitgestellt von dbf.finalrewind.org"
         if slogans else

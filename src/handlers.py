@@ -22,9 +22,10 @@ async def rename_vc(bot: discord.Bot, scheduled = False) -> bool:
     
     current = random_connection()
     train_type = current['train'].split()[0]
-    if train_type in ("IC", "ICE", "NJ", "ES", "DZ"):
+    print(train_type)
+    if train_type in ("IC", "ICE", "NJ", "ES", "DZ"): # Diese Züge haben ihre normalen Namen, nicht sowas wie RE RE7 sondern ICE 781 zb
         train = current['train']
-        train_ID = current['train'].split()[1]
+        train_ID = current['train'].split()[1] 
     else:
         train = current['train'].split()[1]
         train_ID = current['train_number']
@@ -39,7 +40,7 @@ async def rename_vc(bot: discord.Bot, scheduled = False) -> bool:
         _scheduled_task = asyncio.create_task(_schedule_next_umstieg(bot, train_info["arrival"]))
 
     print("-----------------------------------------")
-    logger(f"Umstieg: {train_name} (Typ {train_type}) von {current['station']}")
+    logger(f"Umstieg: {train_name} von {current['station']}")
     logger(f"Wenn der Name nicht geändert wird bin ich im Cooldown")
     await channel.edit(name=f"{config['formatting']}{train_name}",)
     logger(f"Name geändert!")
@@ -48,9 +49,9 @@ async def rename_vc(bot: discord.Bot, scheduled = False) -> bool:
 
 async def _schedule_next_umstieg(bot, arrival_iso):
     try:
-        arrival = datetime.fromisoformat(arrival_iso)
+#        arrival = datetime.fromisoformat(arrival_iso)
 #        wait_seconds = (arrival - datetime.now()).total_seconds()
-        wait_seconds = 30
+        wait_seconds = 30 # debug aktuell
         
         if wait_seconds > 0:
             remaining = str(timedelta(seconds=wait_seconds))

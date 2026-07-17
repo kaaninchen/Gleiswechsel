@@ -18,7 +18,8 @@ def random_connection():
         
         departures = [
             d for d in data.get("departures", [])
-            if d.get("scheduledDeparture") and d.get("destination") != station 
+            if d.get("scheduledDeparture") and d.get("destination") != station
+            and not d.get("train", "").startswith("S ")
         ]
 
         if not departures:
@@ -34,14 +35,6 @@ def random_connection():
             "station": station,
             "train_number": dep['trainNumber']
         }
-    
-
-def operator_infos(train):
-    if not train:
-        return OPERATORS["fallback"]
-
-    train_type = train.split()[0]
-    return OPERATORS.get(train_type, OPERATORS["fallback"])
 
 def format_via_list(via: list[str]):
     if not via:
@@ -61,10 +54,17 @@ def get_train_info(station, train_ID, train_type):
 
     dep = data.get("departure", [])
     arrival_iso = dep["route_post_diff"][-1]["sched_arr"]
+    print(dep["operators"])
     return {
         "arrival": arrival_iso,
         "operators": dep["operators"]
     }
+
+def operator_metadata(operator):
+    if not operator:
+        return OPERATORS["fallback"]
+
+    return OPERATORS.get(operator, OPERATORS["fallback"])
 
 def logger(msg):
     current_time = datetime.now().strftime('%X')
