@@ -1,5 +1,5 @@
 import discord
-from src.state import rename_vc
+from src.handlers import rename_vc
 from src.embeds import build_info_embed, build_error_embed
 
 def setup_commands(bot: discord.Bot):

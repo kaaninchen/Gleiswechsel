@@ -22,5 +22,5 @@ async def rename_vc(bot: discord.Bot) -> bool:
 
     print(f"Info: {name} from {current['station']} \n via: {current['via']}")
 
-    await channel.edit(name=f"{config['formatting']}{name}")
+    await channel.edit(name=f"{config['formatting']}{name}",)
     return True

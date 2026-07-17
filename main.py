@@ -2,7 +2,7 @@ import discord
 import random
 from discord.ext import tasks
 from config import config
-from handlers import rename_vc
+from src.handlers import rename_vc
 from src.commands import setup_commands
 from src.embeds import build_error_embed
 from src.data.status import discord_status

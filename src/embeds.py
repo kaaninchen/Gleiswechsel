@@ -1,7 +1,7 @@
 import random
 import discord
 from datetime import datetime
-import handlers as handlers
+import src.handlers as handlers
 from src.utils import operator_infos, format_via_list
 
 def format_timestamp(timestr):
