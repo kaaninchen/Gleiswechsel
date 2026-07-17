@@ -24,12 +24,19 @@ def random_connection():
             continue
 
         dep = random.choice(departures)
-        return [dep['train'], dep['destination'], dep['route'], dep['scheduledDeparture'], dep['via'], station]
+        return {
+            "train": dep['train'], 
+            "destination": dep['destination'], 
+            "route": dep['route'], 
+            "departure": dep['scheduledDeparture'], 
+            "via": dep['via'], 
+            "station": station
+        }
     
 
 def operator_infos(train):
     if not train:
-        return OPERATORS["Fallback"]
+        return OPERATORS["fallback"]
 
     train_type = train.split()[0]
 

@@ -26,5 +26,10 @@ OPERATORS = {
         "logo": db_logo,
         "color": 0xEC0016,
         "slogan": db_slogans
-    }  
+    },
+    "NBE": {
+        "name": "Nordbahn",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Logo_Nordbahn_NAH.SH_Blau_positiv_final.png",
+        "color": 0x1A2848
+    }
 }

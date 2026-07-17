@@ -2,15 +2,10 @@ import discord
 from config import config
 from src.utils import random_connection
 
-name = None
-train = None
-route = None
-departure = None
-via = None
-station = None
+current = None
 
 async def rename_vc(bot: discord.Bot) -> bool:
-    global name, train, route, departure, via, station
+    global current, name
 
     guild = bot.get_guild(int(config["server"]))
     if guild is None:
@@ -22,10 +17,10 @@ async def rename_vc(bot: discord.Bot) -> bool:
         print(f"Unable to find voice-Channel {config['vc']} on the server")
         return False
     
-    train, destination, route, departure, via, station = random_connection()
-    name = f"{train} nach {destination}"
+    current = random_connection()
+    name = f"{current['train']} nach {current['destination']}"
 
-    print(f"Info: {name} from {station}\n via: {via}")
+    print(f"Info: {name} from {current['station']} \n via: {current['via']}")
 
     await channel.edit(name=f"{config['formatting']}{name}")
     return True
