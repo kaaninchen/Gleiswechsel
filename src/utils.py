@@ -54,7 +54,6 @@ def get_train_info(station, train_ID, train_type):
 
     dep = data.get("departure", [])
     arrival_iso = dep["route_post_diff"][-1]["sched_arr"]
-    print(dep["operators"])
     return {
         "arrival": arrival_iso,
         "operators": dep["operators"]

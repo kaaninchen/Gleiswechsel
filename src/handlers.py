@@ -7,7 +7,7 @@ from src.utils import random_connection, get_train_info, logger
 current = None
 _scheduled_task: asyncio.Task | None = None
 
-async def rename_vc(bot: discord.Bot, scheduled = False) -> bool:
+async def rename_vc(bot: discord.Bot, scheduled=False) -> bool:
     global current, train_name, train_info, _scheduled_task
 
     guild = bot.get_guild(int(config["server"]))
@@ -19,30 +19,36 @@ async def rename_vc(bot: discord.Bot, scheduled = False) -> bool:
     if not isinstance(channel, discord.VoiceChannel):
         logger(f"Es konnte kein VC mit der ID {config['vc']} auf dem Server gefunden werden")
         return False
-    
-    current = random_connection()
-    train_type = current['train'].split()[0]
-    print(train_type)
-    if train_type in ("IC", "ICE", "NJ", "ES", "DZ"): # Diese Züge haben ihre normalen Namen, nicht sowas wie RE RE7 sondern ICE 781 zb
-        train = current['train']
-        train_ID = current['train'].split()[1] 
-    else:
-        train = current['train'].split()[1]
-        train_ID = current['train_number']
 
-    train_info = get_train_info(station=current['station'], train_ID=train_ID, train_type=train_type)
+    while True:
+        current = random_connection()
+        train_type = current['train'].split()[0]
+
+        if train_type in ("IC", "ICE", "NJ", "ES", "DZ", "RJ"):
+            train = current['train']
+            train_ID = current['train'].split()[1]
+        else:
+            train = current['train'].split()[1]
+            train_ID = current['train_number']
+
+        train_info = get_train_info(station=current['station'], train_ID=train_ID, train_type=train_type)
+
+        if train_info:
+            break
+
+        logger(f"Keine Ankunftszeit für {current['train']} verfügbar, versuche neue Verbindung...")
+
     train_name = f"{train} nach {current['destination']}"
 
     if not scheduled and _scheduled_task and not _scheduled_task.done():
-         _scheduled_task.cancel()
-    
-    if train_info:
-        _scheduled_task = asyncio.create_task(_schedule_next_umstieg(bot, train_info["arrival"]))
+        _scheduled_task.cancel()
+
+    _scheduled_task = asyncio.create_task(_schedule_next_umstieg(bot, train_info["arrival"]))
 
     print("-----------------------------------------")
     logger(f"Umstieg: {train_name} von {current['station']}")
     logger(f"Wenn der Name nicht geändert wird bin ich im Cooldown")
-    await channel.edit(name=f"{config['formatting']}{train_name}",)
+    await channel.edit(name=f"{config['formatting']}{train_name}")
     logger(f"Name geändert!")
 
     return True
