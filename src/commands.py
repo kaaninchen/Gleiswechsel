@@ -1,9 +1,11 @@
 import discord
+from discord.ext import commands
 from src.handlers import rename_vc
 from src.embeds import build_info_embed, build_error_embed
 
 def setup_commands(bot: discord.Bot):
     @bot.slash_command(description="Steige in den nächsten Zug! Beachte das Discord Spam limit (2x in 10min)")
+    @commands.cooldown(1, 600, commands.BucketType.guild)
     async def umstieg(ctx):
         success = await rename_vc(bot)
         if not success:

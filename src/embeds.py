@@ -57,7 +57,6 @@ def build_info_embed() -> discord.Embed | None:
         "Daten großzügig bereitgestellt von dbf.finalrewind.org"
     )
     embed.set_footer(text=footer_text, icon_url="https://dbf.finalrewind.org/static/icons/icon-96x96.png")
-
     return embed
 
 def build_error_embed(errormsg) -> discord.Embed:

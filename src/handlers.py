@@ -1,4 +1,5 @@
 import discord
+import time
 from config import config
 from src.utils import random_connection
 
@@ -25,6 +26,11 @@ async def rename_vc(bot: discord.Bot) -> bool:
         train = current['train'].split()[1]
     train_name = f"{train} nach {current['destination']}"
 
-    print(f"Umstieg: {train_name} von {current['station']} \nüber: {current['via']}")
+    print("-----------------------------------------")
+    current_time = time.strftime('%X')
+    print(f"{current_time}: Umstieg: {train_name} (Typ {train_type}) von {current['station']}")
+    print(f"{current_time}: Wenn hier keine Nachricht mehr kommt bin ich im Cooldown")
     await channel.edit(name=f"{config['formatting']}{train_name}",)
+    print(f"{current_time}: Name geändert!")
+    print("-----------------------------------------")
     return True

@@ -1,6 +1,7 @@
 import discord
 import random
-from discord.ext import tasks
+import time
+from discord.ext import tasks, commands
 from config import config
 from src.handlers import rename_vc
 from src.commands import setup_commands
@@ -10,7 +11,7 @@ from src.data.status import discord_status
 bot = discord.Bot(intents=discord.Intents.all())
 setup_commands(bot)
 
-@tasks.loop(minutes=1)
+@tasks.loop(minutes=5)
 async def change_status():
     status = random.choice(discord_status)
     await bot.change_presence(activity=discord.Game(name=status))
@@ -24,7 +25,11 @@ async def on_ready():
 
 @bot.event
 async def on_application_command_error(ctx, error):
-    embed = build_error_embed(f"Ein Fehler ist aufgetreten: {error}")
+    if isinstance(error, commands.CommandOnCooldown):
+        retry_timestamp = int(time.time() + error.retry_after)
+        embed = build_error_embed(f"Dein Umstieg ist erst <t:{retry_timestamp}:R> da! (Discord Cooldown)")
+    else:
+        embed = build_error_embed(f"Ein Fehler ist aufgetreten: {error}")
     await ctx.respond(embed=embed)
 
 try: 
