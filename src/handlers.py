@@ -22,7 +22,7 @@ async def rename_vc(bot: discord.Bot, scheduled = False) -> bool:
     
     current = random_connection()
     train_type = current['train'].split()[0]
-    if train_type in ("IC", "ICE", "NJ", "ES"):
+    if train_type in ("IC", "ICE", "NJ", "ES", "DZ"):
         train = current['train']
         train_ID = current['train'].split()[1]
     else:

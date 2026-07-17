@@ -15,10 +15,10 @@ def random_connection():
             data = response.json()
         except requests.RequestException:
             continue
-
+        
         departures = [
             d for d in data.get("departures", [])
-            if d.get("scheduledDeparture") and d.get("destination") != station
+            if d.get("scheduledDeparture") and d.get("destination") != station 
         ]
 
         if not departures:
@@ -52,7 +52,6 @@ def format_via_list(via: list[str]):
 
 def get_train_info(station, train_ID, train_type):
     url = f"https://dbf.finalrewind.org/z/{train_type}%20{train_ID}/{station}.json"
-
     try:
         response = requests.get(url)
         response.raise_for_status()
