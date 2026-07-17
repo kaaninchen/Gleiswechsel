@@ -18,8 +18,8 @@ async def rename_vc(bot: discord.Bot) -> bool:
         return False
     
     current = random_connection()
-
-    if current['train'].split()[0] == "IC" or current['train'].split()[0] == "ICE":
+    train_type = current['train'].split()[0]
+    if train_type in ("IC", "ICE", "NJ"):
         train = current['train']
     else:
         train = current['train'].split()[1]
