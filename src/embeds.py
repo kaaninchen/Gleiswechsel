@@ -1,29 +1,42 @@
 import random
 import discord
-from datetime import datetime
+from datetime import datetime, timedelta
 import src.handlers as handlers
-from src.utils import operator_infos, format_via_list
+from src.utils import operator_infos, format_via_list, logger
 
 def format_timestamp(timestr):
     parsed_time = datetime.strptime(timestr, "%H:%M")
+    now = datetime.now()
     final_datetime = datetime.now().replace(
         hour=parsed_time.hour,
         minute=parsed_time.minute,
         second=0,
         microsecond=0
     )
+
+    if final_datetime <= now:
+        final_datetime += timedelta(days=1)
+
     return discord.utils.format_dt(final_datetime, style="t")
+
+def format_iso_timestamp(isostr):
+    parsed_time = discord.utils.parse_time(isostr)
+    return discord.utils.format_dt(parsed_time, style="t")
 
 def build_info_embed() -> discord.Embed | None:
     if handlers.current is None:
         return None
 
     conn = handlers.current
+    info = handlers.train_info
+
+    arrival = format_iso_timestamp(info["arrival"])
+    departure = format_timestamp(conn['departure'])
     operator = operator_infos(conn["train"])
 
     embed = discord.Embed(
         title=handlers.train_name,
-        description=f"Abfahrt von {conn['station']} um {format_timestamp(conn['departure'])}",
+        description=f"Abfahrt von {conn['station']} um {departure}. Ankunft um {arrival}",
         color=operator["color"]
     )
     
@@ -32,7 +45,7 @@ def build_info_embed() -> discord.Embed | None:
 
     if operator["name"] == "Unbekannter Anbieter": 
         anbieter = conn['train'].split()[0]
-        print(f"INFO: Unbekannter Anbieter für Typ {anbieter}")
+        logger(f"INFO: Unbekannter Anbieter für Typ {anbieter}")
         operator_name = f"{operator['name']} (Typ: {anbieter})"
     else:
         operator_name = operator["name"]
