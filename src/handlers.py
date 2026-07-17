@@ -20,7 +20,13 @@ async def rename_vc(bot: discord.Bot, scheduled=False) -> bool:
         logger(f"Es konnte kein VC mit der ID {config['vc']} auf dem Server gefunden werden")
         return False
 
+    attempt = 0
     while True:
+        if attempt > 3:
+            logger("Zu viele Fehlversuche. Füge einen anderen Bahnhof hinzu.")
+            return "Es konnte kein Zug gefunden werden."
+        
+        attempt += 1
         current = random_connection()
         train_type = current['train'].split()[0]
 
@@ -36,7 +42,7 @@ async def rename_vc(bot: discord.Bot, scheduled=False) -> bool:
         if train_info:
             break
 
-        logger(f"Keine Ankunftszeit für {current['train']} verfügbar, versuche neue Verbindung...")
+        logger(f"Versuch {attempt}: Keine Ankunftszeit für {current['train']} verfügbar, versuche neue Verbindung...")
 
     train_name = f"{train} nach {current['destination']}"
 
