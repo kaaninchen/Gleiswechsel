@@ -53,6 +53,7 @@ async def rename_vc(bot: discord.Bot, scheduled=False) -> bool:
 
     print("-----------------------------------------")
     logger(f"Umstieg: {train_name} von {current['station']}")
+    logger(f"Betreiber: {train_info['operators']}")
     logger(f"Wenn der Name nicht geändert wird bin ich im Cooldown")
     await channel.edit(name=f"{config['formatting']}{train_name}")
     logger(f"Name geändert!")
@@ -61,9 +62,9 @@ async def rename_vc(bot: discord.Bot, scheduled=False) -> bool:
 
 async def _schedule_next_umstieg(bot, arrival_iso):
     try:
-#        arrival = datetime.fromisoformat(arrival_iso)
-#        wait_seconds = (arrival - datetime.now()).total_seconds()
-        wait_seconds = 30 # debug aktuell
+        arrival = datetime.fromisoformat(arrival_iso)
+        wait_seconds = (arrival - datetime.now()).total_seconds()
+
         
         if wait_seconds > 0:
             remaining = str(timedelta(seconds=wait_seconds))

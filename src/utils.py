@@ -2,7 +2,7 @@ import requests
 import random
 from datetime import datetime
 from src.config import config
-from src.data.operators import OPERATORS
+from src.data.operators import OPERATORS, OPERATOR_ALIASES
 
 def random_connection():
     while True:
@@ -62,6 +62,9 @@ def get_train_info(station, train_ID, train_type):
 def operator_metadata(operator):
     if not operator:
         return OPERATORS["fallback"]
+
+    if operator in OPERATOR_ALIASES:
+        return OPERATOR_ALIASES[operator]
 
     return OPERATORS.get(operator, OPERATORS["fallback"])
 

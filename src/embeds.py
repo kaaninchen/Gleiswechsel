@@ -35,10 +35,7 @@ def build_info_embed() -> discord.Embed | None:
     arrival = format_iso_timestamp(info["arrival"])
     departure = format_timestamp(conn['departure'])
 
-    if current_operator.split()[0] == "DB":
-        operator_infos = operator_metadata("DB") # die haben auch 500 tochterkonzerne da blickt keiner durch
-    else: 
-        operator_infos = operator_metadata(current_operator)
+    operator_infos = operator_metadata(current_operator)
 
     embed = discord.Embed(
         title=handlers.train_name,
