@@ -60,6 +60,7 @@ def build_info_embed() -> discord.Embed | None:
             route_lines.append(f"• {stop_name}")
 
     embed.add_field(name="Route", value="\n".join(route_lines))
+    embed.add_field(name="Weitere Informationen", value=info['url'].rsplit('.', 1)[0], inline=False)
 
     slogans = operator_infos.get("slogan")
     footer_text = (

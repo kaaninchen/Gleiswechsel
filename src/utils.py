@@ -68,7 +68,8 @@ def get_train_info(station, train_ID, train_type):
     arrival_iso = dep.get("route_post_diff", [])[-1].get("sched_arr")
     return {
         "arrival": arrival_iso,
-        "operators": dep.get("operators")
+        "operators": dep.get("operators"),
+        "url": url
     }
 
 def format_via_list(via: list[str]):
