@@ -1,6 +1,9 @@
 # Gleiswechsel
-Gleiswechel ist ein Discord Bot, welcher einen Sprachkanal zu einer real-existierenden, aktuell befahrenden Zugverbindung umbenennt. Diesen Namen behält der Kanal so lange, wie die Verbindung in echt dauert. 
-![Beispiel Kanal](.github/preview_kanal.png)
+Gleiswechel ist ein Discord Bot, welcher einen Sprachkanal zu einer real-existierenden, aktuell befahrenden Zugverbindung umbenennt. Diesen Namen behält der Kanal so lange, wie die Verbindung in echt dauert.  
+
+![Beispiel Kanal](.github/preview_kanal.png) 
+
+Der Bot stellt außerdem den /info Befehl dar, welche einem weitere Informationen zur Verbindung zurückgibt
 ![Beispiel info](.github/preview_info.png)
 
 ## Setup
