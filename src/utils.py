@@ -1,8 +1,27 @@
 import requests
 import random
+import os
+import importlib
 from datetime import datetime
 from src.config import config
-from src.data.operators import OPERATORS, OPERATOR_ALIASES
+import src.data.operators as operators_module
+
+_operators_mtime = None
+
+def _reload_operators_if_changed():
+    global _operators_mtime
+
+    path = operators_module.__file__
+    current_mtime = os.path.getmtime(path)
+
+    if _operators_mtime is None:
+        _operators_mtime = current_mtime
+        return
+    
+    if current_mtime != _operators_mtime:
+        importlib.reload(operators_module)
+        _operators_mtime = current_mtime
+        logger("operators.py wurde automatisch neu geladen (Änderungen erkannt)")
 
 def random_connection():
     while True:
@@ -36,13 +55,6 @@ def random_connection():
             "train_number": dep['trainNumber']
         }
 
-def format_via_list(via: list[str]):
-    if not via:
-        return ""
-    if len(via) == 1:
-        return via[0]
-    return ", ".join(via[:-1]) + " und " + via[-1] 
-
 def get_train_info(station, train_ID, train_type):
     url = f"https://dbf.finalrewind.org/z/{train_type}%20{train_ID}/{station}.json"
     try:
@@ -56,17 +68,26 @@ def get_train_info(station, train_ID, train_type):
     arrival_iso = dep.get("route_post_diff", [])[-1].get("sched_arr")
     return {
         "arrival": arrival_iso,
-        "operators": dep["operators"]
+        "operators": dep.get("operators")
     }
 
+def format_via_list(via: list[str]):
+    if not via:
+        return ""
+    if len(via) == 1:
+        return via[0]
+    return ", ".join(via[:-1]) + " und " + via[-1] 
+
 def operator_metadata(operator):
+    _reload_operators_if_changed()
+
     if not operator:
-        return OPERATORS["fallback"]
+        return operators_module.OPERATORS["fallback"]
 
-    if operator in OPERATOR_ALIASES:
-        return OPERATOR_ALIASES[operator]
+    if operator in operators_module.OPERATOR_ALIASES:
+        return operators_module.OPERATOR_ALIASES[operator]
 
-    return OPERATORS.get(operator, OPERATORS["fallback"])
+    return operators_module.OPERATORS.get(operator, operators_module.OPERATORS["fallback"])
 
 def logger(msg):
     current_time = datetime.now().strftime('%X')

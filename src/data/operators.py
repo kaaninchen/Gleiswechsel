@@ -13,7 +13,7 @@ db_bawü = {
 OPERATOR_ALIASES = {
     "DB Regio AG Baden-Württemberg": db_bawü,
     "DB Regio Stuttgart GmbH": db_bawü,
-    "DB Fernverkehr": db_allgemein,
+    "DB Fernverkehr AG": db_allgemein,
     "DB Regio AG NRW": db_allgemein,
 }
 
@@ -34,5 +34,13 @@ OPERATORS = {
     "eurobahn": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/3/34/Digital_Logo_eurobahn.png",
         "color": 0x005a9b
+    },
+    "Arverio Bayern": {
+        "logo": "https://cdn.discordapp.com/attachments/1383843132906537023/1528006572805062776/Arverio_Avi_Bayern_blau_RGB.png?ex=6a5cba83&is=6a5b6903&hm=5781ae6c372c92ab4f52409c6fc91e5014ac34ccf24db665ade052e8135bdde0&animated=true", # alternative nötig!
+        "color": 0x0083BE
+    },
+    "Bayerische Regiobahn": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_BRB_2015.svg/1920px-Logo_BRB_2015.svg.png",
+        "color": 0xF61526
     }
 }
