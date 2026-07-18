@@ -33,7 +33,9 @@ Aktuell gibt es kein error handling für die config (kommt bald!!), also BITTE s
 ```
 
 #### Erklärung bezüglich random:
-Bei kleineren Bahnhöfen stehen an den Anzeigetafeln die Namen Züge öfters Stunden vor Abfahrt, da das Gleis sonst frei ist. Dadurch wird auch der Name des VC sehr lange gleich bleiben. Sollte man random ausmachen, würde immer der erste Zug an der Anzeigetafel genommen werden, welcher auch der erst der am frühesten losfährt. Wenn man aber wenige Bahnhöfen zur Auswahl hat könnte es repetitiv werden, da die Züge ja oft hin und her fahren.
+Bei kleineren Bahnhöfen stehen an den Anzeigetafeln die Namen Züge öfters Stunden vor Abfahrt, da das Gleis sonst frei ist. Dadurch wird auch der Name des VC sehr lange gleich bleiben. Sollte man random ausmachen, würde immer der erste Zug an der Anzeigetafel genommen werden, welcher auch der erst der am frühesten losfährt. Wenn man aber wenige Bahnhöfen zur Auswahl hat könnte es repetitiv werden, da die Züge ja oft hin und her fahren.  
+
+Wenn man nur einen Bahnhof hat ist es stark empfohlen random zu nutzen. Sonst könnte der Bot bei unvollständigen Einträgen in einer Schleife immer wieder vergeblichg den selben Zug probieren.
 
 ## Metadaten 
 Es kann vorkommen, dass während dem `/info` Befehl das Logo und die Farbe des Bahnuntermehns fehlt.

@@ -40,15 +40,14 @@ async def rename_vc(bot: discord.Bot):
             train_ID = current['train_number']
 
         train_info = get_train_info(station=current['station'], train_ID=train_ID, train_type=train_type)
-
-        if train_info:
+        if train_info['operators'] and train_info['arrival']:
             break
 
         logger(f"Versuch {attempt}: Keine Ankunftszeit für {current['train']} verfügbar, versuche neue Verbindung...")
 
     train_name = f"{train} nach {current['destination']} von {current['station']}"
     logger(f"Vorbereitung auf {train_name} (typ: {train_type})")
-    arrival = datetime.fromisoformat(str(train_info["arrival"]))
+    arrival = datetime.fromisoformat((train_info["arrival"]))
 
     _scheduled_task = asyncio.create_task(_schedule_next_umstieg(bot, arrival))
 
