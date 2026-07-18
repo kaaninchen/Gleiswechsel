@@ -40,7 +40,7 @@ async def rename_vc(bot: discord.Bot):
             train_ID = current['train_number']
 
         train_info = get_train_info(station=current['station'], train_ID=train_ID, train_type=train_type)
-        if train_info['operators'] and train_info['arrival']:
+        if train_info and train_info.get('operators') and train_info.get('arrival'):
             break
 
         logger(f"Versuch {attempt}: Keine Ankunftszeit für {current['train']} verfügbar, versuche neue Verbindung...")

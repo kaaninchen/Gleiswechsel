@@ -26,7 +26,7 @@ OPERATORS = {
         "slogan": ["Senk ju vor träwelling wis Deutsche Bahn.", "Bitte beachten Sie die umgekehrte Wagenreihung.", "Zurückbleiben bitte!", "Alle reden vom Wetter. Wir nicht.", "Die Bahn macht mobil.", "Grün abgefahren"]
     },
     "db_bawü": {
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Bwegt_Logo_%282020%29.jpg",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Bwegt_Logo.svg/960px-Bwegt_Logo.svg.png",
         "color": 0xFFBF34,
         "slogan": ["Nett hier", "Aber waren Sie schon mal in Baden-Württemberg?", "Bwegt euch!"]
     },
