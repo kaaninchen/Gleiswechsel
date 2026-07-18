@@ -3,7 +3,8 @@ Gleiswechel ist ein Discord Bot, welcher einen Sprachkanal zu einer real-existie
 
 ![Beispiel Kanal](.github/preview_kanal.png) 
 
-Der Bot stellt außerdem den /info Befehl dar, welche einem weitere Informationen zur Verbindung zurückgibt
+Der Bot stellt außerdem den `/info` Befehl dar, welche einem weitere Informationen zur Verbindung zurückgibt  
+
 ![Beispiel info](.github/preview_info.png)
 
 ## Setup
@@ -36,7 +37,9 @@ Bei kleineren Bahnhöfen stehen an den Anzeigetafeln die Namen Züge öfters Stu
 
 ## Metadaten 
 Es kann vorkommen, dass während dem `/info` Befehl das Logo und die Farbe des Bahnuntermehns fehlt.
+
 ![Beispiel für fehlende Daten](.github/info_fehlende_daten.png)  
+
 Die zugehörigen Daten lassen sich innerhalb [operators.py](src/data/operators.py) ergänzen. Der Aufbau dabei sollte selbsterklärend sein, dennoch habe ich eine kleine Beschreibung in die Datei hinzugefügt. Bei Änderungen sind PR's willkommen, ebenso wie Issues falls man das nicht selber ändern will da das ja eigentlich mein Job sein sollte.  
 
 Die Statuseinträge, von welchen der Bot alle 5 Minuten einen aussucht, kann mn in [status.py](src/data/operators.py) anpassen
