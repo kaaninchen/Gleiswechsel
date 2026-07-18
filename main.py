@@ -25,11 +25,7 @@ async def on_ready():
 
 @bot.event
 async def on_application_command_error(ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-        retry_timestamp = int(time.time() + error.retry_after)
-        embed = build_error_embed(f"Dein Umstieg ist erst <t:{retry_timestamp}:R> da! (Discord Cooldown)")
-    else:
-        embed = build_error_embed(f"Ein Fehler ist aufgetreten: {error}")
+    embed = build_error_embed(f"Ein Fehler ist aufgetreten: {error}")
     await ctx.respond(embed=embed)
 
 try: 
