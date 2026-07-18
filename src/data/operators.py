@@ -9,7 +9,7 @@ db_allgemein = {
 db_bawü = {
     "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Bwegt_Logo.svg/960px-Bwegt_Logo.svg.png",
     "color": 0xFFBF34,
-    "slogan": ["Nett hier", "Aber waren Sie schon mal in Baden-Württemberg?", "Wir können alles. Außer Hochdeutsch.", "Ausgesprochen international"]
+    "slogan": ["Nett hier", "Aber waren Sie schon mal in Baden-Württemberg?", "Bwegt euch!"]
 }
 
 OPERATOR_ALIASES = {
