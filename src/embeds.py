@@ -60,7 +60,10 @@ def build_info_embed() -> discord.Embed | None:
             route_lines.append(f"• {stop_name}")
 
     embed.add_field(name="Route", value="\n".join(route_lines))
-    embed.add_field(name="Weitere Informationen", value=info['url'].rsplit('.', 1)[0], inline=False)
+
+    remove_json_url = info['url'].rsplit('.', 1)[0]
+    formatted_url = remove_json_url.replace(' ', '%20')
+    embed.add_field(name="Weitere Informationen", value=formatted_url, inline=False)
 
     slogans = operator_infos.get("slogan")
     footer_text = (
@@ -68,6 +71,7 @@ def build_info_embed() -> discord.Embed | None:
         if slogans else
         "Daten großzügig bereitgestellt von dbf.finalrewind.org"
     )
+
     embed.set_footer(text=footer_text, icon_url="https://dbf.finalrewind.org/static/icons/icon-96x96.png")
     return embed
 
