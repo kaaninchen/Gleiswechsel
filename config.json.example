@@ -3,5 +3,6 @@
     "stations": [ "Berlin Hbf", "Hamburg Hbf", "München Hbf", "Amsterdam Centraal"],
     "server": , 
     "vc": ,
-    "formatting": "🚅┇"
+    "formatting": "🚅┇",
+    "random": false
 }

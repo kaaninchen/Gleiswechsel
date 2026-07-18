@@ -1,8 +1,8 @@
 OPERATORS = { 
     "fallback": {
         "unknown": True,
-        "logo": "https://images.emojiterra.com/google/noto-emoji/unicode-15/color/512px/1f686.png",
-        "color": 0x087BBB
+        "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCVeC5E0mNNBKyQftQaFMzxIVkbDvEnSzWv07h_c8PdA&s=10",
+        "color": 0xFFFFFF
     },
     "db_allgemein": {
         "logo": "https://marketingportal.extranet.deutschebahn.com/resource/blob/13602522/c53f806b9df966e144010b276af72dd2/Bild_09-data.png",
@@ -32,8 +32,8 @@ OPERATORS = {
         "color": 0x0083BE
     },
     "Bayerische Regiobahn": {
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_BRB_2015.svg/1920px-Logo_BRB_2015.svg.png",
-        "color": 0xF61526
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Bahnland_Bayern_Logo_2021.svg/500px-Bahnland_Bayern_Logo_2021.svg.png",
+        "color": 0x0095DB
     },
     "Abellio Rail Mitteldeutschland GmbH": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Abellio_logo.svg/1920px-Abellio_logo.svg.png",
@@ -42,6 +42,10 @@ OPERATORS = {
     "SBB": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/SBB_logo_simplified.svg/960px-SBB_logo_simplified.svg.png",
         "color": 0xEB0000
+    },
+    "Nordbahn Eisenbahngesellschaft": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Logo_Nordbahn_NAH.SH_Blau_positiv_final.png",
+        "color": 0x1A2848
     }
 }
 
@@ -51,6 +55,7 @@ OPERATOR_ALIASES = {
     "DB Fernverkehr AG": OPERATORS["db_allgemein"],
     "DB Regio AG NRW": OPERATORS["db_allgemein"],
     "DB Regio AG Nord": OPERATORS["db_allgemein"],
+    "DB Regio AG Südost": OPERATORS["db_allgemein"],
     "SBB GmbH": OPERATORS["SBB"],
     "Schweizerische Bundesbahnen SBB": OPERATORS["SBB"],
 }

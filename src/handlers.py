@@ -66,7 +66,7 @@ async def _schedule_next_umstieg(bot, arrival):
     wait_seconds = (arrival - datetime.now()).total_seconds()
     if wait_seconds > 0:
         remaining = str(timedelta(seconds=wait_seconds))
-        logger(f"Um {arrival.strftime('%H:%M:%S')} gehts weiter (in {remaining.split(".")[0]})!...")
+        logger(f"SCHEDULER: Nächster Umstieg in {remaining.split(".")[0]} ({arrival.strftime('%H:%M:%S')})")
         await asyncio.sleep(wait_seconds)
     logger("Zug angekommen, wähle neue Verbindung...")
     await rename_vc(bot)

@@ -38,13 +38,16 @@ def random_connection():
         departures = [
             d for d in data.get("departures", [])
             if d.get("scheduledDeparture") and d.get("destination") != station
-            and not d.get("train", "").startswith("S ")
         ]
 
         if not departures:
             continue
 
-        dep = random.choice(departures)
+        if config['random']:
+            dep = random.choice(departures)
+        else:
+            dep = departures[0]
+
         return {
             "train": dep['train'], 
             "destination": dep['destination'], 
