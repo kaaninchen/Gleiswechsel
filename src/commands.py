@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from src.handlers import rename_vc
 from src.embeds import build_info_embed, build_error_embed
 
 def setup_commands(bot: discord.Bot):
@@ -8,6 +7,6 @@ def setup_commands(bot: discord.Bot):
     async def info(ctx):
         embed = build_info_embed()
         if embed is None:
-            await ctx.respond("Noch keine Verbindung gesetzt.")
+            await build_error_embed("Noch keine Verbindung gesetzt.")
             return
         await ctx.respond(embed=embed)

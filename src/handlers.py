@@ -7,7 +7,7 @@ from src.utils import random_connection, get_train_info, logger
 current = None
 _scheduled_task: asyncio.Task | None = None
 
-async def rename_vc(bot: discord.Bot, scheduled=False) -> bool:
+async def rename_vc(bot: discord.Bot):
     global current, train_name, train_info, _scheduled_task
 
     guild = bot.get_guild(int(config["server"]))
@@ -44,35 +44,27 @@ async def rename_vc(bot: discord.Bot, scheduled=False) -> bool:
 
         logger(f"Versuch {attempt}: Keine Ankunftszeit für {current['train']} verfügbar, versuche neue Verbindung...")
 
-    train_name = f"{train} nach {current['destination']}"
+    train_name = f"{train} nach {current['destination']} von {current['station']}"
+    print(train_name)
+    arrival = datetime.fromisoformat(str(train_info["arrival"]))
 
-    if not scheduled and _scheduled_task and not _scheduled_task.done():
-        _scheduled_task.cancel()
-
-    _scheduled_task = asyncio.create_task(_schedule_next_umstieg(bot, train_info["arrival"]))
+    _scheduled_task = asyncio.create_task(_schedule_next_umstieg(bot, arrival))
 
     print("-----------------------------------------")
-    logger(f"Umstieg: {train_name} von {current['station']}")
+    logger(f"Umstieg: {train_name}")
     logger(f"Betreiber: {train_info['operators']}")
     logger(f"Wenn der Name nicht geändert wird bin ich im Cooldown")
     await channel.edit(name=f"{config['formatting']}{train_name}")
+    await channel.set_status(f"Ankunft um {arrival.strftime('%H:%M')}")
     logger(f"Name geändert!")
 
     return True
 
-async def _schedule_next_umstieg(bot, arrival_iso):
-    try:
-        arrival = datetime.fromisoformat(arrival_iso)
-        wait_seconds = (arrival - datetime.now()).total_seconds()
-
-        
-        if wait_seconds > 0:
-            remaining = str(timedelta(seconds=wait_seconds))
-            logger(f"Um {arrival.strftime('%H:%M:%S')} gehts weiter (in {remaining.split(".")[0]})!...")
-            await asyncio.sleep(wait_seconds)
-        logger("Zug angekommen, wähle neue Verbindung...")
-        await rename_vc(bot, scheduled=True)
-    
-    except asyncio.CancelledError:
-        logger("Geplanter Umstieg wurde abgebrochen (manueller /umstieg dazwischen oder CTRL + C)")
-        raise
+async def _schedule_next_umstieg(bot, arrival):
+    wait_seconds = (arrival - datetime.now()).total_seconds()
+    if wait_seconds > 0:
+        remaining = str(timedelta(seconds=wait_seconds))
+        logger(f"Um {arrival.strftime('%H:%M:%S')} gehts weiter (in {remaining.split(".")[0]})!...")
+        await asyncio.sleep(wait_seconds)
+    logger("Zug angekommen, wähle neue Verbindung...")
+    await rename_vc(bot)
