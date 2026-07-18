@@ -1,7 +1,7 @@
 ''''
 Die Datei gibt dem Embed zugehörige Metadaten der Zugbetreiber. Identifiziert wird dabei durch die genauen Namen der Unternehmen. 
-Diese werden sowohl im /info Embed als auch in der Konsole angezeigt. Dabei beinhaltet jeder folgende Felder:
-und beinhaltet 2-3 Felder:
+Diese werden sowohl im /info Embed als auch in der Konsole angezeigt. 
+
 | Feld    | Optional | Wert  | Beschreibung                                                          |
 |---------|----------|-------|-----------------------------------------------------------------------|
 | Unknown | Ja       | Bool  | Eigentlich nur für fallback relevant, sollte man weglassen            |
