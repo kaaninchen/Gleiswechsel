@@ -2,7 +2,7 @@ import random
 import discord
 from datetime import datetime, timedelta
 import src.handlers as handlers
-from src.utils import operator_metadata, format_via_list, logger
+from src.utils import operator_metadata, format_via_list, resolve_operator, logger
 
 def format_timestamp(timestr):
     parsed_time = datetime.strptime(timestr, "%H:%M")
@@ -30,8 +30,7 @@ def build_info_embed() -> discord.Embed | None:
     conn = handlers.current
     info = handlers.train_info
 
-    current_operator = info["operators"][0]
-
+    current_operator = resolve_operator(info["operators"])
     arrival = format_iso_timestamp(info["arrival"])
     departure = format_timestamp(conn['departure'])
 

@@ -28,13 +28,15 @@ async def rename_vc(bot: discord.Bot):
         
         attempt += 1
         current = random_connection()
-        train_type = current['train'].split()[0]
 
-        if train_type in ("IC", "ICE", "NJ", "ES", "DZ", "RJ"):
+        parts = current['train'].split()
+        train_type = parts[0]
+
+        if parts[1].isdigit():
             train = current['train']
-            train_ID = current['train'].split()[1]
+            train_ID = parts[1]
         else:
-            train = current['train'].split()[1]
+            train = parts[1]
             train_ID = current['train_number']
 
         train_info = get_train_info(station=current['station'], train_ID=train_ID, train_type=train_type)
@@ -45,7 +47,7 @@ async def rename_vc(bot: discord.Bot):
         logger(f"Versuch {attempt}: Keine Ankunftszeit für {current['train']} verfügbar, versuche neue Verbindung...")
 
     train_name = f"{train} nach {current['destination']} von {current['station']}"
-    print(train_name)
+    logger(f"Vorbereitung auf {train_name} (typ: {train_type})")
     arrival = datetime.fromisoformat(str(train_info["arrival"]))
 
     _scheduled_task = asyncio.create_task(_schedule_next_umstieg(bot, arrival))

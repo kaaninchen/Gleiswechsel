@@ -78,6 +78,15 @@ def format_via_list(via: list[str]):
         return via[0]
     return ", ".join(via[:-1]) + " und " + via[-1] 
 
+def resolve_operator(operators):
+    if not operators:
+        return None
+    for op in operators:
+        if op in operators_module.OPERATOR_ALIASES or op in operators_module.OPERATORS:
+            return op
+        
+    return operators[0]
+
 def operator_metadata(operator):
     _reload_operators_if_changed()
 
