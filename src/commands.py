@@ -7,7 +7,7 @@ def setup_commands(bot: discord.Bot):
     @bot.slash_command(description="Steige in den nächsten Zug! Beachte das Discord Spam limit (2x in 10min)")
     @commands.cooldown(1, 600, commands.BucketType.guild)
     async def umstieg(ctx):
-        ctx.defer()
+        await ctx.defer()
         rename = await rename_vc(bot)
         if not rename:
             build_error_embed(rename)

@@ -1,9 +1,7 @@
-db_slogans = ["Senk ju vor träwelling wis Deutsche Bahn.", "Bitte beachten Sie die umgekehrte Wagenreihung.", "Zurückbleiben bitte!", "Alle reden vom Wetter. Wir nicht.", "Die Bahn macht mobil.", "Grün abgefahren"]
-
 db_allgemein = {
     "logo": "https://marketingportal.extranet.deutschebahn.com/resource/blob/13602522/c53f806b9df966e144010b276af72dd2/Bild_09-data.png",
     "color": 0xEC0016,
-    "slogan": db_slogans
+    "slogan": ["Senk ju vor träwelling wis Deutsche Bahn.", "Bitte beachten Sie die umgekehrte Wagenreihung.", "Zurückbleiben bitte!", "Alle reden vom Wetter. Wir nicht.", "Die Bahn macht mobil.", "Grün abgefahren"]
 }
 
 db_bawü = {
@@ -15,7 +13,8 @@ db_bawü = {
 OPERATOR_ALIASES = {
     "DB Regio AG Baden-Württemberg": db_bawü,
     "DB Regio Stuttgart GmbH": db_bawü,
-    "DB Fernverkehr": db_allgemein
+    "DB Fernverkehr": db_allgemein,
+    "DB Regio AG NRW": db_allgemein,
 }
 
 OPERATORS = { 
@@ -31,5 +30,9 @@ OPERATORS = {
     "Nederlandse Spoorwegen": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Logo_NS.svg/960px-Logo_NS.svg.png",
         "color": 0X00337F
+    },
+    "eurobahn": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/3/34/Digital_Logo_eurobahn.png",
+        "color": 0x005a9b
     }
 }
