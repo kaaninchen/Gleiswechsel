@@ -1,3 +1,19 @@
+''''
+Die Datei gibt dem Embed zugehörige Metadaten der Zugbetreiber. Identifiziert wird dabei durch die genauen Namen der Unternehmen. 
+Diese werden sowohl im /info Embed als auch in der Konsole angezeigt. Dabei beinhaltet jeder folgende Felder:
+und beinhaltet 2-3 Felder:
+| Feld    | Optional | Wert  | Beschreibung                                                          |
+|---------|----------|-------|-----------------------------------------------------------------------|
+| Unknown | Ja       | Bool  | Eigentlich nur für fallback relevant, sollte man weglassen            |
+| Logo    | Nein     | URL   | Das Logo in der Ecke des Embeds. Am besten PNG, SVG geht leider nicht |
+| Color   | Nein     | HEX   | HEX Color Code des Streifen vom Embed, muss mit 0x anfangen           |
+| Slogan  | Ja       | Liste | Zufälliger Text aus der Liste im Footer                               |
+
+Sollte es dazu kommen, dass mehrere Anbieter die selben Metadaten nutzen sollen, kann man einen Eintrag für alle in OPERATORS setzen und 
+die zugehörigen Anbieternamen in OPERATOR_ALIASES auf den Eintrag lenken lassen. db_bawü ist dafür ein gutes Beispiel.
+
+Nachdem diese Datei editiert wurde muss der Bot nicht neugestartet werden.
+'''
 OPERATORS = { 
     "fallback": {
         "unknown": True,
@@ -15,7 +31,7 @@ OPERATORS = {
         "slogan": ["Nett hier", "Aber waren Sie schon mal in Baden-Württemberg?", "Bwegt euch!"]
     },
     "Ostdeutsche Eisenbahn GmbH": {
-        "logo": "https://www.odeg.de/fileadmin/user_upload/Unternehmensseite/presse/pressebilder/ODEG_Pressebilder_Logo-CMYK-JPG.jpg",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/ODEG-Logo_Neu.svg/960px-ODEG-Logo_Neu.svg.png",
         "color": 0x00745C
     },
     "Nederlandse Spoorwegen": {
