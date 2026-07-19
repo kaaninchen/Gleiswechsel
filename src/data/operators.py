@@ -40,7 +40,7 @@ OPERATORS = {
         "slogan": ["Goed op weg", "Welkom in de trein van morgen", "Veilig, Vlug, Voordelig", "we haben een serious probleem", "Neuken in de keuken"]
     },
     "eurobahn": {
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/3/34/Digital_Logo_eurobahn.png",
+        "logo": "https://cdn.discordapp.com/attachments/1383843132906537023/1528405390260179146/Eurpnajm.png?ex=6a5e2df1&is=6a5cdc71&hm=d73fc3458f59f8942a5a0f51311308b12567b35b55b64aab0726bf6be92b3b0e&animated=true",
         "color": 0x005a9b,
     },
     "Arverio Bayern": {
@@ -66,16 +66,27 @@ OPERATORS = {
     "Erfurter Bahn GmbH": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Erfurter_Bahn_logo.svg/960px-Erfurter_Bahn_logo.svg.png",
         "color": 0x009133
+    },
+    "S-Bahn Hannover (Transdev)": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Transdev_Hannover_GmbH.svg/960px-Transdev_Hannover_GmbH.svg.png",
+        "color": 0x1B4587
+    },
+    "Regionalverkehre Start Deutschland GmbH (Start Mitteldeutschland)": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Logo_der_Regionalverkehre_Start_Deutschland.svg/960px-Logo_der_Regionalverkehre_Start_Deutschland.svg.png",
+        "color": 0x61A731
     }
 }
 
 OPERATOR_ALIASES = {
     "DB Regio AG Baden-Württemberg": OPERATORS["db_bawü"],
     "DB Regio Stuttgart GmbH": OPERATORS["db_bawü"],
+    "Arverio Baden-Württemberg": OPERATORS["db_bawü"],
     "DB Fernverkehr AG": OPERATORS["db_allgemein"],
     "DB Regio AG NRW": OPERATORS["db_allgemein"],
     "DB Regio AG Nord": OPERATORS["db_allgemein"],
     "DB Regio AG Südost": OPERATORS["db_allgemein"],
+    "DB Regio AG Nordost": OPERATORS["db_allgemein"],
+    "DB Regio AG Mitte": OPERATORS["db_allgemein"],
     "SBB GmbH": OPERATORS["SBB"],
     "Schweizerische Bundesbahnen SBB": OPERATORS["SBB"],
 }
