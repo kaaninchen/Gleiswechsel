@@ -68,8 +68,8 @@ OPERATORS = {
         "color": 0x009133
     },
     "S-Bahn Hannover (Transdev)": {
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Transdev_Hannover_GmbH.svg/960px-Transdev_Hannover_GmbH.svg.png",
-        "color": 0x1B4587
+        "logo": "https://cdn.discordapp.com/attachments/1526274436523888732/1528470315234234520/sbahn.png?ex=6a5e6a68&is=6a5d18e8&hm=c9f630c6f0c646eafeccef9b4d591ce8fcf8856b2b45f14e72fbf25e32edb017&animated=true",
+        "color": 0x1A4389
     },
     "Regionalverkehre Start Deutschland GmbH (Start Mitteldeutschland)": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Logo_der_Regionalverkehre_Start_Deutschland.svg/960px-Logo_der_Regionalverkehre_Start_Deutschland.svg.png",
