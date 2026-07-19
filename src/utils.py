@@ -82,7 +82,6 @@ def get_train_info(station, train_ID, train_type):
     return {
         "arrival": arrival_iso,
         "operators": dep.get("operators"),
-        "url": url
     }
 
 def format_via_list(via: list[str]):

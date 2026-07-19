@@ -61,10 +61,6 @@ def build_info_embed() -> discord.Embed | None:
 
     embed.add_field(name="Route", value="\n".join(route_lines))
 
-    remove_json_url = info['url'].rsplit('.', 1)[0]
-    formatted_url = remove_json_url.replace(' ', '%20')
-    embed.add_field(name="Weitere Informationen", value=formatted_url, inline=False)
-
     slogans = operator_infos.get("slogan")
     footer_text = (
         f"{random.choice(slogans)} • Daten großzügig bereitgestellt von dbf.finalrewind.org"
