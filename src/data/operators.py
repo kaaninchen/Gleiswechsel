@@ -62,6 +62,10 @@ OPERATORS = {
     "Nordbahn Eisenbahngesellschaft": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Logo_Nordbahn_NAH.SH_Blau_positiv_final.png",
         "color": 0x1A2848
+    },
+    "Erfurter Bahn GmbH": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Erfurter_Bahn_logo.svg/960px-Erfurter_Bahn_logo.svg.png",
+        "color": 0x009133
     }
 }
 
