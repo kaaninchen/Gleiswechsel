@@ -78,6 +78,10 @@ OPERATORS = {
     "Westbahn Management GmbH": {
         "logo": "https://corporate.westbahn.at/uploads/Logos/westbahn2025-logo-signet-small.png",
         "color": 0x1D4A83
+    },
+    "European Sleeper": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/European_Sleeper_Logo.svg/960px-European_Sleeper_Logo.svg.png",
+        "color": 0xEB4A27
     }
 }
 
