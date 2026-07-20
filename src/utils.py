@@ -72,17 +72,17 @@ def get_train_info(station, train_ID, train_type):
 
     dep = data.get("departure", [])
     if not dep:
-        logger("Kein departure Feld gefunden")
+        logger("Kein departure Feld gefunden", "error")
         return None
     
     route_post = dep.get("route_post_diff")
     if not route_post:
-        logger("Kein route_post_diff Feld gefunden")
+        logger("Kein route_post_diff Feld gefunden", "error")
         return None
     
     arrival_iso = route_post[-1].get("sched_arr")
     if not arrival_iso:
-        logger("Keine Ankunftszeit gefunden")
+        logger("Keine Ankunftszeit gefunden", "error")
         return None
     
     return {

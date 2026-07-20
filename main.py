@@ -30,4 +30,4 @@ async def on_application_command_error(ctx, error):
 try: 
     bot.run(config['token'])
 except:
-    print("An error occured while parsing the token (check the config!)")
+    print("An error occured while parsing the token (check the config!)", "fatal")

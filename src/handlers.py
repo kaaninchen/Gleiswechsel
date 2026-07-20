@@ -12,18 +12,18 @@ async def rename_vc(bot: discord.Bot):
 
     guild = bot.get_guild(int(config["server"]))
     if guild is None:
-        logger(f"Es konnte kein Server mit der ID {config['server']} gefunden werden! Ist der Bot ein Member?")
+        logger(f"Es konnte kein Server mit der ID {config['server']} gefunden werden! Ist der Bot ein Member?", "fatal")
         return False
 
     channel = guild.get_channel(int(config["vc"]))
     if not isinstance(channel, discord.VoiceChannel):
-        logger(f"Es konnte kein VC mit der ID {config['vc']} auf dem Server gefunden werden")
+        logger(f"Es konnte kein VC mit der ID {config['vc']} auf dem Server gefunden werden", "fatal")
         return False
 
     attempt = 0
     while True:
-        if attempt == 3:
-            logger("Zu viele Fehlversuche. Füge einen anderen Bahnhof hinzu.")
+        if attempt == 20:
+            logger("Zu viele Fehlversuche. Füge einen anderen Bahnhof hinzu.", "fatal")
             return "Es konnte kein Zug gefunden werden."
         
         attempt += 1
