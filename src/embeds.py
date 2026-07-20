@@ -46,7 +46,7 @@ def build_info_embed() -> discord.Embed | None:
         embed.add_field(name="Über", value=format_via_list(conn['via']), inline=False)
 
     if operator_infos.get("unknown"): 
-        logger(f"WARNING: {current_operator} nicht in operators.py gefunden")
+        logger(f"Metadaten für {current_operator} konten in operators.py nicht gefunden werden")
     
     embed.set_author(name=current_operator)
     embed.set_thumbnail(url=operator_infos["logo"])

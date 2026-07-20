@@ -38,7 +38,7 @@ def random_connection():
         departures = [
             d for d in data.get("departures", [])
             if d.get("scheduledDeparture") and d.get("destination") != station
-            and not d.get("train", "").startswith("S ")
+            and not d.get("train", "").startswith(tuple(config["blacklist"]))
         ]
 
         if not departures:
@@ -117,6 +117,8 @@ def operator_metadata(operator):
 
     return operators_module.OPERATORS.get(operator, operators_module.OPERATORS["fallback"])
 
-def logger(msg):
+def logger(msg, log_type="info"):
     current_time = datetime.now().strftime('%X')
-    print(f"{current_time}: {msg}")
+    print(f"{current_time}: {log_type.upper()}: {msg}")
+    if log_type.lower() == "fatal":
+        os._exit(1)

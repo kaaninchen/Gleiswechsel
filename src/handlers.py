@@ -28,6 +28,8 @@ async def rename_vc(bot: discord.Bot):
         
         attempt += 1
         current = random_connection()
+        if current == None:
+            return None
 
         parts = current['train'].split()
         train_type = parts[0]

@@ -74,6 +74,10 @@ OPERATORS = {
     "Regionalverkehre Start Deutschland GmbH (Start Mitteldeutschland)": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Logo_der_Regionalverkehre_Start_Deutschland.svg/960px-Logo_der_Regionalverkehre_Start_Deutschland.svg.png",
         "color": 0x61A731
+    },
+    "Westbahn Management GmbH": {
+        "logo": "https://corporate.westbahn.at/uploads/Logos/westbahn2025-logo-signet-small.png",
+        "color": 0x1D4A83
     }
 }
 

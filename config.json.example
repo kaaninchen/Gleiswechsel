@@ -5,4 +5,7 @@
     "vc": ,
     "formatting": "🚅┇",
     "random": false
+    "blacklist": [
+        
+    ]
 }
