@@ -1,7 +1,6 @@
 import discord
 import random
-import time
-from discord.ext import tasks, commands
+from discord.ext import tasks
 from src.config import config
 from src.handlers import rename_vc
 from src.commands import setup_commands

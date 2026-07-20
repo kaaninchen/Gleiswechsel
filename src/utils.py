@@ -38,6 +38,7 @@ def random_connection():
         departures = [
             d for d in data.get("departures", [])
             if d.get("scheduledDeparture") and d.get("destination") != station
+            and not d.get("train", "").startswith("S ")
         ]
 
         if not departures:
@@ -60,23 +61,28 @@ def random_connection():
 
 def get_train_info(station, train_ID, train_type):
     url = f"https://dbf.finalrewind.org/z/{train_type}%20{train_ID}/{station}.json"
+    logger(f"Fetche {url}")
     try:
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
-    except requests.RequestException:
+    except requests.RequestException as e:
+        logger(f"ReqestException Fehler: {e}")
         return None
 
     dep = data.get("departure", [])
     if not dep:
+        logger("Kein departure Feld gefunden")
         return None
     
     route_post = dep.get("route_post_diff")
     if not route_post:
+        logger("Kein route_post_diff Feld gefunden")
         return None
     
     arrival_iso = route_post[-1].get("sched_arr")
     if not arrival_iso:
+        logger("Keine Ankunftszeit gefunden")
         return None
     
     return {

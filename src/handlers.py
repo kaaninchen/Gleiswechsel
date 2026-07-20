@@ -22,7 +22,7 @@ async def rename_vc(bot: discord.Bot):
 
     attempt = 0
     while True:
-        if attempt > 3:
+        if attempt == 3:
             logger("Zu viele Fehlversuche. Füge einen anderen Bahnhof hinzu.")
             return "Es konnte kein Zug gefunden werden."
         
@@ -39,11 +39,12 @@ async def rename_vc(bot: discord.Bot):
             train = parts[1]
             train_ID = current['train_number']
 
-        train_info = get_train_info(station=current['station'], train_ID=train_ID, train_type=train_type)
+        station = current['station']
+        train_info = get_train_info(station=station, train_ID=train_ID, train_type=train_type)
         if train_info and train_info.get('operators') and train_info.get('arrival'):
             break
 
-        logger(f"Versuch {attempt}: Keine Ankunftszeit für {current['train']} verfügbar, versuche neue Verbindung...")
+        logger(f"Versuch {attempt}: Fehler bei {current['train']} von {station}, versuche neue Verbindung...")
 
     train_name = f"{train} nach {current['destination']} von {current['station']}"
     logger(f"Vorbereitung auf {train_name} (typ: {train_type})")
@@ -65,7 +66,7 @@ async def _schedule_next_umstieg(bot, arrival):
     wait_seconds = (arrival - datetime.now()).total_seconds()
     if wait_seconds > 0:
         remaining = str(timedelta(seconds=wait_seconds))
-        logger(f"SCHEDULER: Nächster Umstieg in {remaining.split(".")[0]} ({arrival.strftime('%H:%M:%S')} Uhr)")
+        logger(f"Nächster Umstieg in {remaining.split(".")[0]} ({arrival.strftime('%H:%M:%S')} Uhr)")
         await asyncio.sleep(wait_seconds)
     logger("Zug angekommen, wähle neue Verbindung...")
     await rename_vc(bot)

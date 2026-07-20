@@ -24,11 +24,11 @@ def format_iso_timestamp(isostr):
     return discord.utils.format_dt(parsed_time, style="t")
 
 def build_info_embed() -> discord.Embed | None:
-    if handlers.current is None:
-        return None
-
     conn = handlers.current
     info = handlers.train_info
+
+    if handlers.current is None and handlers.train_info is None:
+        return None
 
     current_operator = resolve_operator(info["operators"])
     arrival = format_iso_timestamp(info["arrival"])
