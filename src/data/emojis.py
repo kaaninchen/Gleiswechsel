@@ -4,8 +4,9 @@ emoji_list = {
     "Höchstgeschwindigkeit": "🚄"
 }
 
-train_types = {
+train_types = { # Unvollständig! Benötigt testing
     "ICE": emoji_list["Höchstgeschwindigkeit"],
+    "TGV": emoji_list["Höchstgeschwindigkeit"],
 
     "RE": emoji_list["Nahverkehr"],
     "RB": emoji_list["Nahverkehr"],
