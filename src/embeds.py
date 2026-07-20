@@ -62,10 +62,11 @@ def build_info_embed() -> discord.Embed | None:
     embed.add_field(name="Route", value="\n".join(route_lines))
 
     slogans = operator_infos.get("slogan")
+    footer_notice = f"Daten großzügig bereitgestellt von dbf.finalrewind.org • Typ: {handlers.train_type}"
     footer_text = (
-        f"{random.choice(slogans)} • Daten großzügig bereitgestellt von dbf.finalrewind.org"
+        f"{random.choice(slogans)} • {footer_notice}"
         if slogans else
-        "Daten großzügig bereitgestellt von dbf.finalrewind.org"
+        footer_notice
     )
 
     embed.set_footer(text=footer_text, icon_url="https://dbf.finalrewind.org/static/icons/icon-96x96.png")

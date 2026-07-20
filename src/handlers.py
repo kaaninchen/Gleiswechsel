@@ -2,13 +2,13 @@ import discord
 from datetime import datetime, timedelta
 import asyncio
 from src.config import config
-from src.utils import random_connection, get_train_info, logger
+from src.utils import random_connection, get_train_info, get_channel_formatting, logger
 
 current = None
 _scheduled_task: asyncio.Task | None = None
 
 async def rename_vc(bot: discord.Bot):
-    global current, train_name, train_info, _scheduled_task
+    global current, train_name, train_info, train_type, _scheduled_task
 
     guild = bot.get_guild(int(config["server"]))
     if guild is None:
@@ -51,14 +51,16 @@ async def rename_vc(bot: discord.Bot):
     train_name = f"{train} nach {current['destination']} von {current['station']}"
     logger(f"Vorbereitung auf {train_name} (typ: {train_type})")
     arrival = datetime.fromisoformat((train_info["arrival"]))
+    formatting = get_channel_formatting(train_type)
 
     _scheduled_task = asyncio.create_task(_schedule_next_umstieg(bot, arrival))
 
     print("-----------------------------------------")
     logger(f"Umstieg: {train_name}")
-    logger(f"Betreiber: {train_info['operators']}")
+    logger(f"Betreiber: {''.join(train_info['operators'])}")
+    logger(f"Train-Type: {train_type}")
     logger(f"Wenn der Name nicht geändert wird bin ich im Cooldown")
-    await channel.edit(name=f"{config['formatting']}{train_name}")
+    await channel.edit(name=f"{formatting}{train_name}")
     await channel.set_status(f"Ankunft um {arrival.strftime('%H:%M')}")
     logger(f"Name geändert!")
 

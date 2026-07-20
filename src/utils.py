@@ -5,6 +5,7 @@ import importlib
 from datetime import datetime
 from src.config import config
 import src.data.operators as operators_module
+import src.data.emojis as emojis
 
 _operators_mtime = None
 
@@ -127,6 +128,14 @@ def operator_metadata(operator):
         return operators_module.OPERATOR_ALIASES[operator]
 
     return operators_module.OPERATORS.get(operator, operators_module.OPERATORS["fallback"])
+
+def get_channel_formatting(train_type):
+    formatting = config.get("formatting", "")
+    
+    train_emoji = emojis.train_types.get(train_type)
+    if train_emoji is None:
+        train_emoji = emojis.emoji_list.get("Fallback", "")
+    return f"{train_emoji} {formatting}"
 
 def logger(msg, log_type="info"):
     status = log_type.upper()
