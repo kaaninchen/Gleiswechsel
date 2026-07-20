@@ -13,7 +13,7 @@ setup_commands(bot)
 @tasks.loop(minutes=5)
 async def change_status():
     status = random.choice(discord_status)
-    await bot.change_presence(activity=discord.Game(name=status))
+    await bot.change_presence(activity=discord.Game(name=f"{status} • /info"))
 
 @bot.event
 async def on_ready():
@@ -30,4 +30,4 @@ async def on_application_command_error(ctx, error):
 try: 
     bot.run(config['token'])
 except:
-    print("An error occured while parsing the token (check the config!)", "fatal")
+    print("Fehler beim parsen des token", "fatal")

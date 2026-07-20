@@ -5,7 +5,12 @@ discord_status = [
     "Störung an der Weiche",
     "Heute ohne Bordbistro",
     "SEV ist eingerichtet",
-    "BahnBonus Status",
     "Gleiswechsel!",
-    "Zug entgleist :("
+    "Zug entgleist :(",
+    "Die Bundespolizei ist informiert",
+    "Dieser Zug endet hier",
+    "Außerplanmäßiger Halt in Oberhausen Hbf",
+    "Verspätung aus vorheriger Fahrt",
+    "Der Zug hat keine Bremsen",
+    "Heute ohne Klimatisierung",
 ]
