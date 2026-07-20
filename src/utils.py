@@ -55,7 +55,7 @@ def random_connection():
         if not departures:
             continue
 
-        if config['random'] is False:
+        if not config['random']:
             dep = random.choice(departures)
         else:
             dep = departures[0]
