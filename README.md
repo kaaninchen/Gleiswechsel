@@ -18,8 +18,6 @@ pip install -r requirements.txt
 ### Config
 
 `$ mv config.json.example`
-
-Aktuell gibt es kein error handling für die config (kommt bald!!), also BITTE stell sicher dass du keine unerwarteten Daten eingegeben hast
 ```
 {
     "token": "", // Discord Token

@@ -25,6 +25,10 @@ OPERATORS = {
         "color": 0xEC0016,
         "slogan": ["Senk ju vor träwelling wis Deutsche Bahn.", "Bitte beachten Sie die umgekehrte Wagenreihung.", "Zurückbleiben bitte!", "Alle reden vom Wetter. Wir nicht.", "Die Bahn macht mobil.", "Grün abgefahren"]
     },
+    "db_bayern": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Bahnland_Bayern_Logo_2021.svg/500px-Bahnland_Bayern_Logo_2021.svg.png",
+        "color": 0x0095DB
+    },
     "db_bawü": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Bwegt_Logo.svg/960px-Bwegt_Logo.svg.png",
         "color": 0xFFBF34,
@@ -46,10 +50,6 @@ OPERATORS = {
     "Arverio Bayern": {
         "logo": "https://cdn.discordapp.com/attachments/1383843132906537023/1528006572805062776/Arverio_Avi_Bayern_blau_RGB.png?ex=6a5cba83&is=6a5b6903&hm=5781ae6c372c92ab4f52409c6fc91e5014ac34ccf24db665ade052e8135bdde0&animated=true", # alternative nötig!
         "color": 0x0083BE
-    },
-    "Bayerische Regiobahn": {
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Bahnland_Bayern_Logo_2021.svg/500px-Bahnland_Bayern_Logo_2021.svg.png",
-        "color": 0x0095DB
     },
     "Abellio Rail Mitteldeutschland GmbH": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Abellio_logo.svg/1920px-Abellio_logo.svg.png",
@@ -85,6 +85,8 @@ OPERATOR_ALIASES = {
     "DB Regio AG Baden-Württemberg": OPERATORS["db_bawü"],
     "DB Regio Stuttgart GmbH": OPERATORS["db_bawü"],
     "Arverio Baden-Württemberg": OPERATORS["db_bawü"],
+    "Bayerische Regiobahn": OPERATORS["db_bayern"],
+    "DB Regio AG Bayern": OPERATORS["db_bayern"],
     "DB Fernverkehr AG": OPERATORS["db_allgemein"],
     "DB Regio AG NRW": OPERATORS["db_allgemein"],
     "DB Regio AG Nord": OPERATORS["db_allgemein"],

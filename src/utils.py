@@ -24,27 +24,38 @@ def _reload_operators_if_changed():
         logger("operators.py wurde automatisch neu geladen (Änderungen erkannt)")
 
 def random_connection():
+    available_stations = config["stations"].copy()
     while True:
-        station = random.choice(config["stations"])
+        if not available_stations:
+            logger("Keine validen Bahnhöfe. Schlag den richtigen Bahnhofsnamen auf https://dbf.finalrewind.org/ nach", "fatal")
+       
+        station = random.choice(available_stations)
         url = f"https://dbf.finalrewind.org/{station}.json"
+        blacklist = config.get("blacklist", [])
 
         try:
             response = requests.get(url)
             response.raise_for_status()
             data = response.json()
-        except requests.RequestException:
-            continue
+        except requests.RequestException as e:
+            logger(f"Fehler beim aussuchen der Verbindung: {e}", "fatal")
+            return
         
+        if response.status_code == 300:
+            logger(f"Bahnhof '{station}' konnte nicht gefunden werden ({url})", "error")
+            available_stations.remove(station)
+            continue
+
         departures = [
             d for d in data.get("departures", [])
             if d.get("scheduledDeparture") and d.get("destination") != station
-            and not d.get("train", "").startswith(tuple(config["blacklist"]))
+            and not d.get("train", "").startswith(tuple(blacklist))
         ]
 
         if not departures:
             continue
 
-        if config['random']:
+        if config['random'] is False:
             dep = random.choice(departures)
         else:
             dep = departures[0]
@@ -118,7 +129,8 @@ def operator_metadata(operator):
     return operators_module.OPERATORS.get(operator, operators_module.OPERATORS["fallback"])
 
 def logger(msg, log_type="info"):
+    status = log_type.upper()
     current_time = datetime.now().strftime('%X')
-    print(f"{current_time}: {log_type.upper()}: {msg}")
-    if log_type.lower() == "fatal":
+    print(f"{current_time}: {status}: {msg}")
+    if status == "FATAL":
         os._exit(1)
