@@ -135,7 +135,7 @@ def get_channel_formatting(train_type):
     train_emoji = emojis.train_types.get(train_type)
     if train_emoji is None:
         train_emoji = emojis.emoji_list.get("Fallback", "")
-    return f"{train_emoji} {formatting}"
+    return f"{train_emoji}{formatting}"
 
 def logger(msg, log_type="info"):
     status = log_type.upper()
