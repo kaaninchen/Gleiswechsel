@@ -1,6 +1,7 @@
 {
     "token": "",
     "stations": [ "Berlin Hbf", "Hamburg Hbf", "München Hbf", "Amsterdam Centraal"],
+    "dbf": "https://dbf.finalrewind.org",
     "server": , 
     "vc": ,
     "random": true,

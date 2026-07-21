@@ -21,12 +21,12 @@ async def on_ready():
     if not change_status.is_running():
         change_status.start()
     await rename_vc(bot)
-
+'''
 @bot.event
 async def on_application_command_error(ctx, error):
     embed = build_error_embed(f"Ein Fehler ist aufgetreten: {error}")
     await ctx.respond(embed=embed)
-
+'''
 try: 
     bot.run(config['token'])
 except:

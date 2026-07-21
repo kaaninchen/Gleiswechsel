@@ -2,6 +2,7 @@ import random
 import discord
 from datetime import datetime, timedelta
 import src.handlers as handlers
+from src.config import config
 from src.utils import operator_metadata, format_via_list, resolve_operator, logger
 
 def format_timestamp(timestr):
@@ -62,14 +63,15 @@ def build_info_embed() -> discord.Embed | None:
     embed.add_field(name="Route", value="\n".join(route_lines))
 
     slogans = operator_infos.get("slogan")
-    footer_notice = f"Daten großzügig bereitgestellt von dbf.finalrewind.org • Typ: {handlers.train_type}"
+    dbf = config.get("dbf", "https://dbf.finalrewind.org")
+    footer_notice = f"Daten großzügig bereitgestellt von {dbf} • Typ: {handlers.train_type}"
     footer_text = (
         f"{random.choice(slogans)} • {footer_notice}"
         if slogans else
         footer_notice
     )
 
-    embed.set_footer(text=footer_text, icon_url="https://dbf.finalrewind.org/static/icons/icon-96x96.png")
+    embed.set_footer(text=footer_text, icon_url=f"{dbf}/static/icons/icon-96x96.png")
     return embed
 
 def build_error_embed(errormsg) -> discord.Embed:

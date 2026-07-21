@@ -8,6 +8,7 @@ import src.data.operators as operators_module
 import src.data.emojis as emojis
 
 _operators_mtime = None
+dbf = config.get("dbf", "https://dbf.finalrewind.org")
 
 def _reload_operators_if_changed():
     global _operators_mtime
@@ -28,10 +29,10 @@ def random_connection():
     available_stations = config["stations"].copy()
     while True:
         if not available_stations:
-            logger("Keine validen Bahnhöfe. Schlag den richtigen Bahnhofsnamen auf https://dbf.finalrewind.org/ nach", "fatal")
+            logger("Keine validen Bahnhöfe. Schlag den richtigen Bahnhofsnamen auf {dbf} nach", "fatal")
        
         station = random.choice(available_stations)
-        url = f"https://dbf.finalrewind.org/{station}.json"
+        url = f"{dbf}/{station}.json"
         blacklist = config.get("blacklist", [])
 
         try:
@@ -72,7 +73,7 @@ def random_connection():
         }
 
 def get_train_info(station, train_ID, train_type):
-    url = f"https://dbf.finalrewind.org/z/{train_type}%20{train_ID}/{station}.json"
+    url = f"{dbf}/z/{train_type}%20{train_ID}/{station}.json"
     logger(f"Fetche {url}")
     try:
         response = requests.get(url)
