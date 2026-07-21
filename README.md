@@ -10,14 +10,22 @@ Der Bot stellt außerdem den `/info` Befehl dar, welcher einem weitere Informati
 ## Setup
 ```sh
 git clone https://github.com/kaaninchen/Gleiswechsel.git
+
+# Mit Python
 python -m venv venv 
 source venv/bin/activate
 pip install -r requirements.txt 
+
+# Mit uv
+uv venv venv
+source venv/bin/activate
+uv pip install -r requirements.txt
+
 ```
 
 ### Config
 
-`$ mv config.json.example`
+`$ cp config.json.example config.json`
 ```jsonc
 {
     "token": "", // Token des Bots
@@ -26,11 +34,15 @@ pip install -r requirements.txt
     "server": , // Discord Server ID
     "vc": , // Server VC ID
     "random": true, // Random Zug aus der Anzeigetafel (true) oder erster Zug, der angezeigt wird (false)
-    "formatting": "┇", // VC Name. Davor steht der Emoji, danach der Zug
+    "emojis": true, // Emoji Namen beim Channel-Namen (true) oder nicht (false)
+    "formatting": "┇", // VC Name. Davor steht der Emoji, danach der Zug.
     "blacklist": [] // Blacklist für bestimmte Zug-Typen
 }
 
 ```
+
+<details>
+<summary>weitere Config Erklärungen</summary>
 
 #### dbf:
 Falls, aus irgendwelchem Gründen, man nicht die [offizielle DBF Instanz](https://dbf.finalrewind.org) nutzen möchte, hat man die Möglichkeiten seine eigene zu hosten. Instruction dazu gibts auf dem [zuständigen Repo](https://github.com/derf/db-fakedisplay). Dafür kann man das Feld in der config mit der eigenen URL austauschen. 
@@ -49,7 +61,7 @@ Die Blacklist ist dafür gedacht, ganze Zugtypen zu ignorieren. Beispielsweise m
     "blacklist": [
         "ICE",
         "NJ",
-        "ES
+        "ES"
     ]
 }
 ```  
@@ -67,10 +79,26 @@ Emojis für die Formattierung werden dynamisch anhand des Zugtypens gepulled. Da
 
 Den Status, den sich der Bot alle 5 Minuten random auswählt, kann man in [src/data/status.py](src/data/status.py) anpassen.
 
+</details>
+
+### Running
+
+```sh
+# Python
+python main.py
+# ODER
+python3 main.py
+
+# uv
+uv run main.py
+```
+
 ## Bekannte Bugs
-Ich weiß nicht ganz wieso, aber die API vertauscht manchmal die Berlin S-Bahn mit der S-Bahn von Stuttgart. Es scheint eher ein Upstream-Issue zu sein, weswegen ich da leider mit dem Bot nicht viel ändern kann.   
-Der Bug führt dazu, dass bei manchen S-Bahn Verbindungen `DB Regio AG S-Bahn Stuttgart` als Betreiber der Berlin S-Bahn angezeigt wird. Außerdem gibt die API dem Bot die Ankunftszeiten einer S-Bahn Verbindung von Stuttgart wieder, während die Route von der aus Berlin stammt (Die Route und die Ankunftszeiten werden von zwei verschiedenen Endpoints gepulled: Route: {dbf}/Berlin%20Hbf.json, Ankunftszeit: {dbf}/z/S%20{ID}/Berlin Hbf.json).  
-Falls das einem zu sehr stört kann man S-Bahns auf die Blacklist packen. 
+#### Stuttgart in Berlin
+Ich weiß nicht ganz wieso, aber die API vertauscht manchmal die S-Bahn von Berlin mit der S-Bahn von Stuttgart. Es scheint eher ein Upstream-Issue zu sein, weswegen ich da leider mit dem Bot nicht viel ändern kann.   
+Der Bug führt dazu, dass bei manchen S-Bahn Verbindungen `DB Regio AG S-Bahn Stuttgart` als Betreiber der Berlin S-Bahn angezeigt wird. Außerdem gibt die API dem Bot die Ankunftszeiten einer S-Bahn Verbindung von Stuttgart wieder, während die Route von der aus Berlin stammt (Die Route und die Ankunftszeiten werden von zwei verschiedenen Endpoints gepulled: Route: `{dbf}/Berlin%20Hbf.json`, Ankunftszeit: `{dbf}/z/S%20{ID}/Berlin Hbf.json`).  
+Falls das einem zu sehr stört kann man S-Bahns auf die Blacklist packen.   
+
 ```json
 {
     ...
@@ -80,3 +108,5 @@ Falls das einem zu sehr stört kann man S-Bahns auf die Blacklist packen.
 }
 
 ```
+
+Allgemein scheint der Berlin HBF eine sehr komische Station zu sein. Die meisten Bugs beim Testing kommt von dieser. Falls jemand mehr weiß sind PR's wie immer willkommen
