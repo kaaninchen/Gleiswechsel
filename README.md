@@ -57,7 +57,6 @@ Wenn man nur einen Bahnhof hat ist es stark empfohlen random zu nutzen. Sonst k�
 Die Blacklist ist dafür gedacht, ganze Zugtypen zu ignorieren. Beispielsweise möchte man, dass der Bot keine ICE's, keine NightJets und keine European Sleepers auswählt, da diese sehr lange Strecken fahren und der VC somit lange unverändert bleibt:
 ```json
 {
-    ...
     "blacklist": [
         "ICE",
         "NJ",
@@ -68,7 +67,7 @@ Die Blacklist ist dafür gedacht, ganze Zugtypen zu ignorieren. Beispielsweise m
 
 Die Namen der einzelnen Zugtypen kann im Footer von `/info` oder im Terminal log erfahren.
 
-## src/data 
+#### src/data 
 Es kann vorkommen, dass während dem `/info` Befehl das Logo und die Farbe des Bahnuntermehns fehlt.
 
 ![Beispiel für fehlende Daten](.github/info_fehlende_daten.png)  
@@ -101,8 +100,7 @@ Falls das einem zu sehr stört kann man S-Bahns auf die Blacklist packen.
 
 ```json
 {
-    ...
-    "blacklist" = [
+    "blacklist": [
         "S "
     ]
 }
