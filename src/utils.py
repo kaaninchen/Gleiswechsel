@@ -132,10 +132,13 @@ def operator_metadata(operator):
 
 def get_channel_formatting(train_type):
     formatting = config.get("formatting", "")
+    train_emoji = ""
+
+    if config.get("emojis", True):
+        train_emoji = emojis.train_types.get(train_type)
+        if train_emoji is None:
+            train_emoji = emojis.emoji_list.get("Fallback", "")
     
-    train_emoji = emojis.train_types.get(train_type)
-    if train_emoji is None:
-        train_emoji = emojis.emoji_list.get("Fallback", "")
     return f"{train_emoji}{formatting}"
 
 def logger(msg, log_type="info"):

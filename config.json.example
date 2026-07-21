@@ -5,6 +5,7 @@
     "server": , 
     "vc": ,
     "random": true,
+    "emojis": true,
     "formatting": "┇",
     "blacklist": []
 }

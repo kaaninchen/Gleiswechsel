@@ -43,7 +43,7 @@ Wenn man nur einen Bahnhof hat ist es stark empfohlen random zu nutzen. Sonst k�
 
 #### blacklist:  
 Die Blacklist ist dafür gedacht, ganze Zugtypen zu ignorieren. Beispielsweise möchte man, dass der Bot keine ICE's, keine NightJets und keine European Sleepers auswählt, da diese sehr lange Strecken fahren und der VC somit lange unverändert bleibt:
-```
+```json
 {
     ...
     "blacklist": [
@@ -66,3 +66,17 @@ Die zugehörigen Daten lassen sich innerhalb [src/data/operators.py](src/data/op
 Emojis für die Formattierung werden dynamisch anhand des Zugtypens gepulled. Dabei wird zwischen Nahverkehr und Fernverkehr unterschieden. Bei einem Zugtyp, welcher zu keiner der Kategorie assigned ist, wird ein Fallback Emoji eingesetzt. Sollte man einen Zugtypen hinzufügen wollen oder die Emojis ändern/deaktivieren wollen ist dies in [src/data/emojis.py](src/data/emojis.py) möglich. Die Namen der einzelnen Zugtypen kann im Footer von `/info` oder im Terminal log erfahren.
 
 Den Status, den sich der Bot alle 5 Minuten random auswählt, kann man in [src/data/status.py](src/data/status.py) anpassen.
+
+## Bekannte Bugs
+Ich weiß nicht ganz wieso, aber die API vertauscht manchmal die Berlin S-Bahn mit der S-Bahn von Stuttgart. Es scheint eher ein Upstream-Issue zu sein, weswegen ich da leider mit dem Bot nicht viel ändern kann.   
+Der Bug führt dazu, dass bei manchen S-Bahn Verbindungen `DB Regio AG S-Bahn Stuttgart` als Betreiber der Berlin S-Bahn angezeigt wird. Außerdem gibt die API dem Bot die Ankunftszeiten einer S-Bahn Verbindung von Stuttgart wieder, während die Route von der aus Berlin stammt (Die Route und die Ankunftszeiten werden von zwei verschiedenen Endpoints gepulled: Route: {dbf}/Berlin%20Hbf.json, Ankunftszeit: {dbf}/z/S%20{ID}/Berlin Hbf.json).  
+Falls das einem zu sehr stört kann man S-Bahns auf die Blacklist packen. 
+```json
+{
+    ...
+    "blacklist" = [
+        "S "
+    ]
+}
+
+```
