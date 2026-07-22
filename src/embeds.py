@@ -24,6 +24,20 @@ def format_iso_timestamp(isostr):
     parsed_time = discord.utils.parse_time(isostr)
     return discord.utils.format_dt(parsed_time, style="t")
 
+def build_embed_footer(operator_slogans):
+    dbf = config.get("dbf", "https://dbf.finalrewind.org")
+    footer_notice = f"Daten großzügig bereitgestellt von {dbf} • Typ: {handlers.train_type}"
+    footer_text = (
+        f"{random.choice(operator_slogans)} • {footer_notice}"
+        if operator_slogans else
+        footer_notice
+    )
+    icon = f"{dbf}/static/icons/icon-96x96.png"
+    return {
+        "text": footer_text,
+        "icon": icon
+    }
+
 def build_info_embed() -> discord.Embed | None:
     conn = handlers.current
     info = handlers.train_info
@@ -62,16 +76,27 @@ def build_info_embed() -> discord.Embed | None:
 
     embed.add_field(name="Route", value="\n".join(route_lines))
 
-    slogans = operator_infos.get("slogan")
-    dbf = config.get("dbf", "https://dbf.finalrewind.org")
-    footer_notice = f"Daten großzügig bereitgestellt von {dbf} • Typ: {handlers.train_type}"
-    footer_text = (
-        f"{random.choice(slogans)} • {footer_notice}"
-        if slogans else
-        footer_notice
+    footer = build_embed_footer(operator_infos.get("slogan"))
+    embed.set_footer(text=footer["text"], icon_url=footer["icon"])
+
+    return embed
+
+def build_announcement_embed(msg):
+    current_operator = resolve_operator(handlers.train_info["operators"])
+    operator_infos = operator_metadata(current_operator)
+
+    embed = discord.Embed(
+        title = "Informationen zu Ihrer Fahrt",
+        description=msg,
+        color=operator_infos["color"]
     )
 
-    embed.set_footer(text=footer_text, icon_url=f"{dbf}/static/icons/icon-96x96.png")
+    embed.set_author(name=current_operator)
+    embed.set_thumbnail(url=operator_infos["logo"])
+
+    footer = build_embed_footer(operator_infos.get("slogan"))
+    embed.set_footer(text=footer["text"], icon_url=footer["icon"])
+    
     return embed
 
 def build_error_embed(errormsg) -> discord.Embed:

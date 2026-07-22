@@ -34,7 +34,8 @@ uv pip install -r requirements.txt
     "server": , // Discord Server ID
     "vc": , // Server VC ID
     "random": true, // Random Zug aus der Anzeigetafel (true) oder erster Zug, der angezeigt wird (false)
-    "emojis": true, // Emoji Namen beim Channel-Namen (true) oder nicht (false)
+    "emojis": true, // Emoji Namen beim Channel-Namen (true) oder nicht (false),
+    "announcemenents": true, // Announcements zur aktuellen Zugreise im VC-Kanal ja (true) oder nein (false)
     "formatting": "┇", // VC Name. Davor steht der Emoji, danach der Zug.
     "blacklist": [] // Blacklist für bestimmte Zug-Typen
 }
@@ -52,6 +53,11 @@ Bei kleineren Bahnhöfen stehen an den Anzeigetafeln öfters die Züge lange vor
 Sollte man `random = false` setzen, würde immer der erste Zug an der Anzeigetafel genommen werden, welcher auch der wäre welcher am frühesten losfährt. Wenn man viele Bahnhöfe hat besteht darin keine Gefahr. 
 
 Wenn man nur einen Bahnhof hat ist es stark empfohlen random zu nutzen. Sonst könnte der Bot bei unvollständigen Einträgen in einer Schleife immer wieder vergeblich den selben unvollständigen Zug probieren.
+
+#### announcements:
+Der Bot kann während der Zugreise Ankündigungen in den Textkanal vom Sprachkanal schicken. Das würde er aber auch nur machen wenn sich dort mindestens eine Person aufhält. Aktuelle Announcements:
+- 3-5 Min vor Umstieg gibt es eine Ankündigung dafür
+- Info Embed bei Umstieg
 
 #### blacklist:  
 Die Blacklist ist dafür gedacht, ganze Zugtypen zu ignorieren. Beispielsweise möchte man, dass der Bot keine ICE's, keine NightJets und keine European Sleepers auswählt, da diese sehr lange Strecken fahren und der VC somit lange unverändert bleibt:
