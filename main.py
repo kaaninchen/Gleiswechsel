@@ -5,6 +5,7 @@ from src.config import config
 from src.handlers import rename_vc
 from src.commands import setup_commands
 from src.embeds import build_error_embed
+from src.utils import logger
 from src.data.status import discord_status
 
 bot = discord.Bot(intents=discord.Intents.all())
@@ -30,4 +31,4 @@ async def on_application_command_error(ctx, error):
 try: 
     bot.run(config['token'])
 except:
-    print("Fehler beim parsen des token", "fatal")
+    logger("Fehler beim parsen des token", "fatal")
