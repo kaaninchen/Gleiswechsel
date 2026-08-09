@@ -29,7 +29,7 @@ async def announcer(bot, announcement):
         return
 
 
-async def rename_vc(bot: discord.Bot):
+async def rename_vc(bot: discord.Bot, from_scheduler: bool = False):
     global current, train_name, train_info, train_type, _scheduled_task
 
     guild = bot.get_guild(int(config["server"]))
@@ -41,6 +41,9 @@ async def rename_vc(bot: discord.Bot):
     if not isinstance(channel, discord.VoiceChannel):
         logger(f"Es konnte kein VC mit der ID {config['vc']} auf dem Server gefunden werden", "fatal")
         return False
+
+    if not from_scheduler and _scheduled_task and not _scheduled_task.done():
+        _scheduled_task.cancel()
 
     attempt = 0
     while True:
@@ -75,7 +78,6 @@ async def rename_vc(bot: discord.Bot):
     arrival = datetime.fromisoformat((train_info["arrival"]))
     formatting = get_channel_formatting(train_type)
 
-    _scheduled_task = asyncio.create_task(_schedule_next_umstieg(bot, arrival))
 
     print("-----------------------------------------")
     logger(f"Umstieg: {train_name}")
@@ -88,6 +90,8 @@ async def rename_vc(bot: discord.Bot):
 
     if config.get("announcements", True):
         await announcer(bot, "umstieg")
+
+    _scheduled_task = asyncio.create_task(_schedule_next_umstieg(bot, arrival))
 
     return True
 
@@ -109,4 +113,4 @@ async def _schedule_next_umstieg(bot, arrival):
             await asyncio.sleep(wait_seconds)
 
     logger("Zug angekommen, wähle neue Verbindung...")
-    await rename_vc(bot)
+    await rename_vc(bot, from_scheduler=True)
