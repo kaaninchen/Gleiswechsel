@@ -16,12 +16,18 @@ async def change_status():
     status = random.choice(discord_status)
     await bot.change_presence(activity=discord.Game(name=f"{status} • /info"))
 
+_bot_initialized = False
 @bot.event
 async def on_ready():
+    global _bot_initialized
     print(f"{bot.user} ist online")
     if not change_status.is_running():
         change_status.start()
-    await rename_vc(bot)
+    if not _bot_initialized:
+        _bot_initialized = True
+        await rename_vc(bot)
+    else:
+        logger("Discord Reconnect, laufende Fahrt bleibt unangetastet")
 
 @bot.event
 async def on_application_command_error(ctx, error):
