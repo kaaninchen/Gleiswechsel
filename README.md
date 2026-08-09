@@ -100,7 +100,7 @@ uv run main.py
 
 ## Bekannte Bugs
 #### Stuttgart in Berlin
-Ich weiß nicht ganz wieso, aber die API vertauscht manchmal die S-Bahn von Berlin mit der S-Bahn von Stuttgart. Es scheint eher ein Upstream-Issue zu sein, weswegen ich da leider mit dem Bot nicht viel ändern kann.   
+Ich weiß nicht ganz wieso, aber die API vertauscht manchmal die S-Bahn von Berlin mit der S-Bahn von Stuttgart. Es scheint eher ein API-Issue zu sein, weswegen ich da leider mit dem Bot nicht viel ändern kann.   
 Der Bug führt dazu, dass bei manchen S-Bahn Verbindungen `DB Regio AG S-Bahn Stuttgart` als Betreiber der Berlin S-Bahn angezeigt wird. Außerdem gibt die API dem Bot die Ankunftszeiten einer S-Bahn Verbindung von Stuttgart wieder, während die Route von der aus Berlin stammt (Die Route und die Ankunftszeiten werden von zwei verschiedenen Endpoints gepulled: Route: `{dbf}/Berlin%20Hbf.json`, Ankunftszeit: `{dbf}/z/S%20{ID}/Berlin Hbf.json`).  
 Falls das einem zu sehr stört kann man S-Bahns auf die Blacklist packen.   
 
@@ -113,4 +113,11 @@ Falls das einem zu sehr stört kann man S-Bahns auf die Blacklist packen.
 
 ```
 
-Allgemein scheint der Berlin HBF eine sehr komische Station zu sein. Die meisten Bugs beim Testing kommt von dieser. Falls jemand mehr weiß sind PR's wie immer willkommen
+#### Nahreisezug
+Der Bot empfängt durch die dbf API ein Operator Field, wo der Betreiber des Züges angezeigt wird. Dadurch kann im `/info` Embed das Logo durch [src/data/operators.py](src/data/operators.py) zugewiesen werden. Manchmal schmeißt die API aber als Operator "Nahreisezug" aus.
+
+![Beispiel für Nahreisezug](.github/info_nahreisezug.png)  
+
+Wenn mehrere Betreiber angezeigt werden (bspw `["SBB", "Nahreisezug"]`) versucht der Bot immer, den Embed den bekannten Betreiber (in dem Fall SBB) zuzuweisen. Sollte allerdings nur Nahreisezug angezeigt werden, kann damit nicht gearbeitet werden, wodurch die Fallback Metadaten genutzt werden.  
+
+Die Fallback Metadaten kann man in [src/data/operators.py](src/data/operators.py) angepasst werden.
