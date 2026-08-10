@@ -82,6 +82,10 @@ OPERATORS = {
     "European Sleeper": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/European_Sleeper_Logo.svg/960px-European_Sleeper_Logo.svg.png",
         "color": 0xEB4A27
+    },
+    "GoVolta": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/GoVolta_logo.svg/1280px-GoVolta_logo.svg.png",
+        "color": 0x0B70F6
     }
 }
 
