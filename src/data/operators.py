@@ -86,6 +86,10 @@ OPERATORS = {
     "GoVolta": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/GoVolta_logo.svg/1280px-GoVolta_logo.svg.png",
         "color": 0x0B70F6
+    },
+    "SNCF": {
+        "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f4/Sncf-logo.svg/960px-Sncf-logo.svg.png",
+        "color": 0x812B6D
     }
 }
 
