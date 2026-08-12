@@ -172,4 +172,4 @@ Der Bot empfängt durch die dbf API ein Operator Field, wo der Betreiber des Zü
 
 Wenn mehrere Betreiber angezeigt werden (bspw `["SBB", "Nahreisezug"]`) versucht der Bot immer, den Embed den bekannten Betreiber (in dem Fall SBB) zuzuweisen. Sollte allerdings nur Nahreisezug angezeigt werden, kann damit nicht gearbeitet werden, wodurch die Fallback Metadaten genutzt werden.  
 
-Die Fallback Metadaten kann man in [src/data/operators.py](src/data/operators.py) angepasst werden.
+Die Fallback Metadaten können in [src/data/operators.py](src/data/operators.py) angepasst werden.
