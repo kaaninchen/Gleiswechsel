@@ -1,10 +1,11 @@
 emoji_list = {
     "Fallback": "🚉",
     "Nahverkehr": "🚃",
-    "Höchstgeschwindigkeit": "🚄"
+    "Höchstgeschwindigkeit": "🚄",
+    "Bus": "🚎"
 }
 
-train_types = { # Unvollständig! Benötigt testing
+train_types = { # Unvollständig!
     "ICE": emoji_list["Höchstgeschwindigkeit"],
     "TGV": emoji_list["Höchstgeschwindigkeit"],
 
@@ -12,4 +13,6 @@ train_types = { # Unvollständig! Benötigt testing
     "RB": emoji_list["Nahverkehr"],
     "ARV": emoji_list["Nahverkehr"],
     "BRB": emoji_list["Nahverkehr"],
+
+    "Bus": emoji_list["Bus"]
 }
