@@ -37,7 +37,7 @@ uv pip install -r requirements.txt
     "emojis": true, // Emoji Namen beim Channel-Namen (true) oder nicht (false),
     "formatting": "┇", // VC Name. Davor steht der Emoji, danach der Zug.
     "announcemenents": true, // Announcements zur aktuellen Zugreise im VC-Kanal ja (true) oder nein (false)
-    "voice_announcements": [ // siehe voice_announcements in der README
+    "voice_announcements": [ // siehe weitere config erklärungen in der README, benötigt extra setup
         {
             "enabled": false,
             "stations": {
@@ -66,22 +66,22 @@ Wenn man nur einen Bahnhof hat ist es stark empfohlen random zu nutzen. Sonst k�
 Der Bot kann während der Zugreise Ankündigungen in den Textkanal vom Sprachkanal schicken. Das würde er aber auch nur machen wenn sich dort mindestens eine Person aufhält. Aktuelle Announcements:
 - 3-5 Min vor Umstieg gibt es eine Ankündigung dafür
 - Info Embed bei Umstieg
+- voice_announcements
 
 #### voice_announcements:
 ⚠️ Announcements muss aktiviert sein
 
-Der Bot kann 3-5 Min vor Umstieg den VC joinen und eine Audiodatei abspielen. Damit der Bot dazu die Möglichkeit hat muss ffmpeg installiert sein. 
+Der Bot kann 3-5 Min vor Umstieg den VC joinen und eine Audiodatei abspielen. Dafür braucht der Bot ffmpeg.
 
 ```sh
 $ sudo apt install ffmpeg # Debian/Ubuntu
 
 $ brew install ffmpeg # macOS (brew)
-
 ```
 
-Außerdem sollte man über pip PyNaCl und davey installieren, sollte aber bereits automatisch durch [requirements.txt](requirements.txt) passiert sein.
+##### Voice_announcements config:  
 
-```
+```json
     "voice_announcements": [
         {
             "enabled": true,
@@ -93,19 +93,23 @@ Außerdem sollte man über pip PyNaCl und davey installieren, sollte aber bereit
     ],
 ```
 
-Audiodateien werden in [src/data/announcements](src/data/announcements) platziert. In der Config wird dann der Name der Station (z.B. Hannover) zu dem Namen der Audiodatei (z.B. hannover.aac) bestimmt. Die Audiodatei braucht keinen Path.  
+Audiodateien werden in [src/data/announcements](src/data/announcements) platziert. In der Config wird der Name der Station (z.B. Hannover) zu dem Namen der Audiodatei (z.B. hannover.aac) zugewiesen. Die Audiodatei braucht keinen Path.  
 
-Der Eintrag `general` meint die allgemeine Audiodatei, welche bei jeder Endstation (mit Ausnahme der zugewiesenen) spielt. Sollte man nur Audios bei eigenen zugewiesenen Endstationen abspielen wollen kann man `general` leerlassen, der bot skipped das ganze dann:  
+Der Eintrag `general` meint die allgemeine Audiodatei, welche bei jeder Endstation (mit Ausnahme der zugewiesenen) spielt. Sollte man nur Audios bei zugewiesenen Endstationen abspielen wollen kann man `general` leerlassen, der bot skipped das ganze dann:  
 
-`"general": ""`
+```json
+"stations": {
+    "general": ""
+}
+```
 
-Es gibt außerdem die Möglichkeit, mehrere Audiodateien zu einer Endstation zuzuweisen. Der Bot sucht sich dann jedes mal wenn er den vc joined eine random aus. Dafür kann man den Endstationen eine Liste mit den Audiodateinamen zuweisen:
+Es gibt außerdem die Möglichkeit, mehrere Audiodateien zu einer Endstation durch Listen zuzuweisen. Der Bot sucht sich dann jedes mal wenn er den vc joined eine davon aus.
 
-`json
+```json
 "stations": {
     "general": ["general_1.aac", "general_2.aac"]
 }
-`
+```
 
 #### blacklist:  
 Die Blacklist ist dafür gedacht, ganze Zugtypen zu ignorieren. Beispielsweise möchte man, dass der Bot keine ICE's, keine NightJets und keine European Sleepers auswählt, da diese sehr lange Strecken fahren und der VC somit lange unverändert bleibt:
