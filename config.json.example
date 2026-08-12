@@ -6,7 +6,15 @@
     "vc": ,
     "random": true,
     "emojis": true,
-    "announcements": true,
     "formatting": "┇",
+    "announcements": true,
+    "voice_announcements: [
+        {
+            "enabled": false,
+            "stations": {
+                "general": ""
+            }
+        }
+    ]
     "blacklist": []
 }

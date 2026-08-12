@@ -2,6 +2,8 @@ import discord
 from datetime import datetime, timedelta
 import asyncio
 import random
+from pathlib import Path
+
 from src.config import config
 from src.utils import random_connection, get_train_info, get_channel_formatting, logger
 from src.embeds import build_announcement_embed, build_info_embed
@@ -14,8 +16,11 @@ async def announcer(bot, announcement):
     if len(voice_channel.members) > 0:
         match announcement:
             case "ende":
+                destination = current['destination']
                 embed = build_announcement_embed(
-                    f'Sehr geehrte Fahrgäste,\nIn wenigen Minuten erreichen wir {current['destination']}. Dieser Zug endet dort.\n\nWir wünschen Ihnen eine angenehme Weiterreise.\n\nVielen Dank für Ihr Vertrauen und auf Wiedersehen.')
+                    f'Sehr geehrte Fahrgäste,\nIn wenigen Minuten erreichen wir {destination}. Dieser Zug endet dort.\n\nWir wünschen Ihnen eine angenehme Weiterreise.\n\nVielen Dank für Ihr Vertrauen und auf Wiedersehen.')
+                if config["voice_announcements"][0]["enabled"]:
+                    await voice_announcer(bot, destination, voice_channel)
             case "umstieg":
                 embed = build_info_embed()
             case _:
@@ -28,6 +33,39 @@ async def announcer(bot, announcement):
         logger(f"Announcement {announcement} wird geskipped, keiner da")
         return
 
+async def voice_announcer(bot: discord.Bot, destination, voice_channel):
+    voice_announcement_config = config["voice_announcements"][0]
+    voice_stations = voice_announcement_config["stations"]
+
+    if destination in voice_stations:
+        announcement_for = destination
+    else:
+        if voice_stations.get("general", "") == "":
+            return
+        announcement_for = "general"
+
+    if voice_stations.values() == list:
+        sound_file = random.choice(voice_stations.get(announcement_for))
+    else:
+        sound_file = voice_stations.get(announcement_for)
+
+    sound_path = f"src/data/announcements/{sound_file}"
+    if Path(sound_path).is_file() is False:
+        logger(f"Konnte Datei {sound_path} nicht finden", "error")
+        return
+
+    logger(f"VC wird betreten, spiele {sound_path}")
+    vc = await voice_channel.connect(timeout=15, reconnect=True)
+    audio_source = discord.FFmpegPCMAudio(sound_path)
+
+    if not vc.is_playing():
+        def after_playing(error):
+            if error:
+                logger(f"Player error: {error}", "error")
+            bot.loop.create_task(vc.disconnect())
+            logger("VC wird verlassen")
+
+        vc.play(audio_source, after=after_playing)
 
 async def rename_vc(bot: discord.Bot, from_scheduler: bool = False):
     global current, train_name, train_info, train_type, _scheduled_task

@@ -3,7 +3,9 @@ aiohttp==3.14.1
 aiosignal==1.4.0
 attrs==26.1.0
 certifi==2026.6.17
+cffi==2.1.1
 charset-normalizer==3.4.9
+davey==0.1.6
 frozenlist==1.8.0
 idna==3.18
 multidict==6.7.1
@@ -11,6 +13,8 @@ numpy==2.5.1
 pandas==3.0.3
 propcache==0.5.2
 py-cord==2.8.0
+pycparser==3.0
+pynacl==1.6.2
 python-dateutil==2.9.0.post0
 requests==2.34.2
 six==1.17.0
