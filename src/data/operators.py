@@ -90,6 +90,14 @@ OPERATORS = {
     "SNCF": {
         "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f4/Sncf-logo.svg/960px-Sncf-logo.svg.png",
         "color": 0x812B6D
+    },
+    "Agilis": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Agilis_Logo.svg/960px-Agilis_Logo.svg.png",
+        "color": 0xCAE15B
+    },
+    "enno": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Enno_logo.svg/960px-Enno_logo.svg.png",
+        "color": 0x88216F
     }
 }
 
