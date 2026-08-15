@@ -1,7 +1,7 @@
 emoji_list = {
     "Fallback": "💺",
     "BUS": "🚎",
-    "Tram": "🚈",
+    "TRAM": "🚈",
     "REGIONAL_RAIL": "🚊",
     "HIGHSPEED_RAIL": "🚅"
 }
