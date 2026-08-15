@@ -1,7 +1,8 @@
 import requests
 import random
+from datetime import datetime
 
-from src.utils import logger, config, get_train_name
+from src.utils import logger, config, get_train_name, convert_iso_string
 
 stations = config["stations"]
 blacklist = config["blacklist"]
@@ -14,8 +15,8 @@ headers = {
 endpoint = "https://api.transitous.org"
 
 def get_random_stop_id() -> str:
-    stop = random.choice(stations)
-    req = f"{endpoint}/api/v1/geocode?text={stop}"
+    assigned_station = random.choice(stations)
+    req = f"{endpoint}/api/v1/geocode?text={assigned_station}"
 
     try:
         response = requests.get(req, headers=headers)
@@ -26,7 +27,7 @@ def get_random_stop_id() -> str:
         return None
 
     if response.status_code == 404:
-        logger(f"Error finding station '{stop}'")
+        logger(f"Error finding station '{assigned_station}'")
 
     for entry in data:
         if entry.get("type") != "STOP":
@@ -54,7 +55,8 @@ def get_random_connection(stop_id: str) -> str:
         return None
 
     trip_ids = []
-    for entry in data.get("stopTimes", []):
+    stop_times = data.get("stopTimes", [])
+    for entry in stop_times:
         trip_id = entry["tripId"]
         if entry["mode"] in blacklist:
             continue
@@ -71,9 +73,14 @@ def get_random_connection(stop_id: str) -> str:
             logger("Couldn't find any connection", "fatal")
             return None
         
-    return random.choice(trip_ids)
+    trip_id = random.choice(trip_id)
+    from_station = stop_times[0]["place"]["name"]
+    return {
+        "trip_id": random.choice(trip_ids), 
+        "from_station": from_station
+        }
 
-def get_trip_details(trip_id: str) -> dict:
+def get_trip_details(trip_id: str, from_station: str) -> dict:
     req = f"{endpoint}/api/v2/trip?tripId={trip_id}"
 
     try:
@@ -88,31 +95,37 @@ def get_trip_details(trip_id: str) -> dict:
 
     display_name = legs["displayName"]
     trip_from = legs["tripFrom"]["name"]
-    trip_to = legs["tripTo"]["name"]
+    goes_to = legs["tripTo"]["name"]
     start_time = legs["startTime"]
     end_time = legs["endTime"]
     mode = legs["mode"]
+
+    departure = convert_iso_string(start_time)
+    arrival = convert_iso_string(end_time)
     train_name = get_train_name(display_name, mode)
 
-
     trip_details = {
-        "long_name": f"{train_name} nach {trip_to} von {trip_from}",
+        "long_name": f"{train_name} nach {goes_to} von {from_station}",
         "short_name": display_name,
-        "from": trip_from,
-        "to": trip_to,
+        "from": from_station,
+        "to": goes_to,
         "agency": legs["agencyName"],
         "route_color": legs.get("routeColor"),
         "duration": legs["duration"],
-        "start_time": start_time,
-        "end_time": end_time,
+        "departure": departure,
+        "arrival": arrival,
         "mode": mode,
         "stops": {}
     }
 
-    trip_details["stops"][trip_from] = start_time
+    trip_details["stops"][trip_from] = departure
     for stop in legs["intermediateStops"]:
-        trip_details["stops"][stop["name"]] = stop["arrival"]
-    trip_details["stops"][trip_to] = end_time
+        arrival = convert_iso_string(stop["arrival"])
+        trip_details["stops"][stop["name"]] = arrival
+        if stop.get("name") == from_station:
+            departure_time = stop["departure"]
+            trip_details["departure"] = convert_iso_string(departure_time)
+    trip_details["stops"][goes_to] = arrival
 
     return trip_details    
 

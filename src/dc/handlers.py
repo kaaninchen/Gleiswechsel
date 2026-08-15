@@ -8,14 +8,15 @@ from src.utils import logger, channel_formatting
 _scheduled_task: asyncio.Task | None = None
 
 async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = False):
+    global trip
     if not from_scheduler and _scheduled_task and not _scheduled_task.done():
         _scheduled_task.cancel()
 
     station_id = transitous.get_random_stop_id()
-    trip_id = transitous.get_random_connection(station_id)
-    trip = transitous.get_trip_details(trip_id)
+    connection = transitous.get_random_connection(station_id)
+    trip = transitous.get_trip_details(connection["trip_id"], connection["from_station"])
 
-    arrival = datetime.fromisoformat(trip["end_time"])
+    arrival = trip["arrival"]
     long_name = trip["long_name"]
 
     print("-----------------")
@@ -25,7 +26,7 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
 
     formatting = channel_formatting(trip["mode"])
     await voice_channel.edit(name=f"{formatting}{long_name}")
-    await voice_channel.set_status(f"Ankunft um {arrival.strftime('%H:%M')}")
+    await voice_channel.set_status(f"Ankunft um {arrival}")
 
     logger(f"Name geändert!")
 
