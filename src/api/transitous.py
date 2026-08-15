@@ -1,8 +1,7 @@
-import json
 import requests
 import random
 
-from src.utils import logger, config
+from src.utils import logger, config, get_train_name
 
 stations = config["stations"]
 blacklist = config["blacklist"]
@@ -92,9 +91,12 @@ def get_trip_details(trip_id: str) -> dict:
     trip_to = legs["tripTo"]["name"]
     start_time = legs["startTime"]
     end_time = legs["endTime"]
+    mode = legs["mode"]
+    train_name = get_train_name(display_name, mode)
+
 
     trip_details = {
-        "long_name": f"{display_name} nach {trip_to} von {trip_from}",
+        "long_name": f"{train_name} nach {trip_to} von {trip_from}",
         "short_name": display_name,
         "from": trip_from,
         "to": trip_to,
@@ -103,7 +105,7 @@ def get_trip_details(trip_id: str) -> dict:
         "duration": legs["duration"],
         "start_time": start_time,
         "end_time": end_time,
-        "mode": legs["mode"],
+        "mode": mode,
         "stops": {}
     }
 
