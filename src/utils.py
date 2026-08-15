@@ -27,6 +27,8 @@ def channel_formatting(mode: str) -> str:
 def get_train_name(train_name: str, mode: str) -> str:
     if train_name.isdigit():
         train = f"{mode.capitalize()} {train_name}"
+    elif "(" in train_name:
+        train = train_name.split(" (")[0]
     else:
         train = train_name
 
