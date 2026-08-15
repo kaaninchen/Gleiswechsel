@@ -1,8 +1,8 @@
 import json
 import requests
 import random
-from src.utils import logger
-from ... import config
+
+from src.utils import logger, config
 
 stations = config["stations"]
 blacklist = config["blacklist"]
@@ -14,7 +14,8 @@ headers = {
 
 endpoint = "https://api.transitous.org"
 
-def get_stop_id(stop):
+def get_random_stop_id() -> str:
+    stop = random.choice(stations)
     req = f"{endpoint}/api/v1/geocode?text={stop}"
 
     try:
@@ -22,7 +23,7 @@ def get_stop_id(stop):
         response.raise_for_status()
         data = response.json()
     except requests.RequestException as e:
-        logger(f"An error occured while searching for a connection: {e}")
+        logger(f"An error occured while searching for a connection: {e}", "fatal")
         return None
 
     if response.status_code == 404:
@@ -33,7 +34,7 @@ def get_stop_id(stop):
             continue
         return entry["id"]
 
-def get_random_connection(stop_id):
+def get_random_connection(stop_id: str) -> str:
     max_pages = 5
     cursor = None
     count = 20
@@ -68,12 +69,12 @@ def get_random_connection(stop_id):
             break
 
         if not trip_ids:
-            print("Couldn't find any connection")
+            logger("Couldn't find any connection", "fatal")
             return None
         
     return random.choice(trip_ids)
 
-def get_trip_details(trip_id):
+def get_trip_details(trip_id: str) -> dict:
     req = f"{endpoint}/api/v2/trip?tripId={trip_id}"
 
     try:
@@ -81,18 +82,20 @@ def get_trip_details(trip_id):
         response.raise_for_status
         data = response.json()
     except requests.RequestException as e:
-        print("e")
+        logger(f"An error occured while trying to get the route details: {e}", "fatal")
         return None
 
     legs = data["legs"][0]
 
+    display_name = legs["displayName"]
     trip_from = legs["tripFrom"]["name"]
     trip_to = legs["tripTo"]["name"]
     start_time = legs["startTime"]
     end_time = legs["endTime"]
 
     trip_details = {
-        "name": legs["displayName"],
+        "long_name": f"{display_name} nach {trip_to} von {trip_from}",
+        "short_name": display_name,
         "from": trip_from,
         "to": trip_to,
         "agency": legs["agencyName"],
@@ -110,11 +113,4 @@ def get_trip_details(trip_id):
     trip_details["stops"][trip_to] = end_time
 
     return trip_details    
-
-assigned_station = random.choice(stations)
-print(assigned_station)
-
-stop_id = get_stop_id(assigned_station)
-trip_id = get_random_connection(stop_id)
-print(json.dumps(get_trip_details(trip_id), indent=2, ensure_ascii=False))
 
