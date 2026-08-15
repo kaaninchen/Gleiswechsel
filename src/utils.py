@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import src.data.operators as operators
 from src.data.emojis import emoji_list
@@ -17,8 +17,11 @@ def logger(msg, log_type="info") -> str:
         os._exit(1)
 
 def convert_iso_string(isostring) -> str:
-    datetime_isostring = datetime.fromisoformat(isostring)
-    return datetime_isostring.strftime('%H:%M')
+    dt = datetime.fromisoformat(isostring.replace('Z', '+00:00'))
+    if dt.second >= 30:
+        dt += timedelta(minutes=1)
+
+    return dt.strftime('%H:%M')
 
 def channel_formatting(mode: str) -> str:
     formatting = config.get("formatting", "")

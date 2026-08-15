@@ -1,6 +1,6 @@
 import requests
 import random
-from datetime import datetime
+import json
 
 from src.utils import logger, config, get_train_name, convert_iso_string
 
@@ -73,10 +73,15 @@ def get_random_connection(stop_id: str) -> str:
             logger("Couldn't find any connection", "fatal")
             return None
         
-    trip_id = random.choice(trip_id)
-    from_station = stop_times[0]["place"]["name"]
+    trip_id = random.choice(trip_ids)
+    for trip in stop_times:
+        if trip.get("tripId") == trip_id:
+            from_station = trip.get("place").get("name")
+            break
+
+    print(from_station)
     return {
-        "trip_id": random.choice(trip_ids), 
+        "trip_id": trip_id, 
         "from_station": from_station
         }
 
@@ -85,7 +90,7 @@ def get_trip_details(trip_id: str, from_station: str) -> dict:
 
     try:
         response = requests.get(req, headers=headers)
-        response.raise_for_status
+        response.raise_for_status()
         data = response.json()
     except requests.RequestException as e:
         logger(f"An error occured while trying to get the route details: {e}", "fatal")
@@ -120,8 +125,8 @@ def get_trip_details(trip_id: str, from_station: str) -> dict:
 
     trip_details["stops"][trip_from] = departure
     for stop in legs["intermediateStops"]:
-        arrival = convert_iso_string(stop["arrival"])
-        trip_details["stops"][stop["name"]] = arrival
+        stop_arrival = convert_iso_string(stop["arrival"])
+        trip_details["stops"][stop["name"]] = stop_arrival
         if stop.get("name") == from_station:
             departure_time = stop["departure"]
             trip_details["departure"] = convert_iso_string(departure_time)

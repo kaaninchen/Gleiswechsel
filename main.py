@@ -30,5 +30,5 @@ TODO
 - text announcements
 - voice announcements
 - improved error handling (retry connection)
-- Footer Notice Slogangs
+- multi language support
 '''

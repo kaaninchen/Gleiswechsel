@@ -3,5 +3,7 @@ emoji_list = {
     "BUS": "🚎",
     "TRAM": "🚈",
     "REGIONAL_RAIL": "🚊",
-    "HIGHSPEED_RAIL": "🚅"
+    "HIGHSPEED_RAIL": "🚅",
+    "METRO": "🚇",
+    "SUBWAY": "🚇"
 }

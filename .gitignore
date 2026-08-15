@@ -3,3 +3,5 @@ __pycache__/
 src/data/announcements/*
 !src/data/announcements/.gitkeep
 config.json
+src/legacy/
+main_legacy.py

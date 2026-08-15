@@ -1,6 +1,0 @@
-name: Transitous API
-variables:
-  - name: stop_id
-    value: at-Railway-Current-Reference-Data-2026_de:09162:100:11:11
-  - name: trip_id
-    value: 20260815_11:52_de-DELFI_3338623109
