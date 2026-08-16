@@ -3,11 +3,12 @@ import random
 import json
 from datetime import datetime, timezone
 
-from src.utils import logger, config, get_train_name, convert_iso_string, validate_connection
+from src.utils import logger, get_train_name, convert_iso_string, validate_connection
+from src.config import config
 
-stations = config["stations"]
-blacklist = config["blacklist"]
-user_agent = config["http"]["user_agent"]
+stations = config.connections.stations
+blacklist = config.connections.blacklist
+user_agent = config.http.user_agent
 
 headers = {
     "User-Agent": f"{user_agent}"

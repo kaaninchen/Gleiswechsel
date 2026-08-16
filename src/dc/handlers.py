@@ -3,7 +3,8 @@ import asyncio
 import random
 from datetime import datetime, timedelta, date
 
-from src.utils import logger, channel_formatting, choose_connection, config, get_sound_path
+from src.utils import logger, channel_formatting, choose_connection, get_sound_path
+from src.config import config
 
 _scheduled_task: asyncio.Task | None = None
 
@@ -62,7 +63,6 @@ async def _schedule_next_transfer(bot: discord.Bot, arrival, voice_channel: disc
         if wait_seconds > announcement_countdown:
             wait_until_end_announcement = wait_seconds - announcement_countdown
             await asyncio.sleep(wait_until_end_announcement)
-            await asyncio.sleep(5)
             await announcer("ende", voice_channel, destination)
             await asyncio.sleep(announcement_countdown)
         else:
@@ -74,8 +74,8 @@ async def _schedule_next_transfer(bot: discord.Bot, arrival, voice_channel: disc
 async def announcer(announcement: str, voice_channel: discord.VoiceChannel, destination = None):
     from src.dc.embeds import build_info_embed, build_announcement_embed
 
-    announcements_enabled = config.get("announcements", True)
-    voice_announcement_enabled = config["voice_announcements"][0]["enabled"]
+    announcements_enabled = config.announcements.enabled
+    voice_announcement_enabled = config.announcements.voice[0].enabled
 
     if announcements_enabled:
         if len(voice_channel.members) > 0:

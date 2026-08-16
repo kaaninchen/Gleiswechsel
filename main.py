@@ -1,5 +1,6 @@
 import discord
-from src.utils import config, logger
+from src.utils import logger
+from src.config import config
 from src.dc.handlers import rename_vc
 from src.dc.helpers import validate_channel
 from src.dc.commands import setup_commands
@@ -16,22 +17,21 @@ async def on_ready():
 
     if not _bot_initialized:
         _bot_initialized = True
-        server_id = config["server"]
-        server_vc_id = config["vc"]
+        server_id = config.discord.server
+        server_vc_id = config.discord.vc
         channel = validate_channel(bot=bot, server_id=server_id, channel_id=server_vc_id)
         await rename_vc(bot, voice_channel=channel)
     else:
         logger("Reconnected to discord gateway, this wont disturb your current ride")
 
 try:
-    bot.run(config["token"])
+    bot.run(config.discord.token)
 except:
     logger("Feher peim parsen des tokens", "fatal")
 
 '''
 TODO
 - discord status
-- config cleanup
 - multi language support
 - README
 '''

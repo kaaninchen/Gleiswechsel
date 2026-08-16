@@ -1,9 +1,9 @@
-import json
 import os
 import importlib
 import random
 from pathlib import Path
-from datetime import datetime, timedelta, timezone, date
+from datetime import datetime, timedelta, timezone
+from src.config import config
 from zoneinfo import ZoneInfo
 
 import src.data.operators as operators
@@ -11,8 +11,6 @@ from src.data.emojis import emoji_list
 
 _operator_mtime = None
 
-with open("config.json", "r") as file:
-    config = json.load(file)
 
 def logger(msg, log_type="info") -> str:
     status = log_type.upper()
@@ -37,7 +35,7 @@ def validate_connection(start_time: str, end_time: str, station_departure: str) 
         logger(f"Verbindung liegt bereits in der Vergangenheit: {start_dt}", "error")
         return False
 
-    max_wait_time = config.get("max_wait_time", 6)
+    max_wait_time = config.connections.max_wait_time
     start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
     if start_dt > now + timedelta(hours=max_wait_time):
         logger(f"Verbindung liegt zu weit in der Zukunft: {start_dt}", "error")
@@ -47,13 +45,13 @@ def validate_connection(start_time: str, end_time: str, station_departure: str) 
     trip_duration = (end_dt - station_departure_dt).total_seconds()
     trip_duration_minutes = str(timedelta(seconds=trip_duration))
 
-    min_duration = config.get("min_duration", 10)
+    min_duration = config.connections.min_duration
     min_duration_seconds = min_duration * 60
     if trip_duration < min_duration_seconds:
         logger(f"Verbindung ist mit {trip_duration_minutes} zu kurz (mindestens {min_duration} Minuten gewollt)", "error")
         return False
 
-    max_duration = config.get("max_duration", "")
+    max_duration = config.connections.max_duration
     if max_duration:
         max_duration_seconds = max_duration * 60
         if max_duration_seconds < trip_duration:
@@ -63,7 +61,7 @@ def validate_connection(start_time: str, end_time: str, station_departure: str) 
     return True
 
 def convert_iso_string(isostring) -> str:
-    timezone = config.get("timezone", "Europe/Berlin")
+    timezone = config.connections.timezone
     dt = datetime.fromisoformat(isostring.replace('Z', '+00:00'))
     dt = dt.astimezone(ZoneInfo(timezone))
 
@@ -72,9 +70,9 @@ def convert_iso_string(isostring) -> str:
     return dt.strftime('%H:%M')
 
 def channel_formatting(mode: str) -> str:
-    formatting = config.get("formatting", "")
+    formatting = config.discord.formatting
 
-    if config.get("emojis", True):
+    if config.discord.formatting:
         emoji = emoji_list.get(mode)
         if emoji is None:
             emoji = emoji_list.get("Fallback")
@@ -134,14 +132,13 @@ def get_operator_metadata(agency: str, route_color: str) -> dict:
     }
 
 def get_sound_path(destination) -> str | None:
-    voice_announcement_config = config["voice_announcements"][0]
-    voice_stations = voice_announcement_config["stations"]
+    voice_stations = config.announcements.voice[0].stations
 
     if destination in voice_stations:
         announcement_for = destination
     else:
-        general_config = voice_stations.get("general", "")
-        if not general_config:
+        general_sound_enabled = voice_stations.get("general", "")
+        if not general_sound_enabled:
             return None
         announcement_for = "general"
         

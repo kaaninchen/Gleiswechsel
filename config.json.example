@@ -1,20 +1,33 @@
 {
+  "discord": {
     "token": "",
-    "stations": ["Hamburg Hbf", "München Hbf", "Köln Hbf", "Amsterdam Centraal"],
-    "dbf": "https://dbf.finalrewind.org",
-    "server": , 
+    "server": ,
     "vc": ,
-    "random": true,
-    "emojis": true,
     "formatting": "┇",
-    "announcements": true,
-    "voice_announcements: [
-        {
-            "enabled": false,
-            "stations": {
-                "general": ""
-            }
+    "emojis": true
+  },
+  "connections": {
+    "stations": [
+      ""
+    ],
+    "blacklist": [],
+    "min_duration": 5,
+    "max_duration": null,
+    "max_wait_time": 6,
+    "timezone": "Europe/Berlin"
+  },
+  "announcements": {
+    "enabled": true,
+    "voice": [
+      {
+        "enabled": false,
+        "stations": {
+          "general": "general.aac",
         }
+      }
     ]
-    "blacklist": []
+  },
+  "http": {
+    "user_agent": "Gleiswechsel-Discord-Bot"
+  }
 }
