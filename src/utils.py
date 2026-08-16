@@ -176,4 +176,35 @@ def get_next_station(stops: dict) -> dict | None:
             return {"name": name, "arrival": arrival_str}
 
     return None
-     
+
+def format_via_list(stops: dict) -> str:
+     if len(stops) > 2:
+            count = min(3, len(stops))
+            random_stops = random.sample(list(stops), k=count)
+            via = f"{', '.join(random_stops[:-1])} und {random_stops[-1]}"
+            return via
+     return None
+
+def format_stop_list(stops: dict, next_stop: str) -> list[tuple[str, str]]:
+    fields = []
+    field_lines, field_length, part = [], 0, 1
+
+    for name, stop_arrival in stops.items():
+        if name == next_stop:
+            line = f"**• {name} ({stop_arrival} Uhr)**"
+        else:
+            line = f"• {name} ({stop_arrival} Uhr)"
+
+        if field_length + len(line) + 1 > 1024:
+            route_page_name = "Route" if part == 1 else "Route (Fortsetzung)"
+            fields.append((route_page_name, "\n".join(field_lines)))
+            field_lines, field_length, part = [], 0, part + 1
+
+        field_lines.append(line)
+        field_length += len(line) + 1
+
+    if field_lines:
+        route_page_name = "Route" if part == 1 else "Route (Fortsetzung)"
+        fields.append((route_page_name, "\n".join(field_lines)))
+
+    return fields
