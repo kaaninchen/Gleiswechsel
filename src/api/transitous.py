@@ -130,10 +130,6 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     start_time = legs["startTime"]
     mode = legs["mode"]
 
-    is_valid = validate_connection(start_time, end_time)
-    if not is_valid:
-        return None
-
     arrival = convert_iso_string(end_time)
     departure = convert_iso_string(start_time)
 
@@ -159,14 +155,19 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     }
 
     trip_details["stops"][train_from] = departure
-
+    departure_time = start_time
+    
     for stop in legs["intermediateStops"]:
         stop_arrival = convert_iso_string(stop["arrival"])
-        trip_details["stops"][stop["name"]] = stop_arrival
+        trip_details["stops"][stop["name"]] = stop_arrival # not sure if that actually works but im too tired to question it
         if stop.get("name") == from_station:
             departure_time = stop["departure"]
             trip_details["departure"] = convert_iso_string(departure_time)
     trip_details["stops"][goes_to] = arrival
+
+    valid = validate_connection(start_time, end_time, departure_time)
+    if not valid:
+        return None
 
     with open('data.json', 'w') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)

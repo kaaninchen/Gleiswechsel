@@ -27,20 +27,27 @@ def choose_connection() -> dict | None:
 
     return trip
 
-def validate_connection(start_time: str, end_time: str) -> bool:
+def validate_connection(start_time: str, end_time: str, station_departure: str) -> bool:
     now = datetime.now(timezone.utc)
-    start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+
     end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
-    max_wait_time = config.get("max_wait_time", 6)
-    
     if end_dt < now:
         logger(f"Verbindung liegt bereits in der Vergangenheit: {start_dt}", "error")
         return False
 
+    max_wait_time = config.get("max_wait_time", 6)
+    start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
     if start_dt > now + timedelta(hours=max_wait_time):
         logger(f"Verbindung liegt zu weit in der Zukunft: {start_dt}", "error")
         return False
-    
+
+    station_departure_dt = datetime.fromisoformat(station_departure.replace("Z", "+00:00"))
+    trip_duration = (end_dt - station_departure_dt).total_seconds()
+    min_duration = config.get("min_duration", 600)
+    if trip_duration < min_duration:
+        logger(f"Verbindung ist zu kurz: Nur {trip_duration} Sekunden lang ({min_duration} gewollt)")
+        return False
+        
     return True
 
 def convert_iso_string(isostring) -> str:
