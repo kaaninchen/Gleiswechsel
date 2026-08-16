@@ -28,7 +28,7 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
     mode = trip["mode"]
 
     print("-----------------")
-    logger(f"Umstieg: {long_name}, Ankunft: {arrival} Uhr")
+    logger(f"Umstieg: {long_name}; Ankunft: {arrival} Uhr")
     logger(f"Betreiber: {trip["agency"]}, Typ: {mode}")
     logger(f"Versuche Namen zu ändern, wenn nichts passiert bin ich im cooldown... (warte bis zu 10min!)")
 

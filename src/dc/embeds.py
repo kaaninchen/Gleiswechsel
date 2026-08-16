@@ -45,6 +45,4 @@ def build_info_embed() -> discord.Embed:
     embed.set_author(name=agency)
     embed.set_thumbnail(url=metadata["logo"])
 
-    color = trip.get("color", "keine farbe :(")
-    print(color)
     return embed

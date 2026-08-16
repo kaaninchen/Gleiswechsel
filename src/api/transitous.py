@@ -1,7 +1,7 @@
 import requests
 import random
 import json
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 
 from src.utils import logger, config, get_train_name, convert_iso_string, validate_connection
 
@@ -32,18 +32,18 @@ def get_random_stop_id() -> str | None:
         logger(f"Error finding station '{assigned_station}'", "error")
         return None
 
-    id = []
+    id = None
     for entry in data:
         if entry.get("type") != "STOP":
             continue
-        entry_id = entry.get("id", None)
-        id.append(entry_id)
+        id = entry.get("id", None)
+        break
 
     if id is None:
         logger(f"Failed to grab ID from '{assigned_station}'", "error")
         return None
-    
-    return random.choice(id)
+
+    return id
 
 def get_random_connection(stop_id: str) -> str | None:
     if stop_id is None:
@@ -81,7 +81,9 @@ def get_random_connection(stop_id: str) -> str | None:
             trip_id = entry["tripId"]
             if entry["mode"] in blacklist:
                 continue
-            trip_ids.append(entry["tripId"])
+            else:
+                print(entry["mode"])
+                trip_ids.append(entry["tripId"])
 
         if len(trip_ids) >= min_results:
             break
@@ -125,8 +127,8 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     end_time = legs["endTime"]
     from_station = random_connection["from_station"]
     display_name = legs["displayName"]
-    trip_from = legs["tripFrom"]["name"]
-    goes_to = legs["tripTo"]["name"]
+    trip_from = legs["from"]["name"]
+    goes_to = legs["to"]["name"]
     start_time = legs["startTime"]
     mode = legs["mode"]
 
@@ -138,9 +140,13 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     departure = convert_iso_string(start_time)
 
     train_name = get_train_name(display_name, mode)
-    
+    if trip_from == from_station:
+        long_name = f"{train_name} nach {goes_to} von {trip_from}"
+    else:
+        long_name = f"{train_name} nach {goes_to} von {trip_from}, über {from_station}"
+        
     trip_details = {
-        "long_name": f"{train_name} nach {goes_to} von {from_station}",
+        "long_name": long_name,
         "short_name": display_name,
         "from": from_station,
         "to": goes_to,
@@ -154,6 +160,7 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     }
 
     trip_details["stops"][trip_from] = departure
+    print(trip_from)
     for stop in legs["intermediateStops"]:
         stop_arrival = convert_iso_string(stop["arrival"])
         trip_details["stops"][stop["name"]] = stop_arrival
@@ -161,6 +168,9 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
             departure_time = stop["departure"]
             trip_details["departure"] = convert_iso_string(departure_time)
     trip_details["stops"][goes_to] = arrival
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
 
     logger(json.dumps(trip_details, indent=4, ensure_ascii=False))
     return trip_details    
