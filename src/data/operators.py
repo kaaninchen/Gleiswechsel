@@ -124,7 +124,8 @@ OPERATOR_ALIASES = {
     "NS International": OPERATORS["NS"],
     "SBB GmbH": OPERATORS["SBB"],
     "Schweizerische Bundesbahnen SBB": OPERATORS["SBB"],
-    "Dänische Staatsbahnen": OPERATORS["DSB"]
+    "Dänische Staatsbahnen": OPERATORS["DSB"],
+    "VR": OPERATORS["Vr"]
 }
 
 

@@ -80,7 +80,7 @@ def channel_formatting(mode: str) -> str:
     return f"{emoji}{formatting}"
 
 def get_train_name(train_name: str, mode: str) -> str:
-    if train_name.isdigit():
+    if mode == "BUS" or mode == "TRAM":
         train = f"{mode.capitalize()} {train_name}"
     elif "(" in train_name:
         train = train_name.split(" (")[0]
@@ -118,7 +118,6 @@ def get_operator_metadata(agency: str, route_color: str) -> dict:
         if route_color is not None:
             try:
                 color = int(route_color, 16)
-                print(color)
             except ValueError:
                 color = operators.OPERATORS["fallback"]["color"]
             else:
@@ -188,7 +187,7 @@ def format_stop_list(stops: dict, next_stop: str | None) -> list[tuple[str, str]
 
     for name, stop_arrival in stops.items():
         if name == next_stop:
-            line = f"**• {name} ({stop_arrival} Uhr)**"
+            line = f"• __{name} ({stop_arrival} Uhr__)"
         else:
             line = f"• {name} ({stop_arrival} Uhr)"
 
