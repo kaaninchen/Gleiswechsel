@@ -31,11 +31,10 @@ except:
 '''
 TODO
 - 1024 embed limit
-- automatic reload of operators
 - discord status
 - text announcements
 - voice announcements
 - improved error handling (retry connection)
 - multi language support
-- random = False
+- README
 '''

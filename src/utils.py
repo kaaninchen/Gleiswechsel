@@ -1,7 +1,7 @@
 import json
 import os
 import importlib
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 import src.data.operators as operators
@@ -19,13 +19,29 @@ def logger(msg, log_type="info") -> str:
     if status == "FATAL":
         os._exit(1)
 
-def choose_connection() -> dict:
+def choose_connection() -> dict | None:
     from src.api import transitous
     station_id = transitous.get_random_stop_id()
     connection = transitous.get_random_connection(station_id)
-    trip = transitous.get_trip_details(connection["trip_id"], connection["from_station"])
+    trip = transitous.get_trip_details(connection)
 
     return trip
+
+def validate_connection(start_time: str, end_time: str) -> bool:
+    now = datetime.now(timezone.utc)
+    start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+    end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
+    max_wait_time = config.get("max_wait_time", 6)
+    
+    if end_dt < now:
+        logger(f"Verbindung liegt bereits in der Vergangenheit: {start_dt}", "error")
+        return False
+
+    if start_dt > now + timedelta(hours=max_wait_time):
+        logger(f"Verbindung liegt zu weit in der Zukunft: {start_dt}", "error")
+        return False
+    
+    return True
 
 def convert_iso_string(isostring) -> str:
     timezone = config.get("timezone", "Europe/Berlin")
@@ -34,7 +50,6 @@ def convert_iso_string(isostring) -> str:
 
     if dt.second >= 30:
         dt += timedelta(minutes=1)
-
     return dt.strftime('%H:%M')
 
 def channel_formatting(mode: str) -> str:
@@ -75,7 +90,7 @@ def _reload_operators_if_changed():
 
 def get_operator_metadata(agency: str, route_color: str) -> dict:
     _reload_operators_if_changed()
-    
+
     op_data = operators.OPERATOR_ALIASES.get(agency) or operators.OPERATORS.get(agency) or operators.OPERATORS["fallback"]
 
     logo = op_data.get("logo", operators.OPERATORS["fallback"]["logo"])

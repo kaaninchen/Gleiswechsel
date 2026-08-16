@@ -1,9 +1,9 @@
 import requests
 import random
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
-from src.utils import logger, config, get_train_name, convert_iso_string
+from src.utils import logger, config, get_train_name, convert_iso_string, validate_connection
 
 stations = config["stations"]
 blacklist = config["blacklist"]
@@ -15,8 +15,9 @@ headers = {
 
 endpoint = "https://api.transitous.org"
 
-def get_random_stop_id() -> str:
+def get_random_stop_id() -> str | None:
     assigned_station = random.choice(stations)
+    logger(f"Station: {assigned_station}")
     req = f"{endpoint}/api/v1/geocode"
 
     try:
@@ -24,18 +25,30 @@ def get_random_stop_id() -> str:
         response.raise_for_status()
         data = response.json()
     except requests.RequestException as e:
-        logger(f"An error occured while searching for a connection: {e}", "fatal")
+        logger(f"An error occured while searching for a connection: {e}", "error")
         return None
 
     if response.status_code == 404:
-        logger(f"Error finding station '{assigned_station}'")
+        logger(f"Error finding station '{assigned_station}'", "error")
+        return None
 
+    id = []
     for entry in data:
         if entry.get("type") != "STOP":
             continue
-        return entry["id"]
+        entry_id = entry.get("id", None)
+        id.append(entry_id)
 
-def get_random_connection(stop_id: str) -> str:
+    if id is None:
+        logger(f"Failed to grab ID from '{assigned_station}'", "error")
+        return None
+    
+    return random.choice(id)
+
+def get_random_connection(stop_id: str) -> str | None:
+    if stop_id is None:
+        return None
+    
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     print(f"Aktuelle Zeit für Query: {now}")
     cursor = None
@@ -58,15 +71,13 @@ def get_random_connection(stop_id: str) -> str:
             response.raise_for_status()
             data = response.json()
         except requests.RequestException as e:
-            print(e)
+            logger(e, "Error")
             break
         
         stop_times = data.get("stopTimes", [])
         all_stop_times.extend(stop_times)
 
         for entry in stop_times:
-            dep = entry.get("place", {}).get("departure") or entry.get("place", {}).get("arrival")
-            print(f"{entry.get('mode')}: {convert_iso_string(dep)}")
             trip_id = entry["tripId"]
             if entry["mode"] in blacklist:
                 continue
@@ -80,7 +91,7 @@ def get_random_connection(stop_id: str) -> str:
             break
 
     if not trip_ids:
-            logger("Couldn't find any connection", "fatal")
+            logger("Couldn't find any connection", "error")
             return None
 
     trip_id = random.choice(trip_ids)
@@ -96,28 +107,36 @@ def get_random_connection(stop_id: str) -> str:
         "from_station": from_station
     }
 
-def get_trip_details(trip_id: str, from_station: str) -> dict:
+def get_trip_details(random_connection: dict | None) -> dict | None:
+    if random_connection is None:
+        return None
+    
     req = f"{endpoint}/api/v2/trip"
 
     try:
-        response = requests.get(req, params={"tripId": trip_id}, headers=headers)
+        response = requests.get(req, params={"tripId": random_connection["trip_id"]}, headers=headers)
         response.raise_for_status()
         data = response.json()
     except requests.RequestException as e:
-        logger(f"An error occured while trying to get the route details: {e}", "fatal")
+        logger(f"An error occured while trying to get the route details: {e}", "error")
         return None
 
     legs = data["legs"][0]
-
+    end_time = legs["endTime"]
+    from_station = random_connection["from_station"]
     display_name = legs["displayName"]
     trip_from = legs["tripFrom"]["name"]
     goes_to = legs["tripTo"]["name"]
     start_time = legs["startTime"]
-    end_time = legs["endTime"]
     mode = legs["mode"]
 
-    departure = convert_iso_string(start_time)
+    is_valid = validate_connection(start_time, end_time)
+    if not is_valid:
+        return None
+
     arrival = convert_iso_string(end_time)
+    departure = convert_iso_string(start_time)
+
     train_name = get_train_name(display_name, mode)
     
     trip_details = {
@@ -143,5 +162,6 @@ def get_trip_details(trip_id: str, from_station: str) -> dict:
             trip_details["departure"] = convert_iso_string(departure_time)
     trip_details["stops"][goes_to] = arrival
 
+    logger(json.dumps(trip_details, indent=4, ensure_ascii=False))
     return trip_details    
 
