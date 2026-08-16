@@ -30,7 +30,6 @@ def choose_connection() -> dict | None:
 def validate_connection(start_time: str, end_time: str) -> bool:
     now = datetime.now(timezone.utc)
     start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
-    print(start_dt)
     end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
     max_wait_time = config.get("max_wait_time", 6)
     
@@ -98,14 +97,15 @@ def get_operator_metadata(agency: str, route_color: str) -> dict:
     slogans = op_data.get("slogan")
 
     color = op_data.get("color")
-    if color is None:
+    if color is None or color == 0xFFFFFF:
         if route_color is not None:
             try:
                 color = int(route_color, 16)
+                print(color)
             except ValueError:
                 color = operators.OPERATORS["fallback"]["color"]
             else:
-                logger(f"Managed to get color from API: {color}")
+                logger(f"Managed to get color from API, edit src/data/operators.py if you don't like it")
         else:
             color = operators.OPERATORS["fallback"]["color"]
     return {

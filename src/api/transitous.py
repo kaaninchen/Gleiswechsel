@@ -17,7 +17,6 @@ endpoint = "https://api.transitous.org"
 
 def get_random_stop_id() -> str | None:
     assigned_station = random.choice(stations)
-    logger(f"Station: {assigned_station}")
     req = f"{endpoint}/api/v1/geocode"
 
     try:
@@ -50,7 +49,6 @@ def get_random_connection(stop_id: str) -> str | None:
         return None
     
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    print(f"Aktuelle Zeit für Query: {now}")
     cursor = None
     max_pages = 5
     min_results = 5
@@ -82,7 +80,6 @@ def get_random_connection(stop_id: str) -> str | None:
             if entry["mode"] in blacklist:
                 continue
             else:
-                print(entry["mode"])
                 trip_ids.append(entry["tripId"])
 
         if len(trip_ids) >= min_results:
@@ -104,6 +101,7 @@ def get_random_connection(stop_id: str) -> str | None:
             from_station = entry.get("place", {}).get("name")
             break
 
+    logger(f"Station: {from_station}")
     return {
         "trip_id": trip_id, 
         "from_station": from_station
@@ -127,7 +125,7 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     end_time = legs["endTime"]
     from_station = random_connection["from_station"]
     display_name = legs["displayName"]
-    trip_from = legs["from"]["name"]
+    train_from = legs["from"]["name"]
     goes_to = legs["to"]["name"]
     start_time = legs["startTime"]
     mode = legs["mode"]
@@ -140,15 +138,16 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     departure = convert_iso_string(start_time)
 
     train_name = get_train_name(display_name, mode)
-    if trip_from == from_station:
-        long_name = f"{train_name} nach {goes_to} von {trip_from}"
+    if train_from == from_station:
+        long_name = f"{train_name} nach {goes_to} von {train_from}"
     else:
-        long_name = f"{train_name} nach {goes_to} von {trip_from}, über {from_station}"
+        long_name = f"{train_name} nach {goes_to} über {from_station}"
         
     trip_details = {
         "long_name": long_name,
         "short_name": display_name,
-        "from": from_station,
+        "station": from_station,
+        "from": train_from,
         "to": goes_to,
         "agency": legs["agencyName"],
         "route_color": legs.get("routeColor"),
@@ -159,8 +158,8 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
         "stops": {}
     }
 
-    trip_details["stops"][trip_from] = departure
-    print(trip_from)
+    trip_details["stops"][train_from] = departure
+
     for stop in legs["intermediateStops"]:
         stop_arrival = convert_iso_string(stop["arrival"])
         trip_details["stops"][stop["name"]] = stop_arrival

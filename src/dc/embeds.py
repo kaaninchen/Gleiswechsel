@@ -27,13 +27,13 @@ def build_info_embed() -> discord.Embed:
     arrival = format_timestamp_to_dc(trip["arrival"])
     embed = discord.Embed(
         title = trip["long_name"],
-        description=f"Abfahrt von {trip["from"]} um {departure}. Ankunft um {arrival}",
+        description=f"Abfahrt von {trip["station"]} um {departure}. Ankunft um {arrival}",
         color = metadata["color"]
     )
 
     route_lines = []
     for stop_name, stop_arrival in trip["stops"].items():
-        if stop_name == trip["from"]:
+        if stop_name == trip["station"]:
             route_lines.append(f"**• {stop_name} ({stop_arrival} Uhr)**")
         else:
             route_lines.append(f"• {stop_name} ({stop_arrival} Uhr)")
