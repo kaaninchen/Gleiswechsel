@@ -109,10 +109,12 @@ OPERATOR_ALIASES = {
     "DB Regio AG Bayern": OPERATORS["db_bayern"],
     "DB Fernverkehr AG": OPERATORS["db_allgemein"],
     "DB Regio AG NRW": OPERATORS["db_allgemein"],
-    "DB Regio AG Nord": OPERATORS["db_allgemein"],
     "DB Regio AG Südost": OPERATORS["db_allgemein"],
     "DB Regio AG Nordost": OPERATORS["db_allgemein"],
     "DB Regio AG Mitte": OPERATORS["db_allgemein"],
     "SBB GmbH": OPERATORS["SBB"],
     "Schweizerische Bundesbahnen SBB": OPERATORS["SBB"],
 }
+
+
+

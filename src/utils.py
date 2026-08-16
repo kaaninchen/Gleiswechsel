@@ -1,10 +1,13 @@
 import json
 import os
+import importlib
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import src.data.operators as operators
 from src.data.emojis import emoji_list
+
+_operator_mtime = None
 
 with open("config.json", "r") as file:
     config = json.load(file)
@@ -54,7 +57,25 @@ def get_train_name(train_name: str, mode: str) -> str:
 
     return train
 
+def _reload_operators_if_changed():
+    global _operator_mtime
+
+    path = operators.__file__
+    current_mtime = os.path.getmtime(path)
+
+    if _operator_mtime is None:
+        _operator_mtime = current_mtime
+        return
+
+    if current_mtime != _operator_mtime:
+        importlib.reload(operators)
+        _operator_mtime = current_mtime
+        logger("operators.py wurde automatisch neu geladen (Änderungen erkannt)")
+
+
 def get_operator_metadata(agency: str, route_color: str) -> dict:
+    _reload_operators_if_changed()
+    
     op_data = operators.OPERATOR_ALIASES.get(agency) or operators.OPERATORS.get(agency) or operators.OPERATORS["fallback"]
 
     logo = op_data.get("logo", operators.OPERATORS["fallback"]["logo"])

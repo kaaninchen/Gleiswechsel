@@ -17,10 +17,10 @@ endpoint = "https://api.transitous.org"
 
 def get_random_stop_id() -> str:
     assigned_station = random.choice(stations)
-    req = f"{endpoint}/api/v1/geocode?text={assigned_station}"
+    req = f"{endpoint}/api/v1/geocode"
 
     try:
-        response = requests.get(req, headers=headers)
+        response = requests.get(req, params={"text": assigned_station}, headers=headers)
         response.raise_for_status()
         data = response.json()
     except requests.RequestException as e:
@@ -97,10 +97,10 @@ def get_random_connection(stop_id: str) -> str:
     }
 
 def get_trip_details(trip_id: str, from_station: str) -> dict:
-    req = f"{endpoint}/api/v2/trip?tripId={trip_id}"
+    req = f"{endpoint}/api/v2/trip"
 
     try:
-        response = requests.get(req, headers=headers)
+        response = requests.get(req, params={"tripId": trip_id}, headers=headers)
         response.raise_for_status()
         data = response.json()
     except requests.RequestException as e:

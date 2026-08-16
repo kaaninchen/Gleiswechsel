@@ -31,7 +31,7 @@ except:
 '''
 TODO
 - 1024 embed limit
-- Automatic transfer
+- automatic reload of operators
 - discord status
 - text announcements
 - voice announcements
