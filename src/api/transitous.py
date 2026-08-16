@@ -27,22 +27,30 @@ def get_random_stop_id() -> str | None:
         logger(f"An error occured while searching for a connection: {e}", "error")
         return None
 
-    if response.status_code == 404:
-        logger(f"Error finding station '{assigned_station}'", "error")
-        return None
-
-    id = None
+    stop_ids = {}
     for entry in data:
         if entry.get("type") != "STOP":
             continue
-        id = entry.get("id", None)
-        break
 
-    if id is None:
+        stop_name = entry.get("name")
+        stop_id = entry.get("id", None)
+        stop_ids[stop_id] = stop_name
+            
+        if stop_name == assigned_station:
+            stop_ids.clear()
+            stop_ids[stop_id] = stop_name
+            break
+
+
+    if stop_ids is None:
         logger(f"Failed to grab ID from '{assigned_station}'", "error")
         return None
 
-    return id
+    stop_ids_list = list(stop_ids.keys())
+    stops_string = ", ".join(stop_ids.values())
+    logger(f"Availabe stations: {stops_string}")
+    chosen_stop_id = random.choice(stop_ids_list)
+    return chosen_stop_id
 
 def get_random_connection(stop_id: str) -> str | None:
     if stop_id is None:
@@ -100,7 +108,6 @@ def get_random_connection(stop_id: str) -> str | None:
             from_station = entry.get("place", {}).get("name")
             break
 
-    logger(f"Station: {from_station}")
     return {
         "trip_id": trip_id, 
         "from_station": from_station

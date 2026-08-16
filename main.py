@@ -30,10 +30,8 @@ except:
 
 '''
 TODO
-- 1024 embed limit
 - discord status
-- text announcements
-- voice announcements
+- config cleanup
 - multi language support
 - README
 '''
