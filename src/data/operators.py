@@ -98,6 +98,10 @@ OPERATORS = {
     "enno": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Enno_logo.svg/960px-Enno_logo.svg.png",
         "color": 0x88216F
+    },
+    "DSB": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/DSB_company_logo.svg/960px-DSB_company_logo.svg.png",
+        "color": 0xB22B32
     }
 }
 
@@ -111,10 +115,12 @@ OPERATOR_ALIASES = {
     "DB Regio AG NRW": OPERATORS["db_allgemein"],
     "DB Regio AG Südost": OPERATORS["db_allgemein"],
     "DB Regio AG Nordost": OPERATORS["db_allgemein"],
+    "DB Regio AG Nord": OPERATORS["db_allgemein"],
     "DB Regio AG Mitte": OPERATORS["db_allgemein"],
     "NS International": OPERATORS["NS"],
     "SBB GmbH": OPERATORS["SBB"],
     "Schweizerische Bundesbahnen SBB": OPERATORS["SBB"],
+    "Dänische Staatsbahnen": OPERATORS["DSB"]
 }
 
 

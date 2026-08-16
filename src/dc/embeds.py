@@ -31,8 +31,18 @@ def build_info_embed() -> discord.Embed:
         color = metadata["color"]
     )
 
+    stops = trip["stops"]
+
+    if len(stops) > 2:
+        count = min(3, len(stops))
+        random_stops = random.sample(list(stops), k=count)
+
+        via = ", ".join(random_stops[:-1]) + " und " + random_stops[-1]
+        embed.add_field(name="Über", value=via, inline=False)
+
+
     route_lines = []
-    for stop_name, stop_arrival in trip["stops"].items():
+    for stop_name, stop_arrival in stops.items():
         if stop_name == trip["station"]:
             route_lines.append(f"**• {stop_name} ({stop_arrival} Uhr)**")
         else:

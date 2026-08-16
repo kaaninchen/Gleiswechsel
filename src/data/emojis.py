@@ -5,6 +5,7 @@ emoji_list = {
     "TRAM": "🚈",
     "REGIONAL_RAIL": "🚊",
     "HIGHSPEED_RAIL": "🚅",
+    "LONG_DISTANCE": "🚅",
     "METRO": "🚇",
     "SUBWAY": "🚇"
 }
