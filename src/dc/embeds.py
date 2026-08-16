@@ -1,7 +1,7 @@
 import discord
 import random
 
-from src.utils import get_operator_metadata
+from src.utils import get_operator_metadata, get_next_station
 from src.dc.helpers import format_timestamp_to_dc
 
 def build_embed_footer(mode: str, slogans):
@@ -25,6 +25,8 @@ def build_info_embed() -> discord.Embed:
     metadata = get_operator_metadata(agency, trip["route_color"])
     departure = format_timestamp_to_dc(trip["departure"])
     arrival = format_timestamp_to_dc(trip["arrival"])
+    next_stop = get_next_station(trip["stops"])
+
     embed = discord.Embed(
         title = trip["long_name"],
         description=f"Abfahrt von {trip["station"]} um {departure}. Ankunft um {arrival}",
@@ -37,23 +39,29 @@ def build_info_embed() -> discord.Embed:
         count = min(3, len(stops))
         random_stops = random.sample(list(stops), k=count)
 
-        via = ", ".join(random_stops[:-1]) + " und " + random_stops[-1]
+        via = ", ".join(random_stops[:-1]) + " und " + random_stops[-1] + ". Nächster Halt: " + next_stop["name"]
         embed.add_field(name="Über", value=via, inline=False)
 
     field_lines, field_length, part = [], 0, 1
 
     for name, stop_arrival in stops.items():
-        line = f"**• {name} ({stop_arrival} Uhr)**" if name == trip["station"] else f"• {name} ({stop_arrival} Uhr)"
+        if name == next_stop["name"]:
+            line = f"**• {name} ({stop_arrival} Uhr)**"
+        else:
+            line = f"• {name} ({stop_arrival} Uhr)"
 
         if field_length + len(line) + 1 > 1024:
-            embed.add_field(name="Route" if part == 1 else "Route (Fortsetzung)", value="\n".join(field_lines), inline=True)
+            route_page_name = "Route"
+            if part != 1:
+                route_page_name += " (Fortsetzung)"
+            embed.add_field(name=route_page_name, value="\n".join(field_lines), inline=False)
             field_lines, field_length, part = [], 0, part + 1
 
         field_lines.append(line)
         field_length += len(line) + 1
 
     if field_lines:
-        embed.add_field(name="Route" if part == 1 else "Route (Fortsetzung)", value="\n".join(field_lines), inline=True)
+        embed.add_field(name="Route" if part == 1 else "Route (Fortsetzung)", value="\n".join(field_lines), inline=False)
 
     footer = build_embed_footer(trip["mode"], metadata["slogans"])
     embed.set_footer(text=footer["text"], icon_url=footer["icon"])

@@ -3,7 +3,7 @@ import os
 import importlib
 import random
 from pathlib import Path
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 from zoneinfo import ZoneInfo
 
 import src.data.operators as operators
@@ -156,3 +156,24 @@ def get_sound_path(destination) -> str | None:
         return None
 
     return sound_path
+
+def get_next_station(stops: dict) -> dict | None:
+    now = datetime.now()
+    today = datetime.today()
+    day_offset = 0
+    previous_time = None
+
+    for name, arrival_str in stops.items():
+        arrival_time = datetime.strptime(arrival_str, "%H:%M").time()
+
+        if previous_time is not None and arrival_time < previous_time:
+            day_offset += 1
+
+        arrival_dt = datetime.combine(today + timedelta(days=day_offset), arrival_time)
+        previous_time = arrival_time
+
+        if arrival_dt >= now:
+            return {"name": name, "arrival": arrival_str}
+
+    return None
+     
