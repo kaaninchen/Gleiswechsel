@@ -1,13 +1,21 @@
 import discord
+import sys
+
 from src.utils import logger
 from src.config import config
 from src.dc.handlers import rename_vc
 from src.dc.helpers import validate_channel
 from src.dc.commands import setup_commands
+from src.api.transitous import check_stations
 
 bot = discord.Bot(intents=discord.Intents.all())
 setup_commands(bot=bot)
 _bot_initialized = False
+
+if len(sys.argv) > 1:
+    if sys.argv[1] == "stations":
+        check_stations()
+        sys.exit(0)
 
 @bot.event
 async def on_ready():

@@ -16,6 +16,77 @@ headers = {
 
 endpoint = "https://api.transitous.org"
 
+def check_stations():
+    all_stations_output = {}
+    minimal_overview = {
+        "stations": {}
+    }
+
+    for station in stations:
+        req = f"{endpoint}/api/v1/geocode"
+
+        try:
+            response = requests.get(req, params={"text": station}, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+        except requests.RequestException as e:
+            logger(f"An error occured while checking for station {station}: {e}")
+            continue
+
+        stops_dict = {}
+        aliases_list = []
+        exact_match = False
+
+        for entry in data:
+            if entry.get("type") != "STOP":
+                continue
+
+            station_id = entry.get("id") 
+            stop_name = entry.get("name")
+            coords = f"{entry.get("lat")}, {entry.get("lon")}"
+            modes = entry.get("modes")
+
+            stop_details = {
+                "tz": entry.get("tz"),
+                "country": entry.get("country"),
+                "coords": coords,
+                "modes": modes,
+                "id": station_id,
+            }
+            
+            if stop_name:
+                stops_dict[stop_name] = stop_details
+                aliases_list.append(stop_name)
+
+            if stop_name == station:
+                if not exact_match:
+                    logger(f"Exact match found! {station} is an assigned station! Bot would use that station directly")
+                    exact_match = True
+
+        if not stops_dict:
+            logger("Failed to grab ID from 'search_name'", "error")
+            continue
+
+        all_stations_output[station] = {
+            "associated": stops_dict
+        }
+
+        minimal_overview["stations"][station] = aliases_list
+
+    logger(json.dumps(minimal_overview, indent=4, ensure_ascii=False))
+
+
+    print(f"\nIf you want, I can save a more detailed version directly as a json file to disk.")
+    print("The json would provide informations like coords, country and transport modes that are from every specific associated station.")
+    prompt = input("This would help you to identify the associated stations more accurately (y/n): ")
+    if prompt == "y" or prompt == "yes":
+        with open('stations.json', 'w') as f:
+            json.dump(all_stations_output, f, indent=4, ensure_ascii=False)
+            logger("stations.json generated")
+    else:
+        logger("okay :(")
+
+
 def get_random_stop_id() -> str | None:
     assigned_station = random.choice(stations)
     req = f"{endpoint}/api/v1/geocode"
@@ -42,14 +113,15 @@ def get_random_stop_id() -> str | None:
             stop_ids[stop_id] = stop_name
             break
 
-
     if stop_ids is None:
         logger(f"Failed to grab ID from '{assigned_station}'", "error")
         return None
 
     stop_ids_list = list(stop_ids.keys())
     stops_string = ", ".join(stop_ids.values())
-    logger(f"Availabe stations: {stops_string}")
+    if len(stop_ids_list) > 1:
+        logger(f"Station '{assigned_station}' not found, choosing random from available: {stops_string}")
+        logger(f"No station associated as '{assigned_station}', choosing random from available")
     chosen_stop_id = random.choice(stop_ids_list)
     return chosen_stop_id
 
@@ -175,9 +247,6 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     valid = validate_connection(start_time, end_time, departure_time)
     if not valid:
         return None
-
-    with open('data.json', 'w') as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
 
     logger(json.dumps(trip_details, indent=4, ensure_ascii=False))
     return trip_details    

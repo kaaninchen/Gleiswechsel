@@ -182,7 +182,7 @@ def format_via_list(stops: dict) -> str:
             return via
      return None
 
-def format_stop_list(stops: dict, next_stop: str) -> list[tuple[str, str]]:
+def format_stop_list(stops: dict, next_stop: str | None) -> list[tuple[str, str]]:
     fields = []
     field_lines, field_length, part = [], 0, 1
 

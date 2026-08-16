@@ -35,16 +35,22 @@ def build_info_embed() -> discord.Embed:
     stops = trip["stops"]
 
     next_stop = get_next_station(trip["stops"])
-    next_stop_station = next_stop["name"]
+    next_stop_text = ""
+    next_stop_station = None
+    if next_stop:
+        print("next_stop")
+        next_stop_station = next_stop.get("name")
+        next_stop_text = f". Nächster Halt: **{next_stop_station}**"
 
     via = format_via_list(stops)
 
     if via:
-        via += f". Nächster Halt: **{next_stop_station}**"
+        via += next_stop_text
         embed.add_field(name="Über", value=via, inline=False)
     else:
-        embed.add_field(name="Nächster Halt", value=next_stop_station, inline=False)
-
+        if next_stop:
+            embed.add_field(name="Nächster Halt", value=next_stop_station, inline=False)
+    
     route_fields = format_stop_list(stops, next_stop_station)
     for field_name, field_value in route_fields:
         embed.add_field(name=field_name, value=field_value, inline=False)

@@ -102,6 +102,10 @@ OPERATORS = {
     "DSB": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/DSB_company_logo.svg/960px-DSB_company_logo.svg.png",
         "color": 0xB22B32
+    },
+    "Vr": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Vr_Logo.png/330px-Vr_Logo.png",
+        "color": 0x00B451
     }
 }
 
