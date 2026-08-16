@@ -5,7 +5,7 @@ from src.utils import convert_iso_string, get_operator_metadata
 from src.dc.helpers import format_timestamp_to_dc
 
 def build_embed_footer(mode: str, slogans):
-    footer_notice = f"Data provided by https://transitous.org • Typ: {mode}"
+    footer_notice = f"Data provided by https://transitous.org • mode: {mode}"
     icon = "https://avatars.githubusercontent.com/u/24960008?s=60&v=4"
 
     if slogans is not None:
