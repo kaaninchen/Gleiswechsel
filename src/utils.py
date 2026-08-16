@@ -141,7 +141,7 @@ def get_sound_path(destination) -> str | None:
         announcement_for = destination
     else:
         general_config = voice_stations.get("general", "")
-        if general_config == "":
+        if not general_config:
             return None
         announcement_for = "general"
         
