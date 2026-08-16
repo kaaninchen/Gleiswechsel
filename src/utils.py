@@ -1,10 +1,10 @@
 import json
 import os
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import src.data.operators as operators
 from src.data.emojis import emoji_list
-
 
 with open("config.json", "r") as file:
     config = json.load(file)
@@ -16,8 +16,19 @@ def logger(msg, log_type="info") -> str:
     if status == "FATAL":
         os._exit(1)
 
+def choose_connection() -> dict:
+    from src.api import transitous
+    station_id = transitous.get_random_stop_id()
+    connection = transitous.get_random_connection(station_id)
+    trip = transitous.get_trip_details(connection["trip_id"], connection["from_station"])
+
+    return trip
+
 def convert_iso_string(isostring) -> str:
+    timezone = config.get("timezone", "Europe/Berlin")
     dt = datetime.fromisoformat(isostring.replace('Z', '+00:00'))
+    dt = dt.astimezone(ZoneInfo(timezone))
+
     if dt.second >= 30:
         dt += timedelta(minutes=1)
 

@@ -6,15 +6,22 @@ from src.dc.commands import setup_commands
 
 bot = discord.Bot(intents=discord.Intents.all())
 setup_commands(bot=bot)
+_bot_initialized = False
 
 @bot.event
 async def on_ready():
-    server_id = config["server"]
-    server_vc_id = config["vc"]
-    channel = validate_channel(bot=bot, server_id=server_id, channel_id=server_vc_id)
+    global _bot_initialized
 
     logger(f"{bot.user} ist online")
-    await rename_vc(bot=bot, voice_channel=channel)
+
+    if not _bot_initialized:
+        _bot_initialized = True
+        server_id = config["server"]
+        server_vc_id = config["vc"]
+        channel = validate_channel(bot=bot, server_id=server_id, channel_id=server_vc_id)
+        await rename_vc(bot, voice_channel=channel)
+    else:
+        logger("Reconnected to discord gateway, this wont disturb your current ride")
 
 try:
     bot.run(config["token"])
@@ -23,12 +30,12 @@ except:
 
 '''
 TODO
-- Only choose connections in the future
-- discord reconnection handling
+- 1024 embed limit
 - Automatic transfer
 - discord status
 - text announcements
 - voice announcements
 - improved error handling (retry connection)
 - multi language support
+- random = False
 '''

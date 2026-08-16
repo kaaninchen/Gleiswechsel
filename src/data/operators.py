@@ -38,7 +38,7 @@ OPERATORS = {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/ODEG-Logo_Neu.svg/960px-ODEG-Logo_Neu.svg.png",
         "color": 0x00745C
     },
-    "Nederlandse Spoorwegen": {
+    "NS": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Logo_NS.svg/960px-Logo_NS.svg.png",
         "color": 0X00337F,
         "slogan": ["Goed op weg", "Welkom in de trein van morgen", "Veilig, Vlug, Voordelig", "we haben een serious probleem", "Neuken in de keuken"]

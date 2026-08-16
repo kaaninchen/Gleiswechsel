@@ -1,6 +1,7 @@
 import requests
 import random
 import json
+from datetime import datetime, timezone
 
 from src.utils import logger, config, get_train_name, convert_iso_string
 
@@ -35,55 +36,65 @@ def get_random_stop_id() -> str:
         return entry["id"]
 
 def get_random_connection(stop_id: str) -> str:
-    max_pages = 5
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    print(f"Aktuelle Zeit für Query: {now}")
     cursor = None
-    count = 20
+    max_pages = 5
+    min_results = 5
+    trip_ids = []
+    all_stop_times = []
 
     for _ in range(max_pages):
-        params = f"stopId={stop_id}&n={count}"
+        params = {
+            "stopId": stop_id,
+            "n": 20,
+            "time": now,
+        }
         if cursor:
-            params += f"&pageCursor={cursor}"
+            params["pageCursor"] = cursor
 
-        req = f"{endpoint}/api/v1/stoptimes?{params}"
-
-    try:
-        response = requests.get(req, headers=headers)
-        response.raise_for_status()
-        data = response.json()
-    except requests.RequestException as e:
-        print(e)
-        return None
-
-    trip_ids = []
-    stop_times = data.get("stopTimes", [])
-    for entry in stop_times:
-        trip_id = entry["tripId"]
-        if entry["mode"] in blacklist:
-            continue
-        trip_ids.append(trip_id)
-
-        if len(trip_ids) >= 5:
+        try:
+            response = requests.get(f"{endpoint}/api/v5/stoptimes", params=params, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+        except requests.RequestException as e:
+            print(e)
             break
+        
+        stop_times = data.get("stopTimes", [])
+        all_stop_times.extend(stop_times)
 
+        for entry in stop_times:
+            dep = entry.get("place", {}).get("departure") or entry.get("place", {}).get("arrival")
+            print(f"{entry.get('mode')}: {convert_iso_string(dep)}")
+            trip_id = entry["tripId"]
+            if entry["mode"] in blacklist:
+                continue
+            trip_ids.append(entry["tripId"])
+
+        if len(trip_ids) >= min_results:
+            break
+        
         cursor = data.get("nextPageCursor")
         if not cursor:
             break
 
-        if not trip_ids:
+    if not trip_ids:
             logger("Couldn't find any connection", "fatal")
             return None
-        
+
     trip_id = random.choice(trip_ids)
-    for trip in stop_times:
-        if trip.get("tripId") == trip_id:
-            from_station = trip.get("place").get("name")
+
+    from_station = None
+    for entry in all_stop_times:
+        if entry.get("tripId") == trip_id:
+            from_station = entry.get("place", {}).get("name")
             break
 
-    print(from_station)
     return {
         "trip_id": trip_id, 
         "from_station": from_station
-        }
+    }
 
 def get_trip_details(trip_id: str, from_station: str) -> dict:
     req = f"{endpoint}/api/v2/trip?tripId={trip_id}"
@@ -108,7 +119,7 @@ def get_trip_details(trip_id: str, from_station: str) -> dict:
     departure = convert_iso_string(start_time)
     arrival = convert_iso_string(end_time)
     train_name = get_train_name(display_name, mode)
-
+    
     trip_details = {
         "long_name": f"{train_name} nach {goes_to} von {from_station}",
         "short_name": display_name,
