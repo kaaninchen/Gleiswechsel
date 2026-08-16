@@ -43,10 +43,20 @@ def validate_connection(start_time: str, end_time: str, station_departure: str) 
 
     station_departure_dt = datetime.fromisoformat(station_departure.replace("Z", "+00:00"))
     trip_duration = (end_dt - station_departure_dt).total_seconds()
+    trip_duration_minutes = str(timedelta(seconds=trip_duration))
+
     min_duration = config.get("min_duration", 600)
-    if trip_duration < min_duration:
-        logger(f"Verbindung ist zu kurz: Nur {trip_duration} Sekunden lang ({min_duration} gewollt)")
+    min_duration_seconds = min_duration * 60
+    if trip_duration < min_duration_seconds:
+        logger(f"Verbindung ist mit {trip_duration_minutes} zu kurz (mindestens {min_duration} Minuten gewollt)", "error")
         return False
+
+    max_duration = config.get("max_duration", "")
+    if max_duration:
+        max_duration_seconds = max_duration * 60
+        if max_duration_seconds < trip_duration:
+            logger(f"Verbindung ist mit {trip_duration_minutes} zu lang (höchstens {max_duration} Minuten gewollt)", "error")
+            return False
         
     return True
 
@@ -104,7 +114,7 @@ def get_operator_metadata(agency: str, route_color: str) -> dict:
     slogans = op_data.get("slogan")
 
     color = op_data.get("color")
-    if color is None or color == 0xFFFFFF:
+    if color is None or color == operators.OPERATORS["fallback"]["color"]:
         if route_color is not None:
             try:
                 color = int(route_color, 16)
