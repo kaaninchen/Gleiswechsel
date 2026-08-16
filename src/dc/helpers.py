@@ -1,6 +1,6 @@
 import discord
 from datetime import datetime, timedelta
-from  src.utils import logger, convert_iso_string
+from  src.utils import logger
 
 def validate_channel(bot: discord.bot, server_id: int, channel_id: int):
     guild = bot.get_guild(server_id)

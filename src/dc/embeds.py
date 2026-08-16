@@ -56,3 +56,22 @@ def build_info_embed() -> discord.Embed:
     embed.set_thumbnail(url=metadata["logo"])
 
     return embed
+
+def build_announcement_embed(msg):
+    from src.dc.handlers import trip
+    agency = trip["agency"]
+    metadata = get_operator_metadata(agency, trip["route_color"])
+
+    embed = discord.Embed(
+        title = "Informationen zu ihrer Fahrt",
+        description=msg,
+        color=metadata["color"]
+    )
+
+    embed.set_author(name=agency)
+    embed.set_thumbnail(url=metadata["logo"])
+
+    footer = build_embed_footer(trip["mode"], metadata.get("slogan"))
+    embed.set_footer(text=footer["text"], icon_url=footer["icon"])
+
+    return embed

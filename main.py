@@ -34,7 +34,6 @@ TODO
 - discord status
 - text announcements
 - voice announcements
-- improved error handling (retry connection)
 - multi language support
 - README
 '''

@@ -1,8 +1,9 @@
 import discord
 import asyncio
+import random
 from datetime import datetime, timedelta, date
 
-from src.utils import logger, channel_formatting, choose_connection
+from src.utils import logger, channel_formatting, choose_connection, config, get_sound_path
 
 _scheduled_task: asyncio.Task | None = None
 
@@ -38,9 +39,12 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
 
     logger(f"Name geändert!")
 
-    _scheduled_task = asyncio.create_task(_schedule_next_transfer(bot, arrival, voice_channel))
+    await announcer(bot, "umstieg", voice_channel)
 
-async def _schedule_next_transfer(bot, arrival, voice_channel):
+    _scheduled_task = asyncio.create_task(_schedule_next_transfer(bot, arrival, voice_channel, trip["to"]))
+
+            
+async def _schedule_next_transfer(bot: discord.Bot, arrival, voice_channel: discord.VoiceChannel, destination: str):
     now = datetime.now()
     parsed_time = datetime.strptime(arrival, "%H:%M").time()
     arrival_dt = datetime.combine(date.today(), parsed_time)
@@ -49,12 +53,63 @@ async def _schedule_next_transfer(bot, arrival, voice_channel):
         arrival_dt += timedelta(days=1)
 
     wait_seconds = (arrival_dt - now).total_seconds()
+#    announcement_countdown = random.randrange(180, 300)
+    announcement_countdown = 3
     if wait_seconds > 0:
         remaining = str(timedelta(seconds=wait_seconds))
         logger(f"Nächster Umstieg in {remaining.split('.')[0]} ({arrival} Uhr)")
 
-        await asyncio.sleep(wait_seconds)
+        if wait_seconds > announcement_countdown:
+            wait_until_end_announcement = wait_seconds - announcement_countdown
+#            await asyncio.sleep(wait_until_end_announcement)
+            await asyncio.sleep(5)
+            await announcer(bot, "ende", voice_channel, destination)
+            await asyncio.sleep(announcement_countdown)
+        else:
+            await asyncio.sleep(wait_seconds)
 
     logger("Zug angekommen, wähle neue Verbindung")
     await rename_vc(bot, voice_channel, from_scheduler=True)
 
+async def announcer(bot: discord.Bot, announcement: str, voice_channel: discord.VoiceChannel, destination = None):
+    from src.dc.embeds import build_info_embed, build_announcement_embed
+
+    announcements_enabled = config.get("announcements", True)
+    voice_announcement_enabled = config["voice_announcements"][0]["enabled"]
+
+    if announcements_enabled:
+        if len(voice_channel.members) > 0:
+            match announcement:
+                case "ende":
+                    embed = build_announcement_embed(
+                        f'Sehr geehrte Fahrgäste,\nIn wenigen Minuten erreichen wir {destination}. Dieser Zug endet dort.\n\nWir wünschen Ihnen eine angenehme Weiterreise.\n\nVielen Dank für ihr Vertrauen und auf Wiedersehen.')
+                    if voice_announcement_enabled:
+                        await voice_announcer(bot, destination, voice_channel)
+                case "umstieg":
+                    embed = build_info_embed()
+                case _:
+                    logger(f"Unbekanntes Announcements: {announcement}")
+                    embed = None
+            if embed:
+                await voice_channel.send(embed=embed)
+        else:
+            logger(f"Announcement {announcement} wird geskipped, keiner da")
+            return
+
+async def voice_announcer(bot: discord.bot, destination: str, voice_channel: discord.VoiceChannel):
+    sound_path = get_sound_path(destination=destination)
+    if sound_path is None:
+        return
+    
+    logger(f"VC wird betreten, spiele {sound_path}")
+    vc = await voice_channel.connect(timeout=15, reconnect=True)
+    audio_source = discord.FFmpegPCMAudio(sound_path)
+
+    if not vc.is_playing():
+        def after_playing(error):
+            if error:
+                logger(f"Player error: {error}", "error")
+            bot.loop.create_task(vc.disconnect())
+            logger("VC wird verlassen")
+
+        vc.play(audio_source, after=after_playing)

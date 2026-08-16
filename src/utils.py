@@ -1,6 +1,8 @@
 import json
 import os
 import importlib
+import random
+from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
@@ -130,3 +132,27 @@ def get_operator_metadata(agency: str, route_color: str) -> dict:
         "color": color,
         "slogans": slogans
     }
+
+def get_sound_path(destination) -> str | None:
+    voice_announcement_config = config["voice_announcements"][0]
+    voice_stations = voice_announcement_config["stations"]
+
+    if destination in voice_stations:
+        announcement_for = destination
+    else:
+        general_config = voice_stations.get("general", "")
+        if general_config == "":
+            return None
+        announcement_for = "general"
+        
+    if voice_stations.values() == list:
+        sound_file = random.choice(voice_stations.get(announcement_for))
+    else:
+        sound_file = voice_stations.get(announcement_for)
+
+    sound_path = f"src/data/announcements/{sound_file}"
+    if Path(sound_path).is_file() is False:
+        logger(f"Konnte Datei {sound_path} nicht finden", "error")
+        return None
+
+    return sound_path
