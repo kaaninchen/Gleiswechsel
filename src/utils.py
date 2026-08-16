@@ -47,7 +47,7 @@ def validate_connection(start_time: str, end_time: str, station_departure: str) 
     trip_duration = (end_dt - station_departure_dt).total_seconds()
     trip_duration_minutes = str(timedelta(seconds=trip_duration))
 
-    min_duration = config.get("min_duration", 600)
+    min_duration = config.get("min_duration", 10)
     min_duration_seconds = min_duration * 60
     if trip_duration < min_duration_seconds:
         logger(f"Verbindung ist mit {trip_duration_minutes} zu kurz (mindestens {min_duration} Minuten gewollt)", "error")
