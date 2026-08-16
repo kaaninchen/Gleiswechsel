@@ -124,7 +124,7 @@ def get_operator_metadata(agency: str, route_color: str) -> dict:
             except ValueError:
                 color = operators.OPERATORS["fallback"]["color"]
             else:
-                logger(f"Managed to get color from API, edit src/data/operators.py if you don't like it")
+                logger(f"Managed to get color from API, add agency to src/data/operators.py if you don't like it")
         else:
             color = operators.OPERATORS["fallback"]["color"]
     return {

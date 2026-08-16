@@ -1,12 +1,12 @@
 import discord
 import random
 
-from src.utils import convert_iso_string, get_operator_metadata
+from src.utils import get_operator_metadata
 from src.dc.helpers import format_timestamp_to_dc
 
 def build_embed_footer(mode: str, slogans):
     footer_notice = f"Data provided by https://transitous.org • mode: {mode}"
-    icon = "https://avatars.githubusercontent.com/u/24960008?s=60&v=4"
+    icon = "https://raw.githubusercontent.com/kaaninchen/Gleiswechsel/refs/heads/main/src/data/assets/transitous-logo.png"
 
     if slogans is not None:
         footer_text = f"{random.choice(slogans)} • {footer_notice}"
@@ -40,14 +40,20 @@ def build_info_embed() -> discord.Embed:
         via = ", ".join(random_stops[:-1]) + " und " + random_stops[-1]
         embed.add_field(name="Über", value=via, inline=False)
 
+    field_lines, field_length, part = [], 0, 1
 
-    route_lines = []
-    for stop_name, stop_arrival in stops.items():
-        if stop_name == trip["station"]:
-            route_lines.append(f"**• {stop_name} ({stop_arrival} Uhr)**")
-        else:
-            route_lines.append(f"• {stop_name} ({stop_arrival} Uhr)")
-    embed.add_field(name="Route", value="\n".join(route_lines))
+    for name, stop_arrival in stops.items():
+        line = f"**• {name} ({stop_arrival} Uhr)**" if name == trip["station"] else f"• {name} ({stop_arrival} Uhr)"
+
+        if field_length + len(line) + 1 > 1024:
+            embed.add_field(name="Route" if part == 1 else "Route (Fortsetzung)", value="\n".join(field_lines), inline=True)
+            field_lines, field_length, part = [], 0, part + 1
+
+        field_lines.append(line)
+        field_length += len(line) + 1
+
+    if field_lines:
+        embed.add_field(name="Route" if part == 1 else "Route (Fortsetzung)", value="\n".join(field_lines), inline=True)
 
     footer = build_embed_footer(trip["mode"], metadata["slogans"])
     embed.set_footer(text=footer["text"], icon_url=footer["icon"])

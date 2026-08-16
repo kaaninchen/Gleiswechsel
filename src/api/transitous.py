@@ -92,7 +92,6 @@ def get_random_connection(stop_id: str) -> str | None:
     if not trip_ids:
             logger("Couldn't find any connection", "error")
             return None
-    print(trip_ids)
     trip_id = random.choice(trip_ids)
 
     from_station = None
