@@ -66,8 +66,9 @@ def parse_iso(iso_str: str) -> datetime:
 
 def channel_formatting(mode: str) -> str:
     formatting = config.discord.formatting
+    emoji = ""
 
-    if config.discord.formatting:
+    if config.discord.emojis:
         emoji = emoji_list.get(mode)
         if emoji is None:
             emoji = emoji_list.get("Fallback")
@@ -115,8 +116,6 @@ def get_operator_metadata(agency: str, route_color: str) -> dict:
                 color = int(route_color, 16)
             except ValueError:
                 color = operators.OPERATORS["fallback"]["color"]
-            else:
-                logger(f"Managed to get color from API, add agency to src/data/operators.py if you don't like it")
         else:
             color = operators.OPERATORS["fallback"]["color"]
     return {
@@ -197,7 +196,6 @@ def format_stop_list(stops: dict, next_stop: str | None) -> list[tuple[str, str]
     for name, info in stops.items():
         if name == next_stop:
             stop_arrival = info["arrival"]
-            print(stop_arrival)
             line = f"• __{name}__ ({stop_arrival.strftime("%H:%M")} Uhr)"
         else:
             stop_arrival = info["arrival"]

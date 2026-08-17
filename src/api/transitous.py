@@ -264,6 +264,5 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     if not valid:
         return None
 
-    logger(json.dumps(trip_details, indent=4, ensure_ascii=False, default=str))
     return trip_details    
 

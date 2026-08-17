@@ -67,7 +67,6 @@ async def _schedule_next_transfer(bot: discord.Bot, arrival_dt: datetime, voice_
 
 async def announcer(announcement: str, voice_channel: discord.VoiceChannel, destination = None):
     from src.dc.embeds import build_info_embed, build_announcement_embed
-    now = datetime.now()
     announcements_enabled = config.announcements.enabled
     voice_announcement_enabled = config.announcements.voice[0].enabled
 
