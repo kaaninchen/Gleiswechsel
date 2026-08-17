@@ -33,12 +33,12 @@ def validate_connection(start_time: str, end_time: str, departure_time_iso: str)
 
     end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
     if end_dt < now:
-        logger(f"Verbindung liegt bereits in der Vergangenheit: {start_dt}", "error")
+        logger(f"Connection is from the past: {start_dt}", "error")
         return False
 
     max_wait_time = config.connections.max_wait_time
     if start_dt > now + timedelta(hours=max_wait_time):
-        logger(f"Verbindung liegt zu weit in der Zukunft: {start_dt}", "error")
+        logger(f"Connection is way too far in the future: {start_dt} (max_wait_time: {max_wait_time}h)", "error")
         return False
 
     departure_time_iso_dt = datetime.fromisoformat(departure_time_iso.replace("Z", "+00:00"))
@@ -48,14 +48,14 @@ def validate_connection(start_time: str, end_time: str, departure_time_iso: str)
     min_duration = config.connections.min_duration
     min_duration_seconds = min_duration * 60
     if trip_duration < min_duration_seconds:
-        logger(f"Verbindung ist mit {trip_duration_minutes} zu kurz (mindestens {min_duration} Minuten gewollt)", "error")
+        logger(f"Connection is with {trip_duration_minutes} minutes too short (configured to {min_duration} minutes or more)", "error")
         return False
 
     max_duration = config.connections.max_duration
     if max_duration:
         max_duration_seconds = max_duration * 60
         if max_duration_seconds < trip_duration:
-            logger(f"Verbindung ist mit {trip_duration_minutes} zu lang (höchstens {max_duration} Minuten gewollt)", "error")
+            logger(f"Connection is with {trip_duration_minutes} too long (configured to {max_duration} minutes at most)", "error")
             return False
         
     return True
@@ -98,8 +98,6 @@ def _reload_operators_if_changed():
     if current_mtime != _operator_mtime:
         importlib.reload(operators)
         _operator_mtime = current_mtime
-        logger("operators.py wurde automatisch neu geladen (Änderungen erkannt)")
-
 
 def get_operator_metadata(agency: str, route_color: str, mode: str) -> dict:
     _reload_operators_if_changed()
@@ -142,7 +140,7 @@ def get_sound_path(destination) -> str | None:
 
     sound_path = f"src/data/announcements/{sound_file}"
     if Path(sound_path).is_file() is False:
-        logger(f"Konnte Datei {sound_path} nicht finden", "error")
+        logger(f"Couldn't find {sound_path}", "error")
         return None
 
     return sound_path

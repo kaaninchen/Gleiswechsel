@@ -6,12 +6,12 @@ def validate_channel(bot: discord.bot, server_id: int, channel_id: int):
     guild = bot.get_guild(server_id)
 
     if guild is None:
-        logger(f"Es konnte kein Server mit der ID {server_id} gefunden werden", "fatal")
+        logger(f"Couldn't find server with ID '{server_id}', is the bot invited?", "fatal")
         return False
 
     channel = guild.get_channel(channel_id)
     if not isinstance(channel, discord.VoiceChannel):
-        logger(f"Es konnte kein VC mit der id {channel_id} gefunden werden", "fatal")
+        logger(f"Couldn't find vc with '{channel_id}'", "fatal")
         return False
 
     return channel

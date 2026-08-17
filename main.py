@@ -22,7 +22,7 @@ async def on_ready():
     global _bot_initialized
 
     if not _bot_initialized:
-        logger(f"{bot.user} ist online")
+        logger(f"{bot.user} is online")
         _bot_initialized = True
         server_id = config.discord.server
         server_vc_id = config.discord.vc
@@ -32,7 +32,7 @@ async def on_ready():
 try:
     bot.run(config.discord.token)
 except:
-    logger("Feher peim parsen des tokens", "fatal")
+    logger("An error occured while parsing the token", "fatal")
 
 '''
 TODO
