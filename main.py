@@ -21,16 +21,13 @@ if len(sys.argv) > 1:
 async def on_ready():
     global _bot_initialized
 
-    logger(f"{bot.user} ist online")
-
     if not _bot_initialized:
+        logger(f"{bot.user} ist online")
         _bot_initialized = True
         server_id = config.discord.server
         server_vc_id = config.discord.vc
         channel = validate_channel(bot=bot, server_id=server_id, channel_id=server_vc_id)
         await rename_vc(bot, voice_channel=channel)
-    else:
-        logger("Reconnected to discord gateway, this wont disturb your current ride")
 
 try:
     bot.run(config.discord.token)

@@ -211,6 +211,10 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     start_time = legs["startTime"]
     mode = legs["mode"]
 
+    if goes_to == train_from:
+        logger(f"Bot doesn't know what to do with round trips, I'll have to implement this some day", "error")
+        return None # TODO actually handel this 
+
     arrival_dt = parse_iso(end_time)
     departure_dt = parse_iso(start_time)
 
