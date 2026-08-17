@@ -3,9 +3,12 @@ import random
 
 from src.utils import get_operator_metadata, get_next_station, format_via_list, format_stop_list
 from src.dc.helpers import format_timestamp_to_dc
+from src.lang.locales import lang
+
+lang_embed = lang.embeds
 
 def build_embed_footer(mode: str, slogans):
-    footer_notice = f"Data provided by https://transitous.org • mode: {mode}"
+    footer_notice = f"{lang.embeds.footer.notice()} • mode: {mode}"
     icon = "https://raw.githubusercontent.com/kaaninchen/Gleiswechsel/refs/heads/main/src/data/assets/transitous-logo.png"
 
     if slogans is not None:
@@ -22,14 +25,15 @@ def build_embed_footer(mode: str, slogans):
 def build_info_embed() -> discord.Embed:
     from src.dc.handlers import trip
 
+    station = trip["station"]
     agency = trip["agency"]
     metadata = get_operator_metadata(agency, trip["route_color"], trip["mode"])
     departure = format_timestamp_to_dc(trip["departure"])
     arrival = format_timestamp_to_dc(trip["arrival"])
-
+    
     embed = discord.Embed(
         title = trip["long_name"],
-        description=f"Abfahrt von {trip["station"]} um {departure}. Ankunft um {arrival}",
+        description=lang_embed.info.description(),
         color = metadata["color"]
     )
 
@@ -40,12 +44,12 @@ def build_info_embed() -> discord.Embed:
     if next_stop:
         next_stop_station = next_stop.get("name")
 
-    via = format_via_list(stops)
+    via = format_via_list(stops, lang_embed.info.via_and())
 
     if via:
-        embed.add_field(name="Über", value=via, inline=False)
+        embed.add_field(name=lang_embed.info.via(), value=via, inline=False)
     if next_stop:
-        embed.add_field(name="Nächster Halt", value=f"__{next_stop_station}__", inline=False)
+        embed.add_field(name=lang_embed.info.next_stop(), value=f"__{next_stop_station}__", inline=False)
     
     route_fields = format_stop_list(stops, next_stop_station)
     for field_name, field_value in route_fields:
@@ -65,7 +69,7 @@ def build_announcement_embed(msg):
     metadata = get_operator_metadata(agency, trip["route_color"], trip["mode"])
 
     embed = discord.Embed(
-        title = "Informationen zu ihrer Fahrt",
+        title = lang_embed.announcement.title(),
         description=msg,
         color=metadata["color"]
     )

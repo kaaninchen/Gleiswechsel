@@ -1,5 +1,4 @@
 import json
-import os
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -8,6 +7,7 @@ class DiscordConfig:
     token: str
     server: int
     vc: int
+    lang: str
     formatting: str
     emojis: bool
 

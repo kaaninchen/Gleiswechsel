@@ -1,0 +1,17 @@
+channel:
+  status: "Ankunft um {arrival}"
+  long_name: 
+    train_from: "{train_name} nach {goes_to} von {train_from}"
+    train_via: "{train_name} nach {goes_to} über {from_station}"
+embeds:
+  footer:
+    notice: "Daten großzügig bereitgestellt von https://transitous.org"
+  info:
+    description: "Abfahrt von {station} um {departure}. Ankunft um {arrival}"
+    via: "Über"
+    "via_and": "und"
+    "next_stop": "Nächster Halt"
+  announcement:
+    title: "Informationen zu ihrer Fahrt"
+    "end_of_connection":
+      message: "Sehr geehrte Fahrgäste,\nIn wenigen Minuten erreichen wir {destination}. Unsere Reise endet dort\n\nWir wünschen Ihnen eine angenehme Weiterreise.\n\nVielen Dank für ihr Vertrauen und auf Wiedersehen."

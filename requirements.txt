@@ -13,6 +13,7 @@ numpy==2.5.1
 pandas==3.0.3
 propcache==0.5.2
 py-cord==2.8.0
+pyyaml==6.0.3
 pycparser==3.0
 pynacl==1.6.2
 python-dateutil==2.9.0.post0

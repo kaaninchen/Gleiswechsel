@@ -160,7 +160,7 @@ def get_next_station(stops: dict, train_from: str) -> dict | None:
         
     return None
 
-def format_via_list(stops: dict) -> str:
+def format_via_list(stops: dict, via_and: str) -> str:
      if len(stops) > 2:
             stations = list(stops.keys())
             trip_from = stations[0]
@@ -173,7 +173,7 @@ def format_via_list(stops: dict) -> str:
                 important_stops.remove(trip_to)
 
             if len(important_stops) > 1:
-                via = f"{', '.join(important_stops[:-1])} und {important_stops[-1]}"
+                via = f"{', '.join(important_stops[:-1])} {via_and} {important_stops[-1]}"
             else:
                 via = important_stops[0]
             return via

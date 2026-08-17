@@ -1,12 +1,14 @@
 import discord
 import asyncio
 import random
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 
 from src.utils import logger, channel_formatting, choose_connection, get_sound_path, LOCAL_TZ, get_next_station
 from src.config import config
+from src.lang.locales import lang
 
 _scheduled_task: asyncio.Task | None = None
+channel_lang = lang.channel
 
 async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = False):
     global trip, _scheduled_task
@@ -35,7 +37,7 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
 
     formatting = channel_formatting(mode)
     await voice_channel.edit(name=f"{formatting}{long_name}")
-    await voice_channel.set_status(f"Ankunft um {arrival}")
+    await voice_channel.set_status(channel_lang.status())
 
     logger(f"Updated channel name!")
 
@@ -56,8 +58,7 @@ async def announcer(announcement: str, voice_channel: discord.VoiceChannel, dest
                         announcement_status = await voice_announcer(destination, voice_channel)
                         if announcement_status:
                             return
-                    embed = build_announcement_embed(
-                    f'Sehr geehrte Fahrgäste,\nIn wenigen Minuten erreichen wir {destination}. Dieser Zug endet dort.\n\nWir wünschen Ihnen eine angenehme Weiterreise.\n\nVielen Dank für ihr Vertrauen und auf Wiedersehen.')
+                    embed = build_announcement_embed(lang.embeds.announcement.end_of_connection.message())
                 case "transfer":
                     embed = build_info_embed()
                 case _:
@@ -96,7 +97,7 @@ async def _schedule_next_transfer(bot: discord.Bot, arrival_dt: datetime, voice_
 
     if wait_seconds > 0:
         remaining = str(timedelta(seconds=wait_seconds))
-        logger(f"Nexxt transfer in {remaining.split('.')[0]} ({arrival_dt.strftime('%H:%M')} Uhr)")
+        logger(f"Next transfer in {remaining.split('.')[0]} ({arrival_dt.strftime('%H:%M')} Uhr)")
 
         if wait_seconds > announcement_countdown:
             wait_until_end_announcement = wait_seconds - announcement_countdown

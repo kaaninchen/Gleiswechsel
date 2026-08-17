@@ -5,9 +5,12 @@ from datetime import datetime, timezone
 
 from src.utils import logger, get_train_name, validate_connection, parse_iso
 from src.config import config
+from src.lang.locales import lang
+
 
 stations = config.connections.stations
 blacklist = config.connections.blacklist
+long_name_lang = lang.channel.long_name
 user_agent = config.http.user_agent
 
 headers = {
@@ -220,9 +223,9 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
 
     train_name = get_train_name(display_name, mode)
     if train_from == from_station:
-        long_name = f"{train_name} nach {goes_to} von {train_from}"
+        long_name = long_name_lang.train_from()
     else:
-        long_name = f"{train_name} nach {goes_to} über {from_station}"
+        long_name = long_name_lang.train_via()
         
     trip_details = {
         "long_name": long_name,
