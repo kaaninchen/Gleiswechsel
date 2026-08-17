@@ -106,6 +106,10 @@ OPERATORS = {
     "Vr": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Vr_Logo.png/330px-Vr_Logo.png",
         "color": 0x00B451
+    },
+    "GVB": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/GVB_Amsterdam_Logo_001.svg/1280px-GVB_Amsterdam_Logo_001.svg.png",
+        "color": 0x2B62AF
     }
 }
 

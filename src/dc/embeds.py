@@ -18,6 +18,7 @@ def build_embed_footer(mode: str, slogans):
         "icon": icon
     }
 
+
 def build_info_embed() -> discord.Embed:
     from src.dc.handlers import trip
 

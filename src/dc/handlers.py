@@ -18,7 +18,6 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
     trip = choose_connection()
     while trip is None and attempt < max_attempt:
         attempt += 1
-        logger(f"Attempt {attempt}: Failed to select route, retrying...", "error")
         trip = choose_connection()
 
     if trip is None:

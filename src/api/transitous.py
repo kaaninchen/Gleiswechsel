@@ -232,23 +232,38 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
         "arrival_dt": arrival_dt,
         "mode": mode,
         "stops": {}
-    }
+    }  
 
-    trip_details["stops"][train_from] = departure_dt
+    train_from_importance = legs["from"]["importance"]
+    trip_details["stops"][train_from] = {
+        "arrival": departure_dt,
+        "importance": train_from_importance
+    }
+    
     departure_time_iso = start_time
     
     for stop in legs["intermediateStops"]:
         stop_arrival_dt = parse_iso(stop["arrival"])
-        trip_details["stops"][stop["name"]] = stop_arrival_dt 
+        stop_importance = stop["importance"]
+        stop_details = {
+            "arrival": stop_arrival_dt,
+            "importance": stop_importance
+        }
+        trip_details["stops"][stop["name"]] = stop_details 
         if stop.get("name") == from_station:
             departure_time_iso = stop["departure"]
             trip_details["departure"] = parse_iso(departure_time_iso).strftime("%H:%M")
 
-    trip_details["stops"][goes_to] = arrival_dt
+    train_to_importance = legs["to"]["importance"]
+    trip_details["stops"][goes_to] = {
+        "arrival": arrival_dt,
+        "importance": train_to_importance
+    }
 
     valid = validate_connection(start_time, end_time, departure_time_iso)
     if not valid:
         return None
-    
+
+    logger(json.dumps(trip_details, indent=4, ensure_ascii=False, default=str))
     return trip_details    
 

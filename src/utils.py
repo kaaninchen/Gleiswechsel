@@ -150,7 +150,8 @@ def get_sound_path(destination) -> str | None:
 
 def get_next_station(stops: dict, train_from :str) -> dict | None:
     now = datetime.now(LOCAL_TZ)
-    for name, arrival_dt in stops.items():
+    for name, info in stops.items():
+        arrival_dt = info["arrival"]
         if arrival_dt >= now:
             if name == train_from:
                 return None
@@ -164,20 +165,42 @@ def get_next_station(stops: dict, train_from :str) -> dict | None:
 
 def format_via_list(stops: dict) -> str:
      if len(stops) > 2:
-            count = min(3, len(stops))
-            random_stops = random.sample(list(stops), k=count)
-            via = f"{', '.join(random_stops[:-1])} und {random_stops[-1]}"
+            stations = list(stops.keys())
+            trip_from = stations[0]
+            trip_to = stations[-1]
+
+            important_stops = sort_stations_by_importance(stops)[:3]
+            if trip_from in important_stops:
+                important_stops.remove(trip_from)
+            if trip_to in important_stops:
+                important_stops.remove(trip_to)
+
+            via = f"{', '.join(important_stops[:-1])} und {important_stops[-1]}"
             return via
      return None
+
+def sort_stations_by_importance(stops: dict) -> list:
+    sorted_stations_dict = dict(
+    sorted(
+        [(name, info["importance"]) for name, info in stops.items()],
+        key=lambda x: x[1],
+        reverse=True)
+    )
+
+    sorted_stations = list(sorted_stations_dict.keys())
+    return sorted_stations
 
 def format_stop_list(stops: dict, next_stop: str | None) -> list[tuple[str, str]]:
     fields = []
     field_lines, field_length, part = [], 0, 1
 
-    for name, stop_arrival in stops.items():
+    for name, info in stops.items():
         if name == next_stop:
+            stop_arrival = info["arrival"]
+            print(stop_arrival)
             line = f"• __{name}__ ({stop_arrival.strftime("%H:%M")} Uhr)"
         else:
+            stop_arrival = info["arrival"]
             line = f"• {name} ({stop_arrival.strftime("%H:%M")} Uhr)"
 
         if field_length + len(line) + 1 > 1024:
