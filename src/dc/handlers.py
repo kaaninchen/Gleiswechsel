@@ -8,6 +8,7 @@ from src.config import config
 from src.lang.locales import lang
 
 _scheduled_task: asyncio.Task | None = None
+_next_stop_task: asyncio.Task | None = None
 channel_lang = lang.channel
 
 async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = False):
@@ -33,15 +34,18 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
     print("-----------------")
     logger(f"Transfer: {long_name}; Arrival: {arrival}")
     logger(f"Agency: {trip["agency"]}, mode: {mode}")
-    logger(f"Trying to change channel name. Discord put the bot into a cooldown if nothing happens... (automatically resolves after up to 10min)")
+    logger(f"Trying to change channel name. If nothing happens, then the bot is in cooldown... (automatically resolves after up to 10min)")
 
     formatting = channel_formatting(mode)
     await voice_channel.edit(name=f"{formatting}{long_name}")
     await voice_channel.set_status(channel_lang.status())
+    start_next_stop_updates(bot, voice_channel)
+
 
     logger(f"Updated channel name!")
 
     await announcer("transfer", voice_channel)
+
 
     _scheduled_task = asyncio.create_task(_schedule_next_transfer(bot,  trip["arrival_dt"], voice_channel, trip["to"]))
 
@@ -109,3 +113,41 @@ async def _schedule_next_transfer(bot: discord.Bot, arrival_dt: datetime, voice_
 
         logger("Train arrived, searching for a new connection....")
         await rename_vc(bot, voice_channel, from_scheduler=True)
+
+async def _update_next_loop(bot: discord.Bot, voice_channel: discord.VoiceChannel):
+    global trip
+    try:
+        if trip is None:
+            return
+
+        now = datetime.now(LOCAL_TZ)
+        departure_dt = trip["departure_dt"]
+
+        if departure_dt > now:
+                await bot.change_presence(activity=discord.Game(name="tschu tschu! • /info"))
+                wait_seconds = (departure_dt - now).total_seconds()
+                print(f"Waiting for {wait_seconds} seconds")
+                await asyncio.sleep(wait_seconds)
+
+        while True:
+            next_stop = get_next_station(trip["stops"], trip["from"])
+
+            if next_stop is None:
+                return
+            
+            presence_text = f"{lang.embeds.info.next_stop()}: {next_stop["name"]}"
+            await voice_channel.set_status(presence_text)
+            wait_seconds = (next_stop["arrival"] - datetime.now(LOCAL_TZ)).total_seconds()
+            if wait_seconds > 0:
+                await asyncio.sleep(wait_seconds)
+
+    except asyncio.CancelledError:
+        raise
+
+def start_next_stop_updates(bot: discord.bot, voice_channel: discord.VoiceChannel):
+    global _next_stop_task
+
+    if _next_stop_task is not None and not _next_stop_task.done():
+        _next_stop_task.cancel()
+
+    _next_stop_task = asyncio.create_task(_update_next_loop(bot, voice_channel))
