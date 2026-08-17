@@ -3,7 +3,7 @@ import random
 import json
 from datetime import datetime, timezone
 
-from src.utils import logger, get_train_name, convert_iso_string, validate_connection
+from src.utils import logger, get_train_name, validate_connection, parse_iso
 from src.config import config
 
 stations = config.connections.stations
@@ -120,8 +120,8 @@ def get_random_stop_id() -> str | None:
     stop_ids_list = list(stop_ids.keys())
     stops_string = ", ".join(stop_ids.values())
     if len(stop_ids_list) > 1:
-        logger(f"Station '{assigned_station}' not found, choosing random from available: {stops_string}")
-        logger(f"No station associated as '{assigned_station}', choosing random from available")
+        logger(f"No station associated as '{assigned_station}', choosing random from similar named stations:")
+        logger({stops_string})
     chosen_stop_id = random.choice(stop_ids_list)
     return chosen_stop_id
 
@@ -209,8 +209,8 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     start_time = legs["startTime"]
     mode = legs["mode"]
 
-    arrival = convert_iso_string(end_time)
-    departure = convert_iso_string(start_time)
+    arrival_dt = parse_iso(end_time)
+    departure_dt = parse_iso(start_time)
 
     train_name = get_train_name(display_name, mode)
     if train_from == from_station:
@@ -227,27 +227,27 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
         "agency": legs["agencyName"],
         "route_color": legs.get("routeColor"),
         "duration": legs["duration"],
-        "departure": departure,
-        "arrival": arrival,
+        "departure": departure_dt.strftime("%H:%M"),
+        "arrival": arrival_dt.strftime("%H:%M"),
         "mode": mode,
         "stops": {}
     }
 
-    trip_details["stops"][train_from] = departure
-    departure_time = start_time
+    trip_details["stops"][train_from] = departure_dt
+    departure_time_iso = start_time
     
     for stop in legs["intermediateStops"]:
-        stop_arrival = convert_iso_string(stop["arrival"])
-        trip_details["stops"][stop["name"]] = stop_arrival # not sure if that actually works but im too tired to question it
+        stop_arrival_dt = parse_iso(stop["arrival"])
+        trip_details["stops"][stop["name"]] = stop_arrival_dt 
         if stop.get("name") == from_station:
-            departure_time = stop["departure"]
-            trip_details["departure"] = convert_iso_string(departure_time)
-    trip_details["stops"][goes_to] = arrival
+            departure_time_iso = stop["departure"]
+            trip_details["departure"] = parse_iso(departure_time_iso).strftime("%H:%M")
 
-    valid = validate_connection(start_time, end_time, departure_time)
+    trip_details["stops"][goes_to] = arrival_dt
+
+    valid = validate_connection(start_time, end_time, departure_time_iso)
     if not valid:
         return None
-
-    logger(json.dumps(trip_details, indent=4, ensure_ascii=False))
+    
     return trip_details    
 

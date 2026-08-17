@@ -34,8 +34,7 @@ def build_info_embed() -> discord.Embed:
 
     stops = trip["stops"]
 
-    next_stop = get_next_station(trip["stops"])
-    print(f"next_stop: {next_stop}")
+    next_stop = get_next_station(trip["stops"], trip["from"])
     next_stop_station = None
     if next_stop:
         next_stop_station = next_stop.get("name")

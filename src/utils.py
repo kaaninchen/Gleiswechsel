@@ -10,7 +10,7 @@ import src.data.operators as operators
 from src.data.emojis import emoji_list
 
 _operator_mtime = None
-
+LOCAL_TZ = ZoneInfo(config.connections.timezone)
 
 def logger(msg, log_type="info") -> str:
     status = log_type.upper()
@@ -60,14 +60,9 @@ def validate_connection(start_time: str, end_time: str, station_departure: str) 
         
     return True
 
-def convert_iso_string(isostring) -> str:
-    timezone = config.connections.timezone
-    dt = datetime.fromisoformat(isostring.replace('Z', '+00:00'))
-    dt = dt.astimezone(ZoneInfo(timezone))
-
-    if dt.second >= 30:
-        dt += timedelta(minutes=1)
-    return dt.strftime('%H:%M')
+def parse_iso(iso_str: str) -> datetime:
+    dt = datetime.fromisoformat(iso_str.replace("Z", "+00:00"))
+    return dt.astimezone(LOCAL_TZ)
 
 def channel_formatting(mode: str) -> str:
     formatting = config.discord.formatting
@@ -80,7 +75,7 @@ def channel_formatting(mode: str) -> str:
     return f"{emoji}{formatting}"
 
 def get_train_name(train_name: str, mode: str) -> str:
-    if mode == "BUS" or mode == "TRAM":
+    if mode == "BUS" or mode == "TRAM" or train_name.isdigit():
         train = f"{mode.capitalize()} {train_name}"
     elif "(" in train_name:
         train = train_name.split(" (")[0]
@@ -153,24 +148,19 @@ def get_sound_path(destination) -> str | None:
 
     return sound_path
 
-def get_next_station(stops: dict) -> dict | None:
-    now = datetime.now()
-    today = datetime.today()
-    day_offset = 0
-    previous_time = None
-
-    for name, arrival_str in stops.items():
-        arrival_time = datetime.strptime(arrival_str, "%H:%M").time()
-
-        if previous_time is not None and arrival_time < previous_time:
-            day_offset += 1
-
-        arrival_dt = datetime.combine(today + timedelta(days=day_offset), arrival_time)
-        previous_time = arrival_time
-
+def get_next_station(stops: dict, train_from :str) -> dict | None:
+    now = datetime.now(LOCAL_TZ)
+    print(train_from)
+    for name, arrival_dt in stops.items():
         if arrival_dt >= now:
-            return {"name": name, "arrival": arrival_str}
-
+            if name == train_from:
+                return None
+            else:
+                return {
+                    "name": name,
+                    "arrival": arrival_dt.strftime("%H:%M")
+                }
+        
     return None
 
 def format_via_list(stops: dict) -> str:
@@ -187,9 +177,9 @@ def format_stop_list(stops: dict, next_stop: str | None) -> list[tuple[str, str]
 
     for name, stop_arrival in stops.items():
         if name == next_stop:
-            line = f"• __{name} ({stop_arrival} Uhr__)"
+            line = f"• __{name}__ ({stop_arrival.strftime("%H:%M")} Uhr)"
         else:
-            line = f"• {name} ({stop_arrival} Uhr)"
+            line = f"• {name} ({stop_arrival.strftime("%H:%M")} Uhr)"
 
         if field_length + len(line) + 1 > 1024:
             route_page_name = "Route" if part == 1 else "Route (Fortsetzung)"

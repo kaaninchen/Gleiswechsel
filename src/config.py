@@ -44,7 +44,7 @@ class Config:
 def _load_config() -> Config:
     with open("config.json", "r") as file:
         raw = json.load(file)
-
+    
     return Config(
         discord=DiscordConfig(**raw["discord"]),
         connections=ConnectionsConfig(**raw["connections"]),

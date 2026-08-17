@@ -110,6 +110,7 @@ OPERATORS = {
 }
 
 OPERATOR_ALIASES = {
+    "Arverio BAyern GmbH": OPERATORS["Arverio Bayern"],
     "DB Regio AG Baden-Württemberg": OPERATORS["db_bawü"],
     "DB Regio Stuttgart GmbH": OPERATORS["db_bawü"],
     "Arverio Baden-Württemberg": OPERATORS["db_bawü"],
