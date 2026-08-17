@@ -92,7 +92,6 @@ async def voice_announcer(destination: str, voice_channel: discord.VoiceChannel)
         vc.play(audio_source, after=after_playing)
         return True
 
-
 async def _schedule_next_transfer(bot: discord.Bot, arrival_dt: datetime, voice_channel: discord.VoiceChannel, destination: str):
     now = datetime.now(LOCAL_TZ)
 

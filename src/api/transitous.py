@@ -110,6 +110,7 @@ def get_random_stop_id() -> str | None:
             
         if stop_name == assigned_station:
             stop_ids.clear()
+            logger(f"Exact match found! Using {stop_name}")
             stop_ids[stop_id] = stop_name
             break
 
@@ -118,11 +119,11 @@ def get_random_stop_id() -> str | None:
         return None
 
     stop_ids_list = list(stop_ids.keys())
-    stops_string = ", ".join(stop_ids.values())
     if len(stop_ids_list) > 1:
         logger(f"No station associated as '{assigned_station}', choosing random from similar named station")
         logger(f"Run `python run main.py stations` to get exact station names")
-    chosen_stop_id = random.choice(stop_ids_list)
+    chosen_stop_id, chosen_station = random.choice(list(stop_ids.items()))
+    logger(f"Assigned Station: {chosen_station}")
     return chosen_stop_id
 
 def get_random_connection(stop_id: str) -> str | None:
@@ -199,6 +200,7 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     except requests.RequestException as e:
         logger(f"An error occured while trying to get the route details: {e}", "error")
         return None
+    
 
     legs = data["legs"][0]
     end_time = legs["endTime"]
@@ -253,12 +255,6 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
         if stop.get("name") == from_station:
             departure_time_iso = stop["departure"]
             trip_details["departure"] = parse_iso(departure_time_iso).strftime("%H:%M")
-
-    train_to_importance = legs["to"]["importance"]
-    trip_details["stops"][goes_to] = {
-        "arrival": arrival_dt,
-        "importance": train_to_importance
-    }
 
     valid = validate_connection(start_time, end_time, departure_time_iso)
     if not valid:

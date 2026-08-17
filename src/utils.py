@@ -27,8 +27,9 @@ def choose_connection() -> dict | None:
 
     return trip
 
-def validate_connection(start_time: str, end_time: str, station_departure: str) -> bool:
+def validate_connection(start_time: str, end_time: str, departure_time_iso: str) -> bool:
     now = datetime.now(timezone.utc)
+    start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
 
     end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
     if end_dt < now:
@@ -36,13 +37,12 @@ def validate_connection(start_time: str, end_time: str, station_departure: str) 
         return False
 
     max_wait_time = config.connections.max_wait_time
-    start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
     if start_dt > now + timedelta(hours=max_wait_time):
         logger(f"Verbindung liegt zu weit in der Zukunft: {start_dt}", "error")
         return False
 
-    station_departure_dt = datetime.fromisoformat(station_departure.replace("Z", "+00:00"))
-    trip_duration = (end_dt - station_departure_dt).total_seconds()
+    departure_time_iso_dt = datetime.fromisoformat(departure_time_iso.replace("Z", "+00:00"))
+    trip_duration = (end_dt - departure_time_iso_dt).total_seconds()
     trip_duration_minutes = str(timedelta(seconds=trip_duration))
 
     min_duration = config.connections.min_duration
