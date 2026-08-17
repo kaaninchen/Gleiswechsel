@@ -157,7 +157,6 @@ def get_next_station(stops: dict, train_from: str) -> dict | None:
                     "name": name,
                     "arrival": arrival_dt
                 }
-        
     return None
 
 def format_via_list(stops: dict, via_and: str) -> str:

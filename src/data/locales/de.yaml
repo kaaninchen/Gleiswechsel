@@ -1,5 +1,4 @@
 channel:
-  status: "Ankunft um {arrival}"
   long_name: 
     train_from: "{train_name} nach {goes_to} von {train_from}"
     train_via: "{train_name} nach {goes_to} über {from_station}"

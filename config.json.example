@@ -3,13 +3,15 @@
     "token": "",
     "server": ,
     "vc": ,
-    "lang": "de"
+    "lang": "de",
     "formatting": "┇",
     "emojis": true
   },
   "connections": {
     "stations": [
-      ""
+      "Berlin Hauptbahnhof",
+      "Amsterdam",
+      "Helsinki"
     ],
     "blacklist": [],
     "min_duration": 5,

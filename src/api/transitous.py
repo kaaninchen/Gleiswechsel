@@ -123,7 +123,7 @@ def get_random_stop_id() -> str | None:
 
     stop_ids_list = list(stop_ids.keys())
     if len(stop_ids_list) > 1:
-        logger(f"No station associated as '{assigned_station}', choosing random from similar named station")
+        logger(f"No station associated as '{assigned_station}', choosing random from similar named stations")
         logger(f"Run `python run main.py stations` to get exact station names")
     chosen_stop_id, chosen_station = random.choice(list(stop_ids.items()))
     logger(f"Assigned Station: {chosen_station}")
@@ -235,8 +235,8 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
         "to": goes_to,
         "agency": legs["agencyName"],
         "route_color": legs.get("routeColor"),
-        "duration": legs["duration"],
         "departure": departure_dt.strftime("%H:%M"),
+        "departure_dt": departure_dt,
         "arrival": arrival_dt.strftime("%H:%M"),
         "arrival_dt": arrival_dt,
         "mode": mode,

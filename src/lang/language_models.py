@@ -15,7 +15,6 @@ class LongName:
 
 @dataclass
 class Channel:
-    status: str
     long_name: LongName
 
 

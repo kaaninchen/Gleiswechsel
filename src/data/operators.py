@@ -110,8 +110,14 @@ OPERATORS = {
     "GVB": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/BSicon_LOGO_GVB.svg/960px-BSicon_LOGO_GVB.svg.png",
         "color": 0x2B62AF
+    },
+    "Berliner Verkehrsbetriebe": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/BVG_Logo_07.2021.svg/960px-BVG_Logo_07.2021.svg.png",
+        "color": 0xEFD13C
     }
 }
+
+
 
 OPERATOR_ALIASES = {
     "Arverio Bayern GmbH": OPERATORS["Arverio Bayern"],
