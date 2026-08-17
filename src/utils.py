@@ -150,7 +150,6 @@ def get_sound_path(destination) -> str | None:
 
 def get_next_station(stops: dict, train_from :str) -> dict | None:
     now = datetime.now(LOCAL_TZ)
-    print(train_from)
     for name, arrival_dt in stops.items():
         if arrival_dt >= now:
             if name == train_from:

@@ -3,7 +3,7 @@ import asyncio
 import random
 from datetime import datetime, timedelta, date
 
-from src.utils import logger, channel_formatting, choose_connection, get_sound_path
+from src.utils import logger, channel_formatting, choose_connection, get_sound_path, LOCAL_TZ
 from src.config import config
 
 _scheduled_task: asyncio.Task | None = None
@@ -42,23 +42,18 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
 
     await announcer("umstieg", voice_channel)
 
-    _scheduled_task = asyncio.create_task(_schedule_next_transfer(bot, arrival, voice_channel, trip["to"]))
+    _scheduled_task = asyncio.create_task(_schedule_next_transfer(bot,  trip["arrival_dt"], voice_channel, trip["to"]))
 
             
-async def _schedule_next_transfer(bot: discord.Bot, arrival, voice_channel: discord.VoiceChannel, destination: str):
-    now = datetime.now()
-    parsed_time = datetime.strptime(arrival, "%H:%M").time()
-    arrival_dt = datetime.combine(date.today(), parsed_time)
-
-    if arrival_dt < now:
-        arrival_dt += timedelta(days=1)
+async def _schedule_next_transfer(bot: discord.Bot, arrival_dt: datetime, voice_channel: discord.VoiceChannel, destination: str):
+    now = datetime.now(LOCAL_TZ)
 
     wait_seconds = (arrival_dt - now).total_seconds()
     announcement_countdown = random.randrange(180, 300)
-    announcement_countdown = 3
+
     if wait_seconds > 0:
         remaining = str(timedelta(seconds=wait_seconds))
-        logger(f"Nächster Umstieg in {remaining.split('.')[0]} ({arrival} Uhr)")
+        logger(f"Nächster Umstieg in {remaining.split('.')[0]} ({arrival_dt.strftime('%H:%M')} Uhr)")
 
         if wait_seconds > announcement_countdown:
             wait_until_end_announcement = wait_seconds - announcement_countdown
@@ -73,7 +68,7 @@ async def _schedule_next_transfer(bot: discord.Bot, arrival, voice_channel: disc
 
 async def announcer(announcement: str, voice_channel: discord.VoiceChannel, destination = None):
     from src.dc.embeds import build_info_embed, build_announcement_embed
-
+    now = datetime.now()
     announcements_enabled = config.announcements.enabled
     voice_announcement_enabled = config.announcements.voice[0].enabled
 

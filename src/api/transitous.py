@@ -229,6 +229,7 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
         "duration": legs["duration"],
         "departure": departure_dt.strftime("%H:%M"),
         "arrival": arrival_dt.strftime("%H:%M"),
+        "arrival_dt": arrival_dt,
         "mode": mode,
         "stops": {}
     }
