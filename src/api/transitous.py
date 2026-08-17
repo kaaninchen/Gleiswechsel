@@ -120,8 +120,8 @@ def get_random_stop_id() -> str | None:
     stop_ids_list = list(stop_ids.keys())
     stops_string = ", ".join(stop_ids.values())
     if len(stop_ids_list) > 1:
-        logger(f"No station associated as '{assigned_station}', choosing random from similar named stations:")
-        logger({stops_string})
+        logger(f"No station associated as '{assigned_station}', choosing random from similar named station")
+        logger(f"Run `python run main.py stations` to get exact station names")
     chosen_stop_id = random.choice(stop_ids_list)
     return chosen_stop_id
 

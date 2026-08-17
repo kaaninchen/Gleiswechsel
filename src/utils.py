@@ -76,7 +76,7 @@ def channel_formatting(mode: str) -> str:
     return f"{emoji}{formatting}"
 
 def get_train_name(train_name: str, mode: str) -> str:
-    if mode == "BUS" or mode == "TRAM" or train_name.isdigit():
+    if train_name.isdigit():
         train = f"{mode.capitalize()} {train_name}"
     elif "(" in train_name:
         train = train_name.split(" (")[0]
@@ -101,7 +101,7 @@ def _reload_operators_if_changed():
         logger("operators.py wurde automatisch neu geladen (Änderungen erkannt)")
 
 
-def get_operator_metadata(agency: str, route_color: str) -> dict:
+def get_operator_metadata(agency: str, route_color: str, mode: str) -> dict:
     _reload_operators_if_changed()
 
     op_data = operators.OPERATOR_ALIASES.get(agency) or operators.OPERATORS.get(agency) or operators.OPERATORS["fallback"]
@@ -147,7 +147,7 @@ def get_sound_path(destination) -> str | None:
 
     return sound_path
 
-def get_next_station(stops: dict, train_from :str) -> dict | None:
+def get_next_station(stops: dict, train_from: str) -> dict | None:
     now = datetime.now(LOCAL_TZ)
     for name, info in stops.items():
         arrival_dt = info["arrival"]
@@ -157,7 +157,7 @@ def get_next_station(stops: dict, train_from :str) -> dict | None:
             else:
                 return {
                     "name": name,
-                    "arrival": arrival_dt.strftime("%H:%M")
+                    "arrival": arrival_dt
                 }
         
     return None
@@ -174,7 +174,10 @@ def format_via_list(stops: dict) -> str:
             if trip_to in important_stops:
                 important_stops.remove(trip_to)
 
-            via = f"{', '.join(important_stops[:-1])} und {important_stops[-1]}"
+            if len(important_stops) > 1:
+                via = f"{', '.join(important_stops[:-1])} und {important_stops[-1]}"
+            else:
+                via = important_stops[0]
             return via
      return None
 

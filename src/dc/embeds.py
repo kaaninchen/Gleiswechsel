@@ -23,7 +23,7 @@ def build_info_embed() -> discord.Embed:
     from src.dc.handlers import trip
 
     agency = trip["agency"]
-    metadata = get_operator_metadata(agency, trip["route_color"])
+    metadata = get_operator_metadata(agency, trip["route_color"], trip["mode"])
     departure = format_timestamp_to_dc(trip["departure"])
     arrival = format_timestamp_to_dc(trip["arrival"])
 
@@ -62,7 +62,7 @@ def build_info_embed() -> discord.Embed:
 def build_announcement_embed(msg):
     from src.dc.handlers import trip
     agency = trip["agency"]
-    metadata = get_operator_metadata(agency, trip["route_color"])
+    metadata = get_operator_metadata(agency, trip["route_color"], trip["mode"])
 
     embed = discord.Embed(
         title = "Informationen zu ihrer Fahrt",

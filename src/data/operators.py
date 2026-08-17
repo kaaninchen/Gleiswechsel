@@ -108,7 +108,7 @@ OPERATORS = {
         "color": 0x00B451
     },
     "GVB": {
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/GVB_Amsterdam_Logo_001.svg/1280px-GVB_Amsterdam_Logo_001.svg.png",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/BSicon_LOGO_GVB.svg/960px-BSicon_LOGO_GVB.svg.png",
         "color": 0x2B62AF
     }
 }
