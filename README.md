@@ -53,6 +53,7 @@ I added an [example config](config.json.example):
       "Amsterdam",
       "Helsinki"
     ],
+    "IDs": [],
     "blacklist": [
       "OTHER",
       "RIDE_SHARING"
@@ -163,6 +164,11 @@ Example output:
 The tool will also ask if it should save a .json file with more informations for every similar station. If you're unsure about what which station is, then it can be really helpful! It would give you data like which types of transports arrive at every similar station, in which country they are and also their coordinates. 
 
 If you choose to generate the json, then you'll find the file as `stations.json` in the same directory as `main.py`
+
+##### IDs
+For every station inside of the `stations.json` you'll find an ID. You can add that ID to `"IDs"` to really specify that you would like to use THAT station, and not a different one.
+
+This is especially useful if you want to add a station whose name isn't unique and also used by other stations. The bot would falsely use the first station with the same name and consider it an exact match, even if you wanted a different one. This won't happen with the ID, as every ID is uniquely assigned to only one station.
 
 ##### blacklist
 You can blacklist specific types of transport, the bot would then skip them while selecting a connection. You can get the type either in your console (mode)

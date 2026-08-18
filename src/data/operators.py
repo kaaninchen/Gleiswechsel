@@ -101,6 +101,10 @@ OPERATORS = {
     "Flixbus": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flixbus_201x_logo.svg/1280px-Flixbus_201x_logo.svg.png",
         "color": 0x8CD541
+    },
+    "Tallink Grupp AS": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Tallink_logo.svg/330px-Tallink_logo.svg.png",
+        "color": 0x225197
     }
 }
 

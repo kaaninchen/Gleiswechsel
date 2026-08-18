@@ -14,6 +14,7 @@ class DiscordConfig:
 @dataclass
 class ConnectionsConfig:
     stations: list[str]
+    IDs: list[str]
     blacklist: list[str]
     min_duration: int
     timezone: str

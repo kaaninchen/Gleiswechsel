@@ -8,7 +8,8 @@ from src.config import config
 from src.lang.locales import lang
 
 
-stations = config.connections.stations
+station_names = config.connections.stations
+station_IDs = config.connections.IDs
 blacklist = config.connections.blacklist
 long_name_lang = lang.channel.long_name
 user_agent = config.http.user_agent
@@ -25,7 +26,7 @@ def check_stations():
         "stations": {}
     }
 
-    for station in stations:
+    for station in station_names:
         req = f"{endpoint}/api/v1/geocode"
 
         try:
@@ -91,7 +92,26 @@ def check_stations():
 
 
 def get_random_stop_id() -> str | None:
-    assigned_station = random.choice(stations)
+    stations = {}
+
+    if len(station_names) > 0:
+        for entry in station_names:
+            if entry != "":
+                stations[entry] = "name"
+
+    if len(station_IDs) > 0:
+        for entry in station_IDs:
+            if entry != "":
+                stations[entry] = "ID"
+
+    if not stations:
+        logger("Both stations and IDs are empty...", "FATAL")
+
+    assigned_station = random.choice(list(stations.keys()))
+
+    if stations[assigned_station] == "ID":
+        return assigned_station
+    
     req = f"{endpoint}/api/v1/geocode"
 
     try:
@@ -175,7 +195,7 @@ def get_random_connection(stop_id: str) -> str | None:
             break
 
     if not trip_ids:
-            logger("Couldn't find any connection", "error")
+            logger("Couldn't find any connections", "error")
             return None
     trip_id = random.choice(trip_ids)
 
