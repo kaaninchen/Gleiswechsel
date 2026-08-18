@@ -21,10 +21,9 @@ headers = {
 endpoint = "https://api.transitous.org"
 
 def check_stations():
+    logger(f"Testing {len(station_names)} stations...")
     all_stations_output = {}
-    minimal_overview = {
-        "stations": {}
-    }
+    minimal_overview = {}
 
     for station in station_names:
         req = f"{endpoint}/api/v1/geocode"
@@ -54,17 +53,16 @@ def check_stations():
                 "tz": entry.get("tz"),
                 "country": entry.get("country"),
                 "coords": coords,
-                "modes": modes,
                 "id": station_id,
+                "modes": modes,
             }
-            
+
             if stop_name:
                 stops_dict[stop_name] = stop_details
                 aliases_list.append(stop_name)
 
             if stop_name == station:
                 if not exact_match:
-                    logger(f"Exact match found! {station} is an assigned station! Bot would use that station directly")
                     exact_match = True
 
         if not stops_dict:
@@ -72,10 +70,14 @@ def check_stations():
             continue
 
         all_stations_output[station] = {
+            "exact_match": exact_match,
             "associated": stops_dict
         }
 
-        minimal_overview["stations"][station] = aliases_list
+        minimal_overview[station] = {
+            "exact_match": exact_match,
+            "names": aliases_list
+        }
 
     logger(json.dumps(minimal_overview, indent=4, ensure_ascii=False))
 
