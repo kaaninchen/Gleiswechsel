@@ -131,7 +131,7 @@ $ python run main.py stations
 ```
 
 Example output:
-```json
+```sh
 22:47:56: INFO: Exact match found! London is an assigned station! Bot would use that station directly
 22:48:33: INFO: {
     "stations": {
