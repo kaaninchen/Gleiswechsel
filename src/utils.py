@@ -39,7 +39,7 @@ def validate_connection(start_time: str, end_time: str, departure_time_iso: str)
     max_wait_time = config.connections.max_wait_time
     if max_wait_time:
         if start_dt > now + timedelta(hours=max_wait_time):
-            logger(f"Connection is way too far in the future: {start_dt} (max_wait_time: {max_wait_time}h)", "error")
+            logger(f"Connection is way too far in the future: {start_dt} (max_wait_time: {max_wait_time}h), retrying...", "error")
             return False
 
     departure_time_iso_dt = datetime.fromisoformat(departure_time_iso.replace("Z", "+00:00"))
@@ -49,14 +49,14 @@ def validate_connection(start_time: str, end_time: str, departure_time_iso: str)
     min_duration = config.connections.min_duration
     min_duration_seconds = min_duration * 60
     if trip_duration < min_duration_seconds:
-        logger(f"Connection is with {trip_duration_minutes} minutes too short (configured to {min_duration} minutes or more)", "error")
+        logger(f"Connection is with {trip_duration_minutes} minutes too short (configured to {min_duration} minutes or more), retrying...", "error")
         return False
 
     max_duration = config.connections.max_duration
     if max_duration:
         max_duration_seconds = max_duration * 60
         if max_duration_seconds < trip_duration:
-            logger(f"Connection is with {trip_duration_minutes} too long (configured to {max_duration} minutes at most)", "error")
+            logger(f"Connection is with {trip_duration_minutes} too long (configured to {max_duration} minutes at most), retrying...", "error")
             return False
         
     return True

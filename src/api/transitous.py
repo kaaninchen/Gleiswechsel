@@ -135,7 +135,6 @@ def get_random_stop_id() -> str | None:
             
         if stop_name == assigned_station:
             stop_ids.clear()
-            logger(f"Exact match found! Using {stop_name}")
             stop_ids[stop_id] = stop_name
             break
 
@@ -148,7 +147,6 @@ def get_random_stop_id() -> str | None:
         logger(f"No station associated as '{assigned_station}', choosing random from similar named stations")
         logger(f"Run `python run main.py stations` to get exact station names")
     chosen_stop_id, chosen_station = random.choice(list(stop_ids.items()))
-    logger(f"Assigned Station: {chosen_station}")
     return chosen_stop_id
 
 def get_random_connection(stop_id: str) -> str | None:
