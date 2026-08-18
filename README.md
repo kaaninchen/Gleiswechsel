@@ -1,4 +1,8 @@
 # Gleiswechsel
+
+## THIS BRANCH IS NO LONGER MAINTAINED
+## This is the code for the legacy Gleiswechsel bot, based on the dbf API
+
 Gleiswechel ist ein Discord Bot, welcher einen Sprachkanal zu einer real-existierenden, aktuell befahrenden Zugverbindung umbenennt. Diesen Namen behält der Kanal so lange, wie die Verbindung in echt dauert.  
 
 ![Beispiel Kanal](.github/preview_kanal.png) 
