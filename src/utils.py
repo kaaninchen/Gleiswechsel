@@ -154,11 +154,6 @@ def get_next_station(stops: dict, train_from: str) -> dict | None:
     for name, info in stops.items():
         arrival_dt = info["arrival"]
         if arrival_dt >= now:
-            return {
-                    "name": name,
-                    "arrival": arrival_dt
-                 }
-            '''
             if name == train_from:
                 return None
             else:
@@ -166,7 +161,7 @@ def get_next_station(stops: dict, train_from: str) -> dict | None:
                     "name": name,
                     "arrival": arrival_dt
                  }
-'''
+
     return None
 
 def format_via_list(stops: dict, via_and: str) -> str:

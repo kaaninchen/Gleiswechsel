@@ -127,14 +127,12 @@ async def _update_next_loop(bot: discord.Bot, voice_channel: discord.VoiceChanne
         if trip is None:
             return
 
-        '''
         now = datetime.now(LOCAL_TZ)
         departure_dt = trip["departure_dt"]
 
         if departure_dt > now:
-                wait_seconds = (departure_dt - now).total_seconds()
+                wait_seconds = (departure_dt - now).total_seconds() + 10
                 await asyncio.sleep(wait_seconds)
-        '''
 
         while True:
             next_stop = get_next_station(trip["stops"], trip["from"])
