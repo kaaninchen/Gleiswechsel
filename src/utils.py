@@ -122,9 +122,12 @@ def get_operator_metadata(agency: str, route_color: str, mode: str) -> dict:
         "slogans": slogans
     }
 
-def get_sound_path(destination) -> str | None:
-    voice_stations = config.announcements.voice[0].stations
-
+def get_sound_path(destination, type_announcement: str) -> str | None:
+    if type_announcement == "end_stations":
+        voice_stations = config.announcements.voice[0].end_stations
+    elif type_announcement == "stops":
+        voice_stations = config.announcements.voice[0].stops
+    
     if destination in voice_stations:
         announcement_for = destination
     else:
@@ -156,7 +159,8 @@ def get_next_station(stops: dict, train_from: str) -> dict | None:
                 return {
                     "name": name,
                     "arrival": arrival_dt
-                }
+                 }
+
     return None
 
 def format_via_list(stops: dict, via_and: str) -> str:

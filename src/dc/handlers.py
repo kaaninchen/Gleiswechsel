@@ -38,7 +38,6 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
 
     formatting = channel_formatting(mode)
     await voice_channel.edit(name=f"{formatting}{long_name}")
-    await voice_channel.set_status(channel_lang.status())
     start_next_stop_updates(bot, voice_channel)
 
 
@@ -72,14 +71,21 @@ async def announcer(announcement: str, voice_channel: discord.VoiceChannel, dest
             if embed:
                 await voice_channel.send(embed=embed)
 
-async def voice_announcer(destination: str, voice_channel: discord.VoiceChannel) -> bool:
-    sound_path = get_sound_path(destination=destination)
+async def voice_announcer(destination: str, voice_channel: discord.VoiceChannel, type_announcement: str) -> bool:
+    sound_path = get_sound_path(destination=destination, type_announcement=type_announcement)
     if sound_path is None:
+        return False
+
+    if voice_channel.guild.voice_client:
+        logger(f"Already in vc, skipping this announcement to be safe")
         return False
     
     logger(f"Joining vc, playing {sound_path}")
-    vc = await voice_channel.connect(timeout=15, reconnect=True)
+
+    connect_task = asyncio.create_task(voice_channel.connect(timeout=15, reconnect=True))
     audio_source = discord.FFmpegPCMAudio(sound_path)
+
+    vc = await connect_task
 
     loop = asyncio.get_running_loop()
 
@@ -124,9 +130,7 @@ async def _update_next_loop(bot: discord.Bot, voice_channel: discord.VoiceChanne
         departure_dt = trip["departure_dt"]
 
         if departure_dt > now:
-                await bot.change_presence(activity=discord.Game(name="tschu tschu! • /info"))
                 wait_seconds = (departure_dt - now).total_seconds()
-                print(f"Waiting for {wait_seconds} seconds")
                 await asyncio.sleep(wait_seconds)
 
         while True:
@@ -135,13 +139,19 @@ async def _update_next_loop(bot: discord.Bot, voice_channel: discord.VoiceChanne
             if next_stop is None:
                 return
             
-            presence_text = f"{lang.embeds.info.next_stop()}: {next_stop["name"]}"
-            await voice_channel.set_status(presence_text)
+            next_stop_str = next_stop["name"]
+            
+            status_text = f"{lang.embeds.info.next_stop()}: {next_stop_str}"
+            await voice_channel.set_status(status_text, reason="Next stop status")
+
+            await voice_announcer(next_stop_str, voice_channel, type_announcement="stops")
+
             wait_seconds = (next_stop["arrival"] - datetime.now(LOCAL_TZ)).total_seconds()
             if wait_seconds > 0:
                 await asyncio.sleep(wait_seconds)
 
     except asyncio.CancelledError:
+        await voice_channel.set_status(None)
         raise
 
 def start_next_stop_updates(bot: discord.bot, voice_channel: discord.VoiceChannel):

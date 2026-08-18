@@ -23,7 +23,8 @@ class ConnectionsConfig:
 @dataclass
 class VoiceAnnouncementConfig:
     enabled: bool
-    stations: dict[str, str]
+    end_stations: dict[str, str]
+    stops: dict[str, str]
 
 @dataclass
 class AnnouncementConfig:

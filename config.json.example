@@ -24,8 +24,10 @@
     "voice": [
       {
         "enabled": false,
-        "stations": {
+        "end_stations": {
           "general": "general.aac",
+        },
+        "stops": {
         }
       }
     ]

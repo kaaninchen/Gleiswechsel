@@ -25,7 +25,7 @@ async def on_ready():
         logger(f"{bot.user} is online")
         _bot_initialized = True
 
-        bot.change_presence(activity=discord.Game(name="tschu tschu! • /info"))
+        await bot.change_presence(activity=discord.Game(name="tschu tschu! • /info"))
 
         server_id = config.discord.server
         server_vc_id = config.discord.vc
