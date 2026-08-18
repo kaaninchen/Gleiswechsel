@@ -43,6 +43,7 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
 
     logger(f"Updated channel name!")
 
+    await bot.change_presence(activity=discord.Game(name=lang.rich_presence.arrival()))
     await announcer("transfer", voice_channel)
 
     _scheduled_task = asyncio.create_task(_schedule_next_transfer(bot,  trip["arrival_dt"], voice_channel, trip["to"]))

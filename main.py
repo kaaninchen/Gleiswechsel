@@ -25,8 +25,6 @@ async def on_ready():
         logger(f"{bot.user} is online")
         _bot_initialized = True
 
-        await bot.change_presence(activity=discord.Game(name="tschu tschu! • /info"))
-
         server_id = config.discord.server
         server_vc_id = config.discord.vc
         channel = validate_channel(bot=bot, server_id=server_id, channel_id=server_vc_id)

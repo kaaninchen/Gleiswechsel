@@ -14,3 +14,5 @@ embeds:
     title: "Information about your trip"
     "end_of_connection":
       message: "Dear Passengers,\nwe will be arriving at {destination} in a few minutes. Our journey ends there.\n\nWe wish you a pleasant onward journey.\n\nThank you for your patronage, and goodbye."
+rich_presence:
+  arrival: "Arrival by {arrival} • /info"

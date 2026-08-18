@@ -14,3 +14,5 @@ embeds:
     title: "Informationen zu ihrer Fahrt"
     "end_of_connection":
       message: "Sehr geehrte Fahrgäste,\nIn wenigen Minuten erreichen wir {destination}. Unsere Reise endet dort\n\nWir wünschen Ihnen eine angenehme Weiterreise.\n\nVielen Dank für ihr Vertrauen und auf Wiedersehen."
+rich_presence:
+  arrival: "Ankunft um {arrival} • /info"
