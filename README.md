@@ -132,9 +132,7 @@ $ python run main.py stations
 ```
 
 Example output:
-```sh
-22:47:56: INFO: Exact match found! London is an assigned station! Bot would use that station directly
-22:48:33: INFO: {
+```json
     "stations": {
         "Amsterdam": [
             "Amsterdam Zuid",
@@ -157,8 +155,7 @@ Example output:
             "S Buch (Berlin)",
             "U Hönow (Berlin)"
         ]
-    }
-}
+      }
 ```
 
 The tool will also ask if it should save a .json file with more informations for every similar station. If you're unsure about what which station is, then it can be really helpful! It would give you data like which types of transports arrive at every similar station, in which country they are and also their coordinates. 
