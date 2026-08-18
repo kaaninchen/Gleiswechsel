@@ -58,9 +58,9 @@ I added an [example config](config.json.example):
       "OTHER",
       "RIDE_SHARING"
     ],
-    "min_duration": 5,
+    "min_duration": 10,
     "max_duration": null,
-    "max_wait_time": 6,
+    "max_wait_time": null,
     "timezone": "Europe/Berlin"
   },
   "announcements": {
