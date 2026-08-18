@@ -1,40 +1,45 @@
 import discord
-import random
-from discord.ext import tasks
-from src.config import config
-from src.handlers import rename_vc
-from src.commands import setup_commands
-from src.embeds import build_error_embed
+import sys
+
 from src.utils import logger
-from src.data.status import discord_status
+from src.config import config
+from src.dc.handlers import rename_vc
+from src.dc.helpers import validate_channel
+from src.dc.commands import setup_commands
+from src.api.transitous import check_stations
 
 bot = discord.Bot(intents=discord.Intents.all())
-setup_commands(bot)
-
-@tasks.loop(minutes=5)
-async def change_status():
-    status = random.choice(discord_status)
-    await bot.change_presence(activity=discord.Game(name=f"{status} • /info"))
-
+setup_commands(bot=bot)
 _bot_initialized = False
+
+if len(sys.argv) > 1:
+    if sys.argv[1] == "stations":
+        check_stations()
+        sys.exit(0)
+
 @bot.event
 async def on_ready():
     global _bot_initialized
-    print(f"{bot.user} ist online")
-    if not change_status.is_running():
-        change_status.start()
+
     if not _bot_initialized:
+        logger(f"{bot.user} is online")
         _bot_initialized = True
-        await rename_vc(bot)
-    else:
-        logger("Discord Reconnect, laufende Fahrt bleibt unangetastet")
 
-@bot.event
-async def on_application_command_error(ctx, error):
-    embed = build_error_embed(f"Ein Fehler ist aufgetreten: {error}")
-    await ctx.respond(embed=embed)
+        await bot.change_presence(activity=discord.Game(name="tschu tschu! • /info"))
 
-try: 
-    bot.run(config['token'])
+        server_id = config.discord.server
+        server_vc_id = config.discord.vc
+        channel = validate_channel(bot=bot, server_id=server_id, channel_id=server_vc_id)
+        await rename_vc(bot, voice_channel=channel)
+
+try:
+    bot.run(config.discord.token)
 except:
-    logger("Fehler beim parsen des token", "fatal")
+    logger("An error occured while parsing the token", "fatal")
+
+'''
+TODO
+- discord status
+- multi language support
+- README
+'''

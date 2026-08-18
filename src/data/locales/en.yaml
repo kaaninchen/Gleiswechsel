@@ -1,0 +1,16 @@
+channel:
+  long_name: 
+    train_from: "{train_name} to {goes_to} from {train_from}"
+    train_via: "{train_name} to {goes_to} via {from_station}"
+embeds:
+  footer:
+    notice: "Data provided by https://transitous.org"
+  info:
+    description: "Departure from {station} at {departure}. Arrival by {arrival}"
+    via: "via"
+    "via_and": "and"
+    "next_stop": "Next stop"
+  announcement:
+    title: "Information about your trip"
+    "end_of_connection":
+      message: "Dear Passengers,\nwe will be arriving at {destination} in a few minutes. Our journey ends there.\n\nWe wish you a pleasant onward journey.\n\nThank you for your patronage, and goodbye."

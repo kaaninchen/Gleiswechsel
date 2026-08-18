@@ -1,22 +1,5 @@
-''''
-Die Datei gibt dem Embed zugehörige Metadaten der Zugbetreiber. Identifiziert wird dabei durch die genauen Namen der Unternehmen. 
-Diese werden sowohl im /info Embed als auch in der Konsole angezeigt. 
-
-| Feld    | Optional | Wert  | Beschreibung                                                          |
-|---------|----------|-------|-----------------------------------------------------------------------|
-| Unknown | Ja       | Bool  | Eigentlich nur für fallback relevant, sollte man weglassen            |
-| Logo    | Nein     | URL   | Das Logo in der Ecke des Embeds. Am besten PNG, SVG geht leider nicht |
-| Color   | Nein     | HEX   | HEX Color Code des Streifen vom Embed, muss mit 0x anfangen           |
-| Slogan  | Ja       | Liste | Zufälliger Text aus der Liste im Footer                               |
-
-Sollte es dazu kommen, dass mehrere Anbieter die selben Metadaten nutzen sollen, kann man einen Eintrag für alle in OPERATORS setzen und 
-die zugehörigen Anbieternamen in OPERATOR_ALIASES auf den Eintrag lenken lassen. db_bawü ist dafür ein gutes Beispiel.
-
-Nachdem diese Datei editiert wurde muss der Bot nicht neugestartet werden.
-'''
 OPERATORS = { 
     "fallback": {
-        "unknown": True,
         "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCVeC5E0mNNBKyQftQaFMzxIVkbDvEnSzWv07h_c8PdA&s=10",
         "color": 0xFFFFFF
     },
@@ -38,7 +21,7 @@ OPERATORS = {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/ODEG-Logo_Neu.svg/960px-ODEG-Logo_Neu.svg.png",
         "color": 0x00745C
     },
-    "Nederlandse Spoorwegen": {
+    "NS": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Logo_NS.svg/960px-Logo_NS.svg.png",
         "color": 0X00337F,
         "slogan": ["Goed op weg", "Welkom in de trein van morgen", "Veilig, Vlug, Voordelig", "we haben een serious probleem", "Neuken in de keuken"]
@@ -98,10 +81,37 @@ OPERATORS = {
     "enno": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Enno_logo.svg/960px-Enno_logo.svg.png",
         "color": 0x88216F
+    },
+    "DSB": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/DSB_company_logo.svg/960px-DSB_company_logo.svg.png",
+        "color": 0xB22B32
+    },
+    "Vr": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Vr_Logo.png/330px-Vr_Logo.png",
+        "color": 0x00B451
+    },
+    "GVB": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/BSicon_LOGO_GVB.svg/960px-BSicon_LOGO_GVB.svg.png",
+        "color": 0x2B62AF
+    },
+    "Berliner Verkehrsbetriebe": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/BVG_Logo_07.2021.svg/960px-BVG_Logo_07.2021.svg.png",
+        "color": 0xEFD13C
+    },
+    "Flixbus": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flixbus_201x_logo.svg/1280px-Flixbus_201x_logo.svg.png",
+        "color": 0x8CD541
+    },
+    "Tallink Grupp AS": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Tallink_logo.svg/330px-Tallink_logo.svg.png",
+        "color": 0x225197
     }
 }
 
+
+
 OPERATOR_ALIASES = {
+    "Arverio Bayern GmbH": OPERATORS["Arverio Bayern"],
     "DB Regio AG Baden-Württemberg": OPERATORS["db_bawü"],
     "DB Regio Stuttgart GmbH": OPERATORS["db_bawü"],
     "Arverio Baden-Württemberg": OPERATORS["db_bawü"],
@@ -109,10 +119,17 @@ OPERATOR_ALIASES = {
     "DB Regio AG Bayern": OPERATORS["db_bayern"],
     "DB Fernverkehr AG": OPERATORS["db_allgemein"],
     "DB Regio AG NRW": OPERATORS["db_allgemein"],
-    "DB Regio AG Nord": OPERATORS["db_allgemein"],
     "DB Regio AG Südost": OPERATORS["db_allgemein"],
     "DB Regio AG Nordost": OPERATORS["db_allgemein"],
+    "DB Regio AG Nord": OPERATORS["db_allgemein"],
     "DB Regio AG Mitte": OPERATORS["db_allgemein"],
+    "NS International": OPERATORS["NS"],
     "SBB GmbH": OPERATORS["SBB"],
     "Schweizerische Bundesbahnen SBB": OPERATORS["SBB"],
+    "Dänische Staatsbahnen": OPERATORS["DSB"],
+    "VR": OPERATORS["Vr"],
+    "FlixBus-gb": OPERATORS["Flixbus"]
 }
+
+
+

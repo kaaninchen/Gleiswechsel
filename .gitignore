@@ -3,3 +3,4 @@ __pycache__/
 src/data/announcements/*
 !src/data/announcements/.gitkeep
 config.json
+stations.json

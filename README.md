@@ -1,175 +1,264 @@
 # Gleiswechsel
-Gleiswechel ist ein Discord Bot, welcher einen Sprachkanal zu einer real-existierenden, aktuell befahrenden Zugverbindung umbenennt. Diesen Namen behält der Kanal so lange, wie die Verbindung in echt dauert.  
+Gleiswechsel [ˈɡlaɪsvɛksəl] (german for "platform change") is a selfhostable discord bot which regularly changes the name of a voice chat to a real public transport connection. The channel will keep the name until the connection arrived at its last stop, after that it will automatically select a new one.
 
-![Beispiel Kanal](.github/preview_kanal.png) 
+![Example Channel](.github/preview_kanal.png)
 
-Der Bot stellt außerdem den `/info` Befehl dar, welcher einem weitere Informationen zur Verbindung zurückgibt  
+## Features
+- [International support](https://transitous.org/sources/) for both countries and cities
+- Support for various types of transportations, including but not limited to Subways, Busses, Funiculars, Trams and Trains
+- Multi language support (+ option to easily add more languages)
+- Announcements, including the option to join the voice chat and play an audio file while arriving at a specific station
+- Highly customizable
+- pretty `/info` embed with some details about your current ride
 
-![Beispiel info](.github/preview_info.png)
+![Example info](.github/preview_info.png)
 
 ## Setup
-```sh
-git clone https://github.com/kaaninchen/Gleiswechsel.git
+Follow [this guide](https://guide.pycord.dev/getting-started/creating-your-first-bot) to create your discord bot up until you have a token. 
 
-# Mit Python
-python -m venv venv 
+Make sure that you have [Python](https://www.python.org/) installed! 
+
+Download the repo (either with git or by clicking the big "Code" button at the start on this page, downloading the zip and extracting it) and run:
+
+```sh
+# Create a virtual environment so that the bot won't cluster your system with dependencies
+python -m venv venv
+
+# Activate your venv, you should have gotten instructions after running the first command, e.g.:
 source venv/bin/activate
-pip install -r requirements.txt 
 
-# Mit uv
-uv venv venv
-source venv/bin/activate
-uv pip install -r requirements.txt
-
+# Install the required dependencies
+pip install -r requirements.txt
 ```
 
-### Config
+Next, you should configure the bot to your liking
 
-`$ cp config.json.example config.json`
-```jsonc
+## Config
+Even if it seems a bit tedious, I highly recommend going through the entire config and checking if there's something that you would like to customize.  
+
+I added an [example config](config.json.example):
+```json
 {
-    "token": "", // Token des Bots
-    "stations": [ "Berlin Hbf", "Hamburg Hbf", "München Hbf", "Amsterdam Centraal"], // Bahnhöfe, von denen die Anzeigetafelns gelesen werden. Namen kann man auf https://dbf.finalrewind.org/ nachschlagen.
-    "dbf": "https://dbf.finalrewind.org", // Die DBF Instanz. Normalerweise müsste man hier nichts ändern
-    "server": , // Discord Server ID
-    "vc": , // Server VC ID
-    "random": true, // Random Zug aus der Anzeigetafel (true) oder erster Zug, der angezeigt wird (false)
-    "emojis": true, // Emoji Namen beim Channel-Namen (true) oder nicht (false),
-    "formatting": "┇", // VC Name. Davor steht der Emoji, danach der Zug.
-    "announcemenents": true, // Announcements zur aktuellen Zugreise im VC-Kanal ja (true) oder nein (false)
-    "voice_announcements": [ // siehe weitere config erklärungen in der README, benötigt extra setup
-        {
-            "enabled": false,
-            "stations": {
-                "general": ""
-            }
-        }
+  "discord": {
+    "token": "",
+    "server": ,
+    "vc": ,
+    "lang": "de",
+    "formatting": "┇",
+    "emojis": true
+  },
+  "connections": {
+    "stations": [
+      "Berlin Hauptbahnhof",
+      "Amsterdam",
+      "Helsinki"
     ],
-    "blacklist": [] // Blacklist für bestimmte Zug-Typen
+    "IDs": [],
+    "blacklist": [
+      "OTHER",
+      "RIDE_SHARING"
+    ],
+    "min_duration": 10,
+    "max_duration": null,
+    "max_wait_time": null,
+    "timezone": "Europe/Berlin"
+  },
+  "announcements": {
+    "enabled": true,
+    "voice": [
+      {
+        "enabled": false,
+        "end_stations": {
+          "general": "general.aac",
+        },
+        "stops": {
+        }
+      }
+    ]
+  },
+  "http": {
+    "user_agent": "Gleiswechsel-Discord-Bot"
+  }
 }
-
 ```
 
-<details>
-<summary>weitere Config Erklärungen</summary>
+You have to rename `config.json.example` to `config.json` and fill out the essential fields so that the bot is usable.
 
-#### dbf:
-Falls, aus irgendwelchem Gründen, man nicht die [offizielle DBF Instanz](https://dbf.finalrewind.org) nutzen möchte, hat man die Möglichkeiten seine eigene zu hosten. Instruction dazu gibts auf dem [zuständigen Repo](https://github.com/derf/db-fakedisplay). Dafür kann man das Feld in der config mit der eigenen URL austauschen. 
+### Explanations
 
-#### random:
-Bei kleineren Bahnhöfen stehen an den Anzeigetafeln öfters die Züge lange vor Abfahrt da, weil sonst der Bahnhof leer steht. Dadurch wird auch der Name des VC sehr lange gleich bleiben.   
-Sollte man `random = false` setzen, würde immer der erste Zug an der Anzeigetafel genommen werden, welcher auch der wäre welcher am frühesten losfährt. Wenn man viele Bahnhöfe hat besteht darin keine Gefahr. 
+#### discord
 
-Wenn man nur einen Bahnhof hat ist es stark empfohlen random zu nutzen. Sonst könnte der Bot bei unvollständigen Einträgen in einer Schleife immer wieder vergeblich den selben unvollständigen Zug probieren.
+- `"token"` is for the discord bot token. You should have copied it earlier
 
-#### announcements:
-Der Bot kann während der Zugreise Ankündigungen in den Textkanal vom Sprachkanal schicken. Das würde er aber auch nur machen wenn sich dort mindestens eine Person aufhält. Aktuelle Announcements:
-- 3-5 Min vor Umstieg gibt es eine Ankündigung dafür
-- Info Embed bei Umstieg
-- voice_announcements
+- `"server"` and `"vc"` are the ID's for the server and the voice chat that the bot should use. Follow [this guide](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID) to get them.
 
-#### voice_announcements:
-⚠️ Announcements muss aktiviert sein
+- `"lang"` is for the language that the bot should use within discord. The relevant language files are located in [src/data/locales/](src/data/locales). Current available languages are english ("en") and german ("de"). Feel free to add your language if you miss it! 
 
-Der Bot kann 3-5 Min vor Umstieg den VC joinen und eine Audiodatei abspielen. Dafür braucht der Bot ffmpeg.
+- `"formatting"` and `"emojis"` are for the channel name. Set `emojis` to `False` and `"formatting"` to `null` if you just want the connection as the channel's name without any decor.
+
+#### connections
+
+##### stations
+You can add your desired stations that the bot should search connections from there. The bot will choose one of the stations at random. 
+
+The bot will also search for similar named stations if it couldn't find an exact match to your input. This is really handy if you'd just like to ride around in a city with various stations. For example, if you just input "Amsterdam" as a station, the bot would randomly choose one of these stations:
+
+```json
+"Amsterdam": [
+    "Amsterdam Zuid",
+    "Amsterdam RAI",
+    "Amsterdam Amstel",
+    "Amsterdam, Gein",
+    "Amsterdam Centraal",
+    "Amsterdam, Noord",
+    "Amsterdam, Rokin",
+    "Amsterdam Lelylaan",
+    "Amsterdam Sloterdijk"
+]
+```
+
+The bot will also warn you if it couldn't find a station with the exact name as your input:
+
+```
+22:44:46: INFO: No station associated as 'Amsterdam', choosing random from similar named stations
+```
+
+but you can safely ignore this warning if you're fine with it. 
+
+If not, I've created a tool which would help you to get the exact station name. You can use the tool by running
 
 ```sh
-$ sudo apt install ffmpeg # Debian/Ubuntu
-
-$ brew install ffmpeg # macOS (brew)
+$ python run main.py stations
 ```
 
-##### Voice_announcements config:  
+Example output:
+```sh
+22:47:56: INFO: Exact match found! London is an assigned station! Bot would use that station directly
+22:48:33: INFO: {
+    "stations": {
+        "Amsterdam": [
+            "Amsterdam Zuid",
+            "Amsterdam RAI",
+            "Amsterdam Amstel",
+            "Amsterdam, Gein",
+            "Amsterdam Centraal",
+            "Amsterdam, Noord",
+            "Amsterdam, Rokin",
+            "Amsterdam Lelylaan",
+            "Amsterdam Sloterdijk"
+        ],
+        "Berlin": [
+            "Berlin Hbf",
+            "Berlin ZOB",
+            "Berlin Ostbf",
+            "Berlin-Spandau",
+            "Berlin Südkreuz",
+            "U Rudow (Berlin)",
+            "S Buch (Berlin)",
+            "U Hönow (Berlin)"
+        ]
+    }
+}
+```
+
+The tool will also ask if it should save a .json file with more informations for every similar station. If you're unsure about what which station is, then it can be really helpful! It would give you data like which types of transports arrive at every similar station, in which country they are and also their coordinates. 
+
+If you choose to generate the json, then you'll find the file as `stations.json` in the same directory as `main.py`
+
+##### IDs
+For every station inside of the `stations.json` you'll find an ID. You can add that ID to `"IDs"` to really specify that you would like to use THAT station, and not a different one.
+
+This is especially useful if you want to add a station whose name isn't unique and also used by other stations. The bot would falsely use the first station with the same name and consider it an exact match, even if you wanted a different one. This won't happen with the ID, as every ID is uniquely assigned to only one station.
+
+##### blacklist
+You can blacklist specific types of transport, the bot would then skip them while selecting a connection. You can get the type either in your console (mode)
+```sh
+22:44:47: INFO: Agency: GVB, mode: TRAM
+```
+or in the `/info` embed. 
+
+I highly recommend keeping `"OTHER"` blacklisted, if the API doesn't know what that is then we probably shouldn't use it. Also, it would probably a good idea to keep `"RIDE_SHARING"` blacklisted as they have weird timetables
+
+##### min_duration, max_duration, max_wait_time, timezone
+
+- `min_duration` is the minimal duration of the connection in minutes. It is HIGHLY recommended to set it to atleast 10, as discord only allows to change the name of a voice chat twice every 10 minutes.
+
+- `max_duration` is the maximun duration of the connection in minutes. Set to `null` to disable
+
+- `max_wait_time` is the maximun wait time for a connection in hours. Don't set that one too low, as the bot may have some issues finding a suitable connection at night, or at stations that aren't frequently used. Set to `null` to disable
+
+- `timezone` is timezone in the IANA timezone format. You can [look it up here](https://www.addevent.com/c/documentation/tools/time-zone-lookup)
+
+##### announcements
+The bot can send a text announcement in the voice chat at the start/end of a trip. 
+At the end of a trip, it would send this embed:
+
+![end_of_trip](.github/end_of_trip_announcement.png)
+
+It will also send the `/info` embed at the start of a new connection with informations about your new trip.
+
+To reduce spam, the bot will only send announcements if someone is in the voice chat
+
+##### voice
+⚠️ Requires `announcements` to be set to enabled
+
+The bot can join the voice chat, play an audio file, and leave at various points of your trip. You have to have [FFmpeg](https://www.ffmpeg.org/) installed for this to work.
+
+Place the audio file of your desired station in [src/data/announcements](src/data/announcements/). Then, define the stations name with the name of the audio file in either `end_stations` or `stops`. The path will be autocompleted to  [src/data/announcements](src/data/announcements/). The station name has to be EXACT, if you're unsure then [get the name through the helper script](#stations)
+
+`end_stations` is for audio files that should play at the end of your trip, and `stops` is for audio files that should play while the train is passing through your desired station. If you set the name of a station to `general`, then the bot will always play that file before the trip ends/a new stop has been reached.
+
+I'm hoping that I didn't explain this too complicated. Here's an example to visualize this:
+
+![example_files](.github/voice_announcements_visualized.png)
 
 ```json
-    "voice_announcements": [
-        {
-            "enabled": true,
-            "stations": {
-                "general": "general.aac",
-                "Hannover": "hannover.aac"
-            }
+  "announcements": {
+    "enabled": true,
+    "voice": [
+      {
+        "enabled": true,
+        "end_stations": {
+          "general": "general.aac",
+          "Hannover Hbf": "hannover.aac"
+        },
+        "stops": {
+          "Amsterdam, Noorderpark": "noorderpark.aac"
         }
-    ],
-```
-
-Audiodateien werden in [src/data/announcements](src/data/announcements) platziert. In der Config wird der Name der Station (z.B. Hannover) zu dem Namen der Audiodatei (z.B. hannover.aac) zugewiesen. Die Audiodatei braucht keinen Path.  
-
-Der Eintrag `general` meint die allgemeine Audiodatei, welche bei jeder Endstation (mit Ausnahme der zugewiesenen) spielt. Sollte man nur Audios bei zugewiesenen Endstationen abspielen wollen kann man `general` leerlassen, der bot skipped das ganze dann:  
-
-```json
-"stations": {
-    "general": ""
-}
-```
-
-Es gibt außerdem die Möglichkeit, mehrere Audiodateien zu einer Endstation durch Listen zuzuweisen. Der Bot sucht sich dann jedes mal wenn er den vc joined eine davon aus.
-
-```json
-"stations": {
-    "general": ["general_1.aac", "general_2.aac"]
-}
-```
-
-#### blacklist:  
-Die Blacklist ist dafür gedacht, ganze Zugtypen zu ignorieren. Beispielsweise möchte man, dass der Bot keine ICE's, keine NightJets und keine European Sleepers auswählt, da diese sehr lange Strecken fahren und der VC somit lange unverändert bleibt:
-```json
-{
-    "blacklist": [
-        "ICE",
-        "NJ",
-        "ES"
+      }
     ]
-}
-```  
+  },
+```
 
-Die Namen der einzelnen Zugtypen kann im Footer von `/info` oder im Terminal log erfahren.
+#### http
 
-#### src/data 
-Es kann vorkommen, dass während dem `/info` Befehl das Logo und die Farbe des Bahnuntermehns fehlt.
+- `"user_agent"`: The user agent of the bot for the API. If you don't know what that is, then you shouldn't have to change that. Even if you do, you still probably don't have to
 
-![Beispiel für fehlende Daten](.github/info_fehlende_daten.png)  
-
-Die zugehörigen Daten lassen sich innerhalb [src/data/operators.py](src/data/operators.py) ergänzen. Der Aufbau dabei sollte selbsterklärend sein, dennoch habe ich eine kleine Beschreibung in die Datei hinzugefügt. Bei Änderungen sind PR's willkommen.  
-
-Emojis für die Formattierung werden dynamisch anhand des Zugtypens gepulled. Dabei wird zwischen Nahverkehr und Fernverkehr unterschieden. Bei einem Zugtyp, welcher zu keiner der Kategorie assigned ist, wird ein Fallback Emoji eingesetzt. Sollte man einen Zugtypen hinzufügen wollen oder die Emojis ändern/deaktivieren wollen ist dies in [src/data/emojis.py](src/data/emojis.py) möglich. Die Namen der einzelnen Zugtypen kann im Footer von `/info` oder im Terminal log erfahren.
-
-Den Status, den sich der Bot alle 5 Minuten random auswählt, kann man in [src/data/status.py](src/data/status.py) anpassen.
-
-</details>
-
-### Running
+## Running
+After you've set everything up, you're ready to start the bot!
 
 ```sh
-# Python
-python main.py
-# ODER
-python3 main.py
-
-# uv
-uv run main.py
+$ python run main.py
 ```
 
-## Bekannte Bugs
-#### Stuttgart in Berlin
-Ich weiß nicht ganz wieso, aber die API vertauscht manchmal die S-Bahn von Berlin mit der S-Bahn von Stuttgart. Es scheint eher ein API-Issue zu sein, weswegen ich da leider mit dem Bot nicht viel ändern kann.   
-Der Bug führt dazu, dass bei manchen S-Bahn Verbindungen `DB Regio AG S-Bahn Stuttgart` als Betreiber der Berlin S-Bahn angezeigt wird. Außerdem gibt die API dem Bot die Ankunftszeiten einer S-Bahn Verbindung von Stuttgart wieder, während die Route von der aus Berlin stammt (Die Route und die Ankunftszeiten werden von zwei verschiedenen Endpoints gepulled: Route: `{dbf}/Berlin%20Hbf.json`, Ankunftszeit: `{dbf}/z/S%20{ID}/Berlin Hbf.json`).  
-Falls das einem zu sehr stört kann man S-Bahns auf die Blacklist packen.   
+## src/data
+[src/data](src/data/) contains a few files/directories which may be interesting to customize. 
 
-```json
-{
-    "blacklist": [
-        "S "
-    ]
-}
+### [emojis.py](src/data/emojis.py)
+if `emojis` is enabled in the config, the bot will use that file to determine the right emoji for the voice chats name according to the current mode. You can add missing modes there or customize the emojis
 
-```
+### [operators.py](src/data/operators.py)
+Metadata for the `/info` embed. You can assign an agency a logo, color and (optionally) some slogans. The agency name is visible in the console log and the `/info` embed.
 
-#### Nahreisezug
-Der Bot empfängt durch die dbf API ein Operator Field, wo der Betreiber des Züges angezeigt wird. Dadurch kann im `/info` Embed das Logo durch [src/data/operators.py](src/data/operators.py) zugewiesen werden. Manchmal schmeißt die API aber als Operator "Nahreisezug" aus.
+If multiple agencys should use the same metadata, take a look at OPERATOR_ALIASES. 
 
-![Beispiel für Nahreisezug](.github/info_nahreisezug.png)  
+You don't have to restart the bot after editing this file.
 
-Wenn mehrere Betreiber angezeigt werden (bspw `["SBB", "Nahreisezug"]`) versucht der Bot immer, den Embed den bekannten Betreiber (in dem Fall SBB) zuzuweisen. Sollte allerdings nur Nahreisezug angezeigt werden, kann damit nicht gearbeitet werden, wodurch die Fallback Metadaten genutzt werden.  
+### [locales/](src/data/locales/)
+Covered in [locales](#locales)
 
-Die Fallback Metadaten können in [src/data/operators.py](src/data/operators.py) angepasst werden.
+### [announcements/](src/data/announcements/)
+Covered in [voice announcements](#voice)
+
+### [announcements](src/data/announcements/)
+Assets (such as images) which the bot uses. You shouldn't have to change anything there
