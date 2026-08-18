@@ -186,6 +186,7 @@ I highly recommend keeping `"OTHER"` blacklisted, if the API doesn't know what t
 ##### announcements
 The bot can send a text announcement in the voice chat at the start/end of a trip. 
 At the end of a trip, it would send this embed:
+
 ![end_of_trip](.github/end_of_trip_announcement.png)
 
 It will also send the `/info` embed at the start of a new connection with informations about your new trip.
