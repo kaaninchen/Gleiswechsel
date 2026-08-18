@@ -108,7 +108,7 @@ async def _schedule_next_transfer(bot: discord.Bot, arrival_dt: datetime, voice_
 
     if wait_seconds > 0:
         remaining = str(timedelta(seconds=wait_seconds))
-        logger(f"Next transfer in {remaining.split('.')[0]} ({arrival_dt.strftime('%H:%M')} Uhr)")
+        logger(f"Next transfer in {remaining.split('.')[0]} ({arrival_dt.strftime('%H:%M')})")
 
         if wait_seconds > announcement_countdown:
             wait_until_end_announcement = wait_seconds - announcement_countdown

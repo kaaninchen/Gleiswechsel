@@ -201,10 +201,10 @@ def format_stop_list(stops: dict, next_stop: str | None) -> list[tuple[str, str]
     for name, info in stops.items():
         if name == next_stop:
             stop_arrival = info["arrival"]
-            line = f"• __{name}__ ({stop_arrival.strftime("%H:%M")} Uhr)"
+            line = f"• __{name}__ ({stop_arrival.strftime("%H:%M")})"
         else:
             stop_arrival = info["arrival"]
-            line = f"• {name} ({stop_arrival.strftime("%H:%M")} Uhr)"
+            line = f"• {name} ({stop_arrival.strftime("%H:%M")})"
 
         if field_length + len(line) + 1 > 1024:
             route_page_name = "Route" if part == 1 else "Route (Fortsetzung)"
