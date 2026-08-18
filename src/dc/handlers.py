@@ -127,12 +127,14 @@ async def _update_next_loop(bot: discord.Bot, voice_channel: discord.VoiceChanne
         if trip is None:
             return
 
+        '''
         now = datetime.now(LOCAL_TZ)
         departure_dt = trip["departure_dt"]
-
+        
         if departure_dt > now:
                 wait_seconds = (departure_dt - now).total_seconds()
                 await asyncio.sleep(wait_seconds)
+        '''
 
         while True:
             next_stop = get_next_station(trip["stops"], trip["from"])
@@ -141,6 +143,7 @@ async def _update_next_loop(bot: discord.Bot, voice_channel: discord.VoiceChanne
                 return
             
             next_stop_str = next_stop["name"]
+            print(next_stop_str)
             
             status_text = f"{lang.embeds.info.next_stop()}: {next_stop_str}"
             await voice_channel.set_status(status_text, reason="Next stop status")
