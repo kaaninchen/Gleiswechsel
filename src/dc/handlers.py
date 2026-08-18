@@ -139,7 +139,8 @@ async def _update_next_loop(voice_channel: discord.VoiceChannel):
             await voice_channel.set_status(status_text, reason="Next stop status")
 
             if config.announcements.voice_announcements:
-                await voice_announcer(next_stop_str, voice_channel)
+                if len(voice_channel.members) > 0:
+                    await voice_announcer(next_stop_str, voice_channel)
 
             wait_seconds = (next_stop["arrival"] - datetime.now(LOCAL_TZ)).total_seconds()
             if wait_seconds > 0:
