@@ -263,6 +263,12 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
             departure_time_iso = stop["departure"]
             trip_details["departure"] = parse_iso(departure_time_iso).strftime("%H:%M")
 
+    train_to_importance = legs["to"]["importance"]
+    trip_details["stops"][goes_to] = {
+        "arrival": arrival_dt,
+        "importance": train_to_importance
+    }
+
     valid = validate_connection(start_time, end_time, departure_time_iso)
     if not valid:
         return None

@@ -13,7 +13,10 @@
       "Amsterdam",
       "Helsinki"
     ],
-    "blacklist": [],
+    "blacklist": [
+      "OTHER",
+      "RIDE_SHARING"
+    ],
     "min_duration": 5,
     "max_duration": null,
     "max_wait_time": 6,

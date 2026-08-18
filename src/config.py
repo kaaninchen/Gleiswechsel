@@ -16,8 +16,8 @@ class ConnectionsConfig:
     stations: list[str]
     blacklist: list[str]
     min_duration: int
-    max_wait_time: int
     timezone: str
+    max_wait_time: Optional[int] = None
     max_duration: Optional[int] = None
 
 @dataclass

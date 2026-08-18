@@ -37,9 +37,10 @@ def validate_connection(start_time: str, end_time: str, departure_time_iso: str)
         return False
 
     max_wait_time = config.connections.max_wait_time
-    if start_dt > now + timedelta(hours=max_wait_time):
-        logger(f"Connection is way too far in the future: {start_dt} (max_wait_time: {max_wait_time}h)", "error")
-        return False
+    if max_wait_time:
+        if start_dt > now + timedelta(hours=max_wait_time):
+            logger(f"Connection is way too far in the future: {start_dt} (max_wait_time: {max_wait_time}h)", "error")
+            return False
 
     departure_time_iso_dt = datetime.fromisoformat(departure_time_iso.replace("Z", "+00:00"))
     trip_duration = (end_dt - departure_time_iso_dt).total_seconds()

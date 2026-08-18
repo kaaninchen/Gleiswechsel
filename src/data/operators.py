@@ -1,22 +1,5 @@
-''''
-Die Datei gibt dem Embed zugehörige Metadaten der Zugbetreiber. Identifiziert wird dabei durch die genauen Namen der Unternehmen. 
-Diese werden sowohl im /info Embed als auch in der Konsole angezeigt. 
-
-| Feld    | Optional | Wert  | Beschreibung                                                          |
-|---------|----------|-------|-----------------------------------------------------------------------|
-| Unknown | Ja       | Bool  | Eigentlich nur für fallback relevant, sollte man weglassen            |
-| Logo    | Nein     | URL   | Das Logo in der Ecke des Embeds. Am besten PNG, SVG geht leider nicht |
-| Color   | Nein     | HEX   | HEX Color Code des Streifen vom Embed, muss mit 0x anfangen           |
-| Slogan  | Ja       | Liste | Zufälliger Text aus der Liste im Footer                               |
-
-Sollte es dazu kommen, dass mehrere Anbieter die selben Metadaten nutzen sollen, kann man einen Eintrag für alle in OPERATORS setzen und 
-die zugehörigen Anbieternamen in OPERATOR_ALIASES auf den Eintrag lenken lassen. db_bawü ist dafür ein gutes Beispiel.
-
-Nachdem diese Datei editiert wurde muss der Bot nicht neugestartet werden.
-'''
 OPERATORS = { 
     "fallback": {
-        "unknown": True,
         "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCVeC5E0mNNBKyQftQaFMzxIVkbDvEnSzWv07h_c8PdA&s=10",
         "color": 0xFFFFFF
     },
@@ -114,6 +97,10 @@ OPERATORS = {
     "Berliner Verkehrsbetriebe": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/BVG_Logo_07.2021.svg/960px-BVG_Logo_07.2021.svg.png",
         "color": 0xEFD13C
+    },
+    "Flixbus": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flixbus_201x_logo.svg/1280px-Flixbus_201x_logo.svg.png",
+        "color": 0x8CD541
     }
 }
 
@@ -136,7 +123,8 @@ OPERATOR_ALIASES = {
     "SBB GmbH": OPERATORS["SBB"],
     "Schweizerische Bundesbahnen SBB": OPERATORS["SBB"],
     "Dänische Staatsbahnen": OPERATORS["DSB"],
-    "VR": OPERATORS["Vr"]
+    "VR": OPERATORS["Vr"],
+    "FlixBus-gb": OPERATORS["Flixbus"]
 }
 
 

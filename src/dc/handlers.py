@@ -34,10 +34,11 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
     print("-----------------")
     logger(f"Transfer: {long_name}; Arrival: {arrival}")
     logger(f"Agency: {trip["agency"]}, mode: {mode}")
-    logger(f"Trying to change channel name. If nothing happens, then the bot is in cooldown... (automatically resolves after up to 10min)")
+    logger(f"Trying to change the channels name. If nothing happens, then the bot is in cooldown... (automatically resolves after up to 10min)")
 
     formatting = channel_formatting(mode)
     await voice_channel.edit(name=f"{formatting}{long_name}")
+    await voice_channel.set_status(None)
     start_next_stop_updates(bot, voice_channel)
 
 
@@ -58,7 +59,7 @@ async def announcer(announcement: str, voice_channel: discord.VoiceChannel, dest
             match announcement:
                 case "end_of_connection":
                     if voice_announcement_enabled:
-                        announcement_status = await voice_announcer(destination, voice_channel)
+                        announcement_status = await voice_announcer(destination, voice_channel, "end_stations")
                         if announcement_status:
                             return
                     embed = build_announcement_embed(lang.embeds.announcement.end_of_connection.message())
@@ -151,7 +152,6 @@ async def _update_next_loop(bot: discord.Bot, voice_channel: discord.VoiceChanne
                 await asyncio.sleep(wait_seconds)
 
     except asyncio.CancelledError:
-        await voice_channel.set_status(None)
         raise
 
 def start_next_stop_updates(bot: discord.bot, voice_channel: discord.VoiceChannel):
