@@ -36,55 +36,9 @@ Next, you should configure the bot to your liking
 ## Config
 Even if it seems a bit tedious, I highly recommend going through the entire config and checking if there's something that you would like to customize.  
 
-I added an [example config](config.json.example):
-```json
-{
-  "discord": {
-    "token": "",
-    "server": ,
-    "vc": ,
-    "lang": "de",
-    "formatting": "┇",
-    "emojis": true
-  },
-  "connections": {
-    "stations": [
-      "Berlin Hauptbahnhof",
-      "Amsterdam",
-      "Helsinki"
-    ],
-    "IDs": [],
-    "blacklist": [
-      "OTHER",
-      "RIDE_SHARING"
-    ],
-    "min_duration": 10,
-    "max_duration": null,
-    "max_wait_time": null,
-    "timezone": "Europe/Berlin"
-  },
-  "announcements": {
-    "enabled": true,
-    "voice": [
-      {
-        "enabled": false,
-        "end_stations": {
-          "general": "general.aac",
-        },
-        "stops": {
-        }
-      }
-    ]
-  },
-  "http": {
-    "user_agent": "Gleiswechsel-Discord-Bot"
-  }
-}
-```
+I added an [example config](config.json.example). Rename `config.json.example` to `config.json` and fill it out.
 
-You have to rename `config.json.example` to `config.json` and fill out the essential fields so that the bot is usable.
-
-### Explanations
+### Config explanations
 
 #### discord
 
