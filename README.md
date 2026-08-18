@@ -49,9 +49,14 @@ I added an [example config](config.json.example):
   },
   "connections": {
     "stations": [
-      ""
+      "Berlin Hauptbahnhof",
+      "Amsterdam",
+      "Helsinki"
     ],
-    "blacklist": [],
+    "blacklist": [
+      "OTHER",
+      "RIDE_SHARING"
+    ],
     "min_duration": 5,
     "max_duration": null,
     "max_wait_time": 6,
@@ -62,8 +67,10 @@ I added an [example config](config.json.example):
     "voice": [
       {
         "enabled": false,
-        "stations": {
+        "end_stations": {
           "general": "general.aac",
+        },
+        "stops": {
         }
       }
     ]
