@@ -39,30 +39,23 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
     formatting = channel_formatting(mode)
     await voice_channel.edit(name=f"{formatting}{long_name}")
     await voice_channel.set_status(None)
-    start_next_stop_updates(bot, voice_channel)
-
+    start_next_stop_updates(voice_channel)
 
     logger(f"Updated channel name!")
 
     await announcer("transfer", voice_channel)
 
-
     _scheduled_task = asyncio.create_task(_schedule_next_transfer(bot,  trip["arrival_dt"], voice_channel, trip["to"]))
 
 async def announcer(announcement: str, voice_channel: discord.VoiceChannel, destination = None):
     from src.dc.embeds import build_info_embed, build_announcement_embed
-    announcements_enabled = config.announcements.enabled
-    voice_announcement_enabled = config.announcements.voice[0].enabled
+    announcements_enabled = config.announcements.text_announcements
 
     if announcements_enabled:
         if len(voice_channel.members) > 0:
             match announcement:
                 case "end_of_connection":
-                    if voice_announcement_enabled:
-                        announcement_status = await voice_announcer(destination, voice_channel, "end_stations")
-                        if announcement_status:
-                            return
-                    embed = build_announcement_embed(lang.embeds.announcement.end_of_connection.message())
+                        embed = build_announcement_embed(lang.embeds.announcement.end_of_connection.message())
                 case "transfer":
                     embed = build_info_embed()
                 case _:
@@ -72,8 +65,8 @@ async def announcer(announcement: str, voice_channel: discord.VoiceChannel, dest
             if embed:
                 await voice_channel.send(embed=embed)
 
-async def voice_announcer(destination: str, voice_channel: discord.VoiceChannel, type_announcement: str) -> bool:
-    sound_path = get_sound_path(destination=destination, type_announcement=type_announcement)
+async def voice_announcer(station: str, voice_channel: discord.VoiceChannel) -> bool:
+    sound_path = get_sound_path(station=station)
     if sound_path is None:
         return False
 
@@ -121,7 +114,7 @@ async def _schedule_next_transfer(bot: discord.Bot, arrival_dt: datetime, voice_
         logger("Train arrived, searching for a new connection....")
         await rename_vc(bot, voice_channel, from_scheduler=True)
 
-async def _update_next_loop(bot: discord.Bot, voice_channel: discord.VoiceChannel):
+async def _update_next_loop(voice_channel: discord.VoiceChannel):
     global trip
     try:
         if trip is None:
@@ -145,7 +138,8 @@ async def _update_next_loop(bot: discord.Bot, voice_channel: discord.VoiceChanne
             status_text = f"{lang.embeds.info.next_stop()}: {next_stop_str}"
             await voice_channel.set_status(status_text, reason="Next stop status")
 
-            await voice_announcer(next_stop_str, voice_channel, type_announcement="stops")
+            if config.announcements.voice_announcements:
+                await voice_announcer(next_stop_str, voice_channel)
 
             wait_seconds = (next_stop["arrival"] - datetime.now(LOCAL_TZ)).total_seconds()
             if wait_seconds > 0:
@@ -154,10 +148,10 @@ async def _update_next_loop(bot: discord.Bot, voice_channel: discord.VoiceChanne
     except asyncio.CancelledError:
         raise
 
-def start_next_stop_updates(bot: discord.bot, voice_channel: discord.VoiceChannel):
+def start_next_stop_updates(voice_channel: discord.VoiceChannel):
     global _next_stop_task
 
     if _next_stop_task is not None and not _next_stop_task.done():
         _next_stop_task.cancel()
 
-    _next_stop_task = asyncio.create_task(_update_next_loop(bot, voice_channel))
+    _next_stop_task = asyncio.create_task(_update_next_loop(voice_channel))

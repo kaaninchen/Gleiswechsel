@@ -22,15 +22,9 @@ class ConnectionsConfig:
     max_duration: Optional[int] = None
 
 @dataclass
-class VoiceAnnouncementConfig:
-    enabled: bool
-    end_stations: dict[str, str]
-    stops: dict[str, str]
-
-@dataclass
 class AnnouncementConfig:
-    enabled: bool
-    voice: list[VoiceAnnouncementConfig]
+    text_announcements: bool
+    voice_announcements: bool
 
 @dataclass
 class HttpConfig:
@@ -50,10 +44,7 @@ def _load_config() -> Config:
     return Config(
         discord=DiscordConfig(**raw["discord"]),
         connections=ConnectionsConfig(**raw["connections"]),
-        announcements=AnnouncementConfig(
-            enabled=raw["announcements"]["enabled"],
-            voice=[VoiceAnnouncementConfig(**v) for v in raw["announcements"]["voice"]],
-        ),
+        announcements=AnnouncementConfig(**raw["announcements"]),
         http=HttpConfig(**raw["http"]),
     )
 

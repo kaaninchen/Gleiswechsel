@@ -187,6 +187,8 @@ I highly recommend keeping `"OTHER"` blacklisted, if the API doesn't know what t
 - `timezone` is timezone in the IANA timezone format. You can [look it up here](https://www.addevent.com/c/documentation/tools/time-zone-lookup)
 
 ##### announcements
+
+##### `text_announcements:`
 The bot can send a text announcement in the voice chat at the start/end of a trip. 
 At the end of a trip, it would send this embed:
 
@@ -196,37 +198,10 @@ It will also send the `/info` embed at the start of a new connection with inform
 
 To reduce spam, the bot will only send announcements if someone is in the voice chat
 
-##### voice
-⚠️ Requires `announcements` to be set to enabled
+##### `voice_announcements:`
+The bot can join the voice chat, play an audio file, and disconnect from the voice chat, at various points of your trip. You have to have [FFmpeg](https://www.ffmpeg.org/) installed for this to work.
 
-The bot can join the voice chat, play an audio file, and leave at various points of your trip. You have to have [FFmpeg](https://www.ffmpeg.org/) installed for this to work.
-
-Place the audio file of your desired station in [src/data/announcements](src/data/announcements/). Then, define the stations name with the name of the audio file in either `end_stations` or `stops`. The path will be autocompleted to  [src/data/announcements](src/data/announcements/). The station name has to be EXACT, if you're unsure then [get the name through the helper script](#stations)
-
-`end_stations` is for audio files that should play at the end of your trip, and `stops` is for audio files that should play while the train is passing through your desired station. If you set the name of a station to `general`, then the bot will always play that file before the trip ends/a new stop has been reached.
-
-I'm hoping that I didn't explain this too complicated. Here's an example to visualize this:
-
-![example_files](.github/voice_announcements_visualized.png)
-
-```json
-  "announcements": {
-    "enabled": true,
-    "voice": [
-      {
-        "enabled": true,
-        "end_stations": {
-          "general": "general.aac",
-          "Hannover Hbf": "hannover.aac"
-        },
-        "stops": {
-          "Amsterdam, Noorderpark": "noorderpark.aac"
-        }
-      }
-    ]
-  },
-```
-
+Place the audio file of your desired station in [src/data/announcements](src/data/announcements/) with the EXACT name of the station. The bot will automatically check if an audio file with the stations name exists, and if it does, play it. 
 #### http
 
 - `"user_agent"`: The user agent of the bot for the API. If you don't know what that is, then you shouldn't have to change that. Even if you do, you still probably don't have to

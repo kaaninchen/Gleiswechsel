@@ -24,17 +24,8 @@
     "timezone": "Europe/Berlin"
   },
   "announcements": {
-    "enabled": true,
-    "voice": [
-      {
-        "enabled": false,
-        "end_stations": {
-          "general": "general.aac",
-        },
-        "stops": {
-        }
-      }
-    ]
+    "text_announcements": true,
+    "voice_announcements": false
   },
   "http": {
     "user_agent": "Gleiswechsel-Discord-Bot"

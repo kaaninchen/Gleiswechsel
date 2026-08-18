@@ -243,7 +243,7 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
     arrival_dt = parse_iso(end_time)
     departure_dt = parse_iso(start_time)
 
-    train_name = get_train_name(display_name, mode)
+    train_name = get_train_name(display_name, mode) # used by lang
     if train_from == from_station:
         long_name = long_name_lang.train_from()
     else:

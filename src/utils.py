@@ -123,31 +123,14 @@ def get_operator_metadata(agency: str, route_color: str, mode: str) -> dict:
         "slogans": slogans
     }
 
-def get_sound_path(destination, type_announcement: str) -> str | None:
-    if type_announcement == "end_stations":
-        voice_stations = config.announcements.voice[0].end_stations
-    elif type_announcement == "stops":
-        voice_stations = config.announcements.voice[0].stops
-    
-    if destination in voice_stations:
-        announcement_for = destination
-    else:
-        general_sound_enabled = voice_stations.get("general", "")
-        if not general_sound_enabled:
-            return None
-        announcement_for = "general"
-        
-    if voice_stations.values() == list:
-        sound_file = random.choice(voice_stations.get(announcement_for))
-    else:
-        sound_file = voice_stations.get(announcement_for)
+def get_sound_path(station: str) -> str | None:
+    announcement_dir = Path("src/data/announcements")
 
-    sound_path = f"src/data/announcements/{sound_file}"
-    if Path(sound_path).is_file() is False:
-        logger(f"Couldn't find {sound_path}", "error")
-        return None
-
-    return sound_path
+    for file in announcement_dir.iterdir():
+        if file.is_file():
+            if station.lower() in file.stem.lower():
+                sound_file = file.resolve()
+                return sound_file
 
 def get_next_station(stops: dict, train_from: str) -> dict | None:
     now = datetime.now(LOCAL_TZ)
