@@ -61,6 +61,7 @@ def build_info_embed() -> discord.Embed:
     embed.set_author(name=agency)
     embed.set_thumbnail(url=metadata["logo"])
 
+    embed.set_image(url="attachment://ride.png")
     return embed
 
 def build_announcement_embed(msg):

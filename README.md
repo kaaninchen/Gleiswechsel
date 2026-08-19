@@ -158,7 +158,7 @@ The bot can join the voice chat, play an audio file, and disconnect from the voi
 Place the audio file of your desired station in [src/data/announcements](src/data/announcements/) with the EXACT name of the station. The bot will automatically check if an audio file with the stations name exists, and if it does, play it. 
 #### http
 
-- `"user_agent"`: The user agent of the bot for the API. If you don't know what that is, then you shouldn't have to change that. Even if you do, you still probably don't have to
+- `"user_agent"`: The user agent of the bot for the API. If you don't know what that is, then you shouldn't have to change that.
 
 ## Running
 After you've set everything up, you're ready to start the bot!
@@ -186,5 +186,5 @@ Covered in [locales](#locales)
 ### [announcements/](src/data/announcements/)
 Covered in [voice announcements](#voice)
 
-### [announcements](src/data/announcements/)
+### [assets](src/data/assets/)
 Assets (such as images) which the bot uses. You shouldn't have to change anything there

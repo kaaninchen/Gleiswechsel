@@ -1,6 +1,7 @@
 venv/
 __pycache__/
 src/data/announcements/*
+src/data/assets/current_map.png
 !src/data/announcements/.gitkeep
 config.json
 stations.json

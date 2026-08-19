@@ -92,6 +92,10 @@ OPERATORS = {
         "color": 0x812B6D,
         "slogan": ["Pour nous tous", "Donner au train des idées d'avance"]
     },
+    "Stadtverkehr Tübingen GmbH": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Stadtwerke_T%C3%BCbingen_logo.svg/330px-Stadtwerke_T%C3%BCbingen_logo.svg.png",
+        "color": 0x439669
+    },
     "Tallink Grupp AS": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Tallink_logo.svg/330px-Tallink_logo.svg.png",
         "color": 0x225197

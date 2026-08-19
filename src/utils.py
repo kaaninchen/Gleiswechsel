@@ -1,8 +1,8 @@
 import os
 import importlib
-import random
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
+import staticmaps
 from src.config import config
 from zoneinfo import ZoneInfo
 
@@ -202,3 +202,129 @@ def format_stop_list(stops: dict, next_stop: str | None) -> list[tuple[str, str]
         fields.append((route_page_name, "\n".join(field_lines)))
 
     return fields
+
+def generate_static_map(stops: dict, mode: str, operator: str, route_color: str):
+    logger("Generating a new route map..")
+    operator_metadata = get_operator_metadata(operator, route_color, mode)
+    operator_color = operator_metadata["color"]
+    if operator_color == 0xFFFFFF:
+        stop_color = staticmaps.Color(105, 105, 105, 255)
+    else:
+        stop_color = staticmaps.parse_color(f"#{operator_color:06x}")
+
+    white = staticmaps.Color(255, 255, 255, 255)
+    
+    context = staticmaps.Context()
+
+    context.set_tile_provider(
+        staticmaps.TileProvider(
+            "carto-voyager",
+            url_pattern=(
+                "https://$s.basemaps.cartocdn.com/"
+                "rastertiles/voyager/$z/$x/$y.png"
+            ),
+            shards=["a", "b", "c", "d"],
+            attribution="",
+        )
+        # It is against the law (and against your morals...) to not give
+        # OSM and carto credits for their great work
+        # I only removed the attribution text because I really dislike the
+        # ugly white box that py-staticmaps adds. Credits are still visible in the
+        # embeds footer
+    )
+
+    stop_coords = [
+        staticmaps.create_latlng(
+            stop["lat"],
+            stop["lon"],
+        )
+        for stop in stops.values()
+    ]
+
+    context.add_object(
+        staticmaps.Line(
+            stop_coords,
+            color=white,
+            width=20,
+        )
+    )
+
+    context.add_object(
+        staticmaps.Line(
+            stop_coords,
+            color=stop_color,
+            width=8,
+        )
+    )
+
+    last_index = len(stop_coords) - 1
+    for i, point in enumerate(stop_coords):
+        
+        if i == 0 or i == last_index:
+            context.add_object(
+                staticmaps.Circle(
+                    point,
+                    radius_km=0.1,
+                    fill_color=white,
+                    color=stop_color,
+                    width=12
+                )
+            )
+            if i == last_index:
+                context.add_object(
+                    staticmaps.Marker(
+                        point,
+                        color=stop_color,
+                        size=12
+                    )
+                )
+        elif mode not in ["TRAM", "BUS", "SUBWAY", "SUBURBAN", "METRO"]: # wayyy too many stops...
+            context.add_object(
+                staticmaps.Circle(
+                    center=point,
+                    fill_color=white,
+                    radius_km=0.1,
+                    color=stop_color,
+                    width=10,
+                )
+            )
+
+    lats = [c.lat().degrees for c in stop_coords]
+    lons = [c.lng().degrees for c in stop_coords]
+    lat_span = max(lats) - min(lats)
+    lon_span = max(lons) - min(lons)
+
+    MIN_SPAN = 0.01 
+
+    if lat_span < MIN_SPAN or lon_span < MIN_SPAN:
+        center_lat = (max(lats) + min(lats)) / 2
+        center_lon = (max(lons) + min(lons)) / 2
+        pad = MIN_SPAN / 2
+
+        context.add_object(
+            staticmaps.Circle(
+                staticmaps.create_latlng(center_lat + pad, center_lon + pad),
+                radius_km=0.01,
+                fill_color=staticmaps.TRANSPARENT,
+                color=staticmaps.TRANSPARENT,
+                width=0,
+            )
+        )
+        context.add_object(
+            staticmaps.Circle(
+                staticmaps.create_latlng(center_lat - pad, center_lon - pad),
+                radius_km=0.01,
+                fill_color=staticmaps.TRANSPARENT,
+                color=staticmaps.TRANSPARENT,
+                width=0,
+            )
+        )
+
+    try:
+        image = context.render_cairo(400, 300)
+        image.write_to_png("src/data/assets/current_map.png")
+    except RuntimeError:
+        logger(f"You don't have cairo installed! Because of that I can only give you a low-res png of the route...")
+        image = context.render_pillow(400, 300)
+        image.save("src/data/assets/current_map.png")
+    logger("Map generated!")

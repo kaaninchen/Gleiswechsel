@@ -3,7 +3,7 @@ import asyncio
 import random
 from datetime import datetime, timedelta
 
-from src.utils import logger, channel_formatting, choose_connection, get_sound_path, LOCAL_TZ, get_next_station
+from src.utils import logger, channel_formatting, choose_connection, get_sound_path, LOCAL_TZ, get_next_station, generate_static_map
 from src.config import config
 from src.lang.locales import lang
 
@@ -26,18 +26,25 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
     if trip is None:
         logger(f"Failed to select route after {max_attempt} attempts", "fatal")
         return False
+
+    generate_static_map(trip["stops"], trip["mode"], trip["agency"], trip["route_color"])
     
     arrival = trip["arrival"]
-    long_name = trip["long_name"]
+
+    if len(trip["long_name"]) >= 100:
+        channel_name = trip["short_name"]
+    else:
+        channel_name = trip["long_name"]
+
     mode = trip["mode"]
 
     print("-----------------")
-    logger(f"Transfer: {long_name}; Arrival: {arrival}")
+    logger(f"Transfer: {channel_name}; Arrival: {arrival}")
     logger(f"Agency: {trip["agency"]}, mode: {mode}")
     logger(f"Trying to change the channels name. If nothing happens, then the bot is in cooldown... (automatically resolves after up to 10min)")
 
     formatting = channel_formatting(mode)
-    await voice_channel.edit(name=f"{formatting}{long_name}")
+    await voice_channel.edit(name=f"{formatting}{channel_name}")
     await voice_channel.set_status(None)
     start_next_stop_updates(voice_channel)
 
@@ -59,12 +66,16 @@ async def announcer(announcement: str, voice_channel: discord.VoiceChannel, dest
                         embed = build_announcement_embed(lang.embeds.announcement.end_of_connection.message())
                 case "transfer":
                     embed = build_info_embed()
+                    image = discord.File("src/data/assets/current_map.png", filename="ride.png")
                 case _:
                     logger(f"Unknown announcement: {announcement}")
                     embed = None
 
             if embed:
-                await voice_channel.send(embed=embed)
+                if image:
+                    await voice_channel.send(file=image, embed=embed)
+                else:
+                    await  voice_channel.send(embed=embed)
 
 async def voice_announcer(station: str, voice_channel: discord.VoiceChannel) -> bool:
     sound_path = get_sound_path(station=station)
@@ -145,7 +156,7 @@ async def _update_next_loop(voice_channel: discord.VoiceChannel):
 
             wait_seconds = (next_stop["arrival"] - datetime.now(LOCAL_TZ)).total_seconds()
             if wait_seconds > 0:
-                await asyncio.sleep(wait_seconds)
+                await (wait_seconds)
 
     except asyncio.CancelledError:
         raise

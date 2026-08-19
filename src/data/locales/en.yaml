@@ -4,7 +4,7 @@ channel:
     train_via: "{train_name} to {goes_to} via {from_station}"
 embeds:
   footer:
-    notice: "Data provided by https://transitous.org"
+    notice: "Data provided by https://transitous.org • Maps (C) CARTO (C) OpenStreetMap.org contributors"
   info:
     description: "Departure from {station} at {departure}. Arrival by {arrival}"
     via: "via"
