@@ -100,6 +100,10 @@ OPERATORS = {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Tallink_logo.svg/330px-Tallink_logo.svg.png",
         "color": 0x225197
     },
+    "Verkehrsbetrieb Potsdam GmbH": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Verkehrsbetrieb_Potsdam_logo.svg/330px-Verkehrsbetrieb_Potsdam_logo.svg.png",
+        "color": 0x000000
+    },
     "Vr": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Vr_Logo.png/330px-Vr_Logo.png",
         "color": 0x00B451,
