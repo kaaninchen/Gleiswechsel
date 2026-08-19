@@ -29,7 +29,7 @@ OPERATORS = {
         "color": 0x88216F,
         "slogan": ["enno fährt bunt"]
     },
-    "Erfurter Bahn GmbH": {
+    "Erfurter Bahn": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Erfurter_Bahn_logo.svg/960px-Erfurter_Bahn_logo.svg.png",
         "color": 0x009133,
         "slogan": ["Kommt gut an."]
