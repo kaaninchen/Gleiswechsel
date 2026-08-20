@@ -9,6 +9,10 @@ OPERATORS = {
         "color": 0xCAE15B,
         "slogan": ["Reinsetzen, zurücklehnen", "Fahren Sie mit uns. Nehmen Sie Platz."]
     },
+    "Aktiv Bus Flensburg GmbH": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Aktiv_Bus_Flensburg_GmbH_logo.svg/960px-Aktiv_Bus_Flensburg_GmbH_logo.svg.png?utm_source=de.wikipedia.org&utm_campaign=index&utm_content=thumbnail",
+        "color": 0xFFC331
+    },
     "Arverio Bayern": {
         "logo": "https://cdn.discordapp.com/attachments/1383843132906537023/1528006572805062776/Arverio_Avi_Bayern_blau_RGB.png?ex=6a5cba83&is=6a5b6903&hm=5781ae6c372c92ab4f52409c6fc91e5014ac34ccf24db665ade052e8135bdde0&animated=true",
         "color": 0x0083BE,
