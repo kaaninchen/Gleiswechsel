@@ -167,7 +167,8 @@ OPERATOR_ALIASES = {
     "Schweizerische Bundesbahnen SBB": OPERATORS["SBB"],
     "Dänische Staatsbahnen": OPERATORS["DSB"],
     "VR": OPERATORS["Vr"],
-    "FlixBus-gb": OPERATORS["Flixbus"]
+    "FlixBus-gb": OPERATORS["Flixbus"],
+    "FlixBus-eu": OPERATORS["Flixbus"]
 }
 
 
