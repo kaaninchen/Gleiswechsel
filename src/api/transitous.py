@@ -291,7 +291,7 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
         trip_details["stops"][stop["name"]] = stop_details 
 
         if stop.get("name") == from_station:
-            departure_time = parse_iso(stop["departure"])
+            departure_time = stop["departure"]
             trip_details["departure"] = departure_time.strftime("%H:%M")
 
     train_to_importance = legs["to"]["importance"]
