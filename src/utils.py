@@ -279,16 +279,6 @@ def generate_static_map(stops: dict, mode: str, operator: str, route_color: str)
                         size=12
                     )
                 )
-        elif mode not in ["TRAM", "BUS", "SUBWAY", "SUBURBAN", "METRO"]: # wayyy too many stops...
-            context.add_object(
-                staticmaps.Circle(
-                    center=point,
-                    fill_color=white,
-                    radius_km=0.1,
-                    color=stop_color,
-                    width=10,
-                )
-            )
 
     lats = [c.lat().degrees for c in stop_coords]
     lons = [c.lng().degrees for c in stop_coords]
