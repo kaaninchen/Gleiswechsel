@@ -30,16 +30,17 @@ def choose_connection() -> dict | None:
 def validate_connection(start_time: str, end_time: str, departure_time_iso: str) -> bool:
     now = datetime.now(timezone.utc)
     start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+    start_local = start_dt.astimezone(LOCAL_TZ).strftime('%H:%M')
 
     end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
     if end_dt < now:
-        logger(f"Connection is from the past: {start_dt}", "error")
+        logger(f"Connection is from the past: {start_local}", "error")
         return False
 
     max_wait_time = config.connections.max_wait_time
     if max_wait_time:
         if start_dt > now + timedelta(hours=max_wait_time):
-            logger(f"Connection is way too far in the future: {start_dt} (max_wait_time: {max_wait_time}h), retrying...", "error")
+            logger(f"Connection is way too far in the future: {start_local} (max_wait_time: {max_wait_time}h), retrying...", "error")
             return False
 
     departure_time_iso_dt = datetime.fromisoformat(departure_time_iso.replace("Z", "+00:00"))

@@ -56,6 +56,7 @@ async def announcer(announcement: str, voice_channel: discord.VoiceChannel, dest
     announcements_enabled = config.announcements.text_announcements
 
     if announcements_enabled:
+        image = None
         if len(voice_channel.members) > 0:
             match announcement:
                 case "end_of_connection":
