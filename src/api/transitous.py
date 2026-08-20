@@ -11,7 +11,6 @@ from src.lang.locales import lang
 station_names = config.connections.stations
 station_IDs = config.connections.IDs
 blacklist = config.connections.blacklist
-long_name_lang = lang.channel.long_name
 user_agent = config.http.user_agent
 
 headers = {
@@ -238,18 +237,25 @@ def get_trip_details(random_connection: dict | None) -> dict | None:
         logger(f"Bot doesn't know what to do with round trips, I'll have to implement this some day", "error")
         return None # TODO actually handel this 
 
+    all_stop_names = [train_from] + [stop["name"] for stop in legs["intermediateStops"]] + [goes_to]
+    if len(all_stop_names) != len(set(all_stop_names)):
+        logger("Route reuses station names! Skipping, to be safe...", "error")
+        return None # TODO this too
+
     arrival_dt = parse_iso(end_time)
     departure_dt = parse_iso(start_time)
 
     train_name = get_train_name(display_name, mode) # used by lang
-    if train_from == from_station:
-        train_name = long_name_lang.train_from()
+    if len(lang.channel.long_name.train_from()) >= 100:
+        channel_name = lang.channel.short_name
     else:
-        long_name = long_name_lang.train_via()
-        
+        if train_from == from_station:
+            channel_name = lang.channel.long_name.train_from()
+        else:
+            channel_name = lang.channel.long_name.train_via()
+
     trip_details = {
-        "long_name": long_name,
-        "short_name": train_name,
+        "channel_name": channel_name,
         "station": from_station,
         "from": train_from,
         "to": goes_to,

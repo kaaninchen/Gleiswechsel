@@ -32,7 +32,7 @@ def build_info_embed() -> discord.Embed:
     arrival = format_timestamp_to_dc(trip["arrival"])
     
     embed = discord.Embed(
-        title = trip["long_name"],
+        title = trip["channel_name"],
         description=lang_embed.info.description(),
         color = metadata["color"]
     )

@@ -62,6 +62,10 @@ OPERATORS = {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/BSicon_LOGO_GVB.svg/960px-BSicon_LOGO_GVB.svg.png",
         "color": 0x2B62AF,
     },
+    "Jenaer Nahverkehr GmbH": {
+        "logo": "https://www.stadtwerke-jena.de/dam/jcr:74dc9d81-0447-4864-973b-7e395f1d6948/JNV_Bildmarke_322px.png",
+        "color": 0x0075BD 
+    },
     "Nordbahn Eisenbahngesellschaft": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Logo_Nordbahn_NAH.SH_Blau_positiv_final.png",
         "color": 0x1A2848,

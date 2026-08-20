@@ -30,11 +30,7 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
     generate_static_map(trip["stops"], trip["mode"], trip["agency"], trip["route_color"])
     
     arrival = trip["arrival"]
-
-    if len(trip["long_name"]) >= 100:
-        channel_name = trip["short_name"]
-    else:
-        channel_name = trip["long_name"]
+    channel_name = trip["channel_name"]
 
     mode = trip["mode"]
 
@@ -156,7 +152,7 @@ async def _update_next_loop(voice_channel: discord.VoiceChannel):
 
             wait_seconds = (next_stop["arrival"] - datetime.now(LOCAL_TZ)).total_seconds()
             if wait_seconds > 0:
-                await (wait_seconds)
+                await asyncio.sleep(wait_seconds)
 
     except asyncio.CancelledError:
         raise

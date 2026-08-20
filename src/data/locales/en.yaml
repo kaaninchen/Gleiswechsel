@@ -2,6 +2,7 @@ channel:
   long_name: 
     train_from: "{train_name} to {goes_to} from {train_from}"
     train_via: "{train_name} to {goes_to} via {from_station}"
+  short_name: "{train_name} to {goes_to}"
 embeds:
   footer:
     notice: "Data provided by https://transitous.org • Maps (C) CARTO (C) OpenStreetMap.org contributors"
