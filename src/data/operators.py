@@ -108,6 +108,10 @@ OPERATORS = {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Stadtwerke_T%C3%BCbingen_logo.svg/330px-Stadtwerke_T%C3%BCbingen_logo.svg.png",
         "color": 0x439669
     },
+    "Südwestdeutsche Verkehrs-AG": {
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/SWEG_Logo.svg/330px-SWEG_Logo.svg.png?utm_source=de.wikipedia.org&utm_campaign=index&utm_content=thumbnail",
+        "color": 0x1A509A
+    },
     "Tallink Grupp AS": {
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Tallink_logo.svg/330px-Tallink_logo.svg.png",
         "color": 0x225197
