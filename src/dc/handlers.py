@@ -145,7 +145,11 @@ async def _update_next_loop(voice_channel: discord.VoiceChannel):
             next_stop_str = next_stop["name"]
             
             status_text = f"{lang.embeds.info.next_stop()}: {next_stop_str}"
-            await voice_channel.set_status(status_text, reason="Next stop status")
+            
+            try:
+                await voice_channel.set_status(status_text, reason="Next stop status")
+            except discord.HTTPException as e:
+                logger(F"Failed to set the channel status (network error?): {e}", "error")
 
             if config.announcements.voice_announcements:
                 if len(voice_channel.members) > 0:
