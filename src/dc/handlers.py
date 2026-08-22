@@ -1,5 +1,6 @@
 import discord
 import asyncio
+import aiohttp
 import random
 from datetime import datetime, timedelta
 
@@ -148,7 +149,7 @@ async def _update_next_loop(voice_channel: discord.VoiceChannel):
             
             try:
                 await voice_channel.set_status(status_text, reason="Next stop status")
-            except discord.HTTPException as e:
+            except aiohttp.ClientConnectorDNSError as e:
                 logger(F"Failed to set the channel status (network error?): {e}", "error")
 
             if config.announcements.voice_announcements:

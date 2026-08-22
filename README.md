@@ -4,7 +4,7 @@ Gleiswechsel [ˈɡlaɪsvɛksəl] (german for "platform change") is a selfhostabl
 ![Example Channel](.github/preview_kanal.png)
 
 ## Features
-- [International support](https://transitous.org/sources/) for both countries and cities
+- [International support](https://transitous.org/sources/) for countries aswell as and cities
 - Support for various types of transportations, including but not limited to Subways, Busses, Funiculars, Trams and Trains
 - Multi language support (+ option to easily add more languages)
 - Announcements, including the option to join the voice chat and play an audio file while arriving at a specific station
