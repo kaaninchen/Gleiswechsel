@@ -82,7 +82,7 @@ but you can safely ignore this warning if you're fine with it.
 If not, I've created a tool which would help you to get the exact station name. You can use the tool by running
 
 ```sh
-$ python run main.py stations
+$ python main.py stations
 ```
 
 Example output:
@@ -164,7 +164,7 @@ Place the audio file of your desired station in [src/data/announcements](src/dat
 After you've set everything up, you're ready to start the bot!
 
 ```sh
-$ python run main.py
+$ python main.py
 ```
 
 ## src/data
