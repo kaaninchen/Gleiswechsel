@@ -9,7 +9,7 @@ lang_embed = lang.embeds
 
 def build_embed_footer(slogans):
     footer_notice = f"https://transitous.org/sources/ • Maps (C) CARTO (C) OpenStreetMap.org contributors"
-    icon = "https://raw.githubusercontent.com/kaaninchen/Gleiswechsel/refs/heads/main/src/data/assets/transitous-logo.png"
+    icon = "https://api.transitous.org/favicon.png"
 
     if slogans is not None:
         footer_text = f"{random.choice(slogans)} • {footer_notice}"
