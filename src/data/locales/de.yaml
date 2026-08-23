@@ -4,8 +4,6 @@ channel:
     train_via: "{train_name} nach {goes_to} über {from_station}"
   short_name: "{train_name} nach {goes_to}"
 embeds:
-  footer:
-    notice: "https://transitous.org/sources/ • Maps (C) CARTO (C) OpenStreetMap.org contributors"
   info:
     description: "Abfahrt von {station} um {departure}. Ankunft um {arrival}"
     via: "Über"
