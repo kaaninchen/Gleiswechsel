@@ -142,10 +142,12 @@ def get_random_stop_id() -> str | None:
         return None
 
     stop_ids_list = list(stop_ids.keys())
+    chosen_stop_id = random.choice(stop_ids_list)
     if len(stop_ids_list) > 1:
         logger(f"No station associated as '{assigned_station}', choosing random from similar named stations")
         logger(f"Run `python run main.py stations` to get exact station names")
-    chosen_stop_id, chosen_station = random.choice(list(stop_ids.items()))
+        logger(f"Selected station: {stop_ids[chosen_stop_id]}")
+
     return chosen_stop_id
 
 def get_random_connection(stop_id: str) -> str | None:
@@ -153,60 +155,46 @@ def get_random_connection(stop_id: str) -> str | None:
         return None
     
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    cursor = None
-    max_pages = 5
-    min_results = 5
-    trip_ids = []
-    all_stop_times = []
+    params = {"stopId": stop_id, "n": 50, "time": now}
 
-    for _ in range(max_pages):
-        params = {
-            "stopId": stop_id,
-            "n": 20,
-            "time": now,
-        }
-        if cursor:
-            params["pageCursor"] = cursor
+    try:
+        response = requests.get(f"{endpoint}/api/v5/stoptimes", params=params, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+    except requests.RequestException as e:
+        logger(e, "Error")
+        return None
 
-        try:
-            response = requests.get(f"{endpoint}/api/v5/stoptimes", params=params, headers=headers)
-            response.raise_for_status()
-            data = response.json()
-        except requests.RequestException as e:
-            logger(e, "Error")
-            break
+    candidates = []
+    for entry in data.get("stopTimes", []):
+        if entry["mode"] in blacklist:
+            continue
+        candidates.append(entry)
         
-        stop_times = data.get("stopTimes", [])
-        all_stop_times.extend(stop_times)
+    if not candidates:
+        logger("Couldn't find any connections", "error")
+        return None
+    
+    if config.connections.priority:
+        best_priority = None
+        for entry in candidates:
+            priority = config.connections.priority.get(entry["mode"], 99)
+            if best_priority is None or priority < best_priority:
+                best_priority = priority
 
-        for entry in stop_times:
-            trip_id = entry["tripId"]
-            if entry["mode"] in blacklist:
-                continue
-            else:
-                trip_ids.append(entry["tripId"])
+        best_candidates = []
+        for entry in candidates:
+            priority = config.connections.priority.get(entry["mode"], 99)
+            if priority == best_priority:
+                best_candidates.append(entry)
 
-        if len(trip_ids) >= min_results:
-            break
-        
-        cursor = data.get("nextPageCursor")
-        if not cursor:
-            break
-
-    if not trip_ids:
-            logger("Couldn't find any connections", "error")
-            return None
-    trip_id = random.choice(trip_ids)
-
-    from_station = None
-    for entry in all_stop_times:
-        if entry.get("tripId") == trip_id:
-            from_station = entry.get("place", {}).get("name")
-            break
+        chosen = random.choice(best_candidates)
+    else:
+        chosen = random.choice(candidates)
 
     return {
-        "trip_id": trip_id, 
-        "from_station": from_station
+        "trip_id": chosen["tripId"], 
+        "from_station": chosen.get("place", {}).get("name"),
     }
 
 def get_trip_details(random_connection: dict | None) -> dict | None:

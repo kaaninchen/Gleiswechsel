@@ -121,6 +121,30 @@ For every station inside of the `stations.json` you'll find an ID. You can add t
 
 This is especially useful if you want to add a station whose name isn't unique and also used by other stations. The bot would falsely use the first station with the same name and consider it an exact match, even if you wanted a different one. This won't happen with the ID, as every ID is uniquely assigned to only one station.
 
+##### priority
+You can define priorities of transport modes while selecting a connection. Leave empty to disable   
+
+The list should be descending, with "1" as the most important transport mode. For example, let's say, the bot should always choose Trains and other longer distance public transport modes. If it can't find any, then it should resort to Metros/Subways/Suburbans. If these are also missing at that station, then it should just use Busses/Trams:
+
+```json
+"priority": {
+    "HIGHSPEED_RAIL": 1,
+    "LONG_DISTANCE": 1,
+    "NIGHT_RAIL": 1,
+    "REGIONAL_RAIL": 1,
+    "COACH": 1,
+    "FERRY": 1,
+    "METRO": 2,
+    "SUBURBAN": 2,
+    "SUBWAY": 2,
+    "BUS": 3,
+    "TRAM": 3
+}
+```
+A transport mode that isn't in the priority list would immediately get assigned the value of "99", making it near impossible to get that connection. Except when there are no other connections available, of course.
+
+You can find the MODE names either in the console log or the stations.json from [helper tool](#stations)
+
 ##### blacklist
 You can blacklist specific types of transport, the bot would then skip them while selecting a connection. You can get the type in your console (mode)
 ```sh

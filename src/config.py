@@ -1,5 +1,5 @@
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 @dataclass
@@ -15,6 +15,7 @@ class DiscordConfig:
 class ConnectionsConfig:
     stations: list[str]
     IDs: list[str]
+    priority: dict
     blacklist: list[str]
     min_duration: int
     timezone: str
