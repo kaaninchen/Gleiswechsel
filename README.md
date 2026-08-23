@@ -4,7 +4,7 @@ Gleiswechsel [ˈɡlaɪsvɛksəl] (german for "platform change") is a selfhostabl
 ![Example Channel](.github/preview_kanal.png)
 
 ## Features
-- [International support](https://transitous.org/sources/) for countries aswell as and cities
+- [International support](https://transitous.org/sources/) for countries as well as and cities
 - Support for various types of transportations, including but not limited to Subways, Busses, Funiculars, Trams and Trains
 - Multi language support (+ option to easily add more languages)
 - Announcements, including the option to join the voice chat and play an audio file while arriving at a specific station
@@ -122,11 +122,10 @@ For every station inside of the `stations.json` you'll find an ID. You can add t
 This is especially useful if you want to add a station whose name isn't unique and also used by other stations. The bot would falsely use the first station with the same name and consider it an exact match, even if you wanted a different one. This won't happen with the ID, as every ID is uniquely assigned to only one station.
 
 ##### blacklist
-You can blacklist specific types of transport, the bot would then skip them while selecting a connection. You can get the type either in your console (mode)
+You can blacklist specific types of transport, the bot would then skip them while selecting a connection. You can get the type in your console (mode)
 ```sh
 22:44:47: INFO: Agency: GVB, mode: TRAM
 ```
-or in the `/info` embed. 
 
 I highly recommend keeping `"OTHER"` blacklisted, if the API doesn't know what that is then we probably shouldn't use it. Also, it would probably a good idea to keep `"RIDE_SHARING"` blacklisted as they have weird timetables
 

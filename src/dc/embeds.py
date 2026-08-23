@@ -7,8 +7,8 @@ from src.lang.locales import lang
 
 lang_embed = lang.embeds
 
-def build_embed_footer(mode: str, slogans):
-    footer_notice = f"{lang.embeds.footer.notice()} • mode: {mode}"
+def build_embed_footer(slogans):
+    footer_notice = f"https://transitous.org/sources/ • Maps (C) CARTO (C) OpenStreetMap.org contributors"
     icon = "https://raw.githubusercontent.com/kaaninchen/Gleiswechsel/refs/heads/main/src/data/assets/transitous-logo.png"
 
     if slogans is not None:
@@ -55,7 +55,7 @@ def build_info_embed() -> discord.Embed:
     for field_name, field_value in route_fields:
         embed.add_field(name=field_name, value=field_value, inline=False)
 
-    footer = build_embed_footer(trip["mode"], metadata["slogans"])
+    footer = build_embed_footer(metadata["slogans"])
     embed.set_footer(text=footer["text"], icon_url=footer["icon"])
 
     embed.set_author(name=agency)
@@ -78,7 +78,7 @@ def build_announcement_embed(msg):
     embed.set_author(name=agency)
     embed.set_thumbnail(url=metadata["logo"])
 
-    footer = build_embed_footer(trip["mode"], metadata.get("slogan"))
+    footer = build_embed_footer(metadata.get("slogan"))
     embed.set_footer(text=footer["text"], icon_url=footer["icon"])
 
     return embed
