@@ -18,7 +18,7 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
         _scheduled_task.cancel()
 
     attempt = 0
-    max_attempt = 15
+    max_attempt = 30
     trip = choose_connection()
     while trip is None and attempt < max_attempt:
         attempt += 1
