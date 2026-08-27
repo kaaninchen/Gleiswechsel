@@ -165,6 +165,7 @@ OPERATOR_ALIASES = {
     "Bayerische Regiobahn": OPERATORS["db_bayern"],
     "DB Regio AG Bayern": OPERATORS["db_bayern"],
     "DB Fernverkehr AG": OPERATORS["db_allgemein"],
+    "DB Regio AG": OPERATORS["db_allgemein"],
     "DB Regio AG NRW": OPERATORS["db_allgemein"],
     "DB Regio AG Südost": OPERATORS["db_allgemein"],
     "DB Regio AG Nordost": OPERATORS["db_allgemein"],
@@ -177,7 +178,8 @@ OPERATOR_ALIASES = {
     "VR": OPERATORS["Vr"],
     "FlixBus-gb": OPERATORS["Flixbus"],
     "FlixBus-eu": OPERATORS["Flixbus"],
-    "S-Bahn Berlin GmbH": OPERATORS["S-Bahn"]
+    "S-Bahn Berlin GmbH": OPERATORS["S-Bahn"],
+    "DB Regio AG S-Bahn München": OPERATORS["S-Bahn"]
 }
 
 

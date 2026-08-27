@@ -4,11 +4,12 @@ import random
 from src.utils import get_operator_metadata, get_next_station, format_via_list, format_stop_list
 from src.dc.helpers import format_timestamp_to_dc
 from src.lang.locales import lang
+from src.config import config
 
 lang_embed = lang.embeds
 
 def build_embed_footer(slogans):
-    footer_notice = f"https://transitous.org/sources/ • Maps (C) CARTO (C) OpenStreetMap.org contributors"
+    footer_notice = f"https://transitous.org/sources/"
     icon = "https://api.transitous.org/favicon.png"
 
     if slogans is not None:
@@ -61,7 +62,8 @@ def build_info_embed() -> discord.Embed:
     embed.set_author(name=agency)
     embed.set_thumbnail(url=metadata["logo"])
 
-    embed.set_image(url="attachment://ride.png")
+    if config.announcements.map:
+        embed.set_image(url="attachment://ride.png")
     return embed
 
 def build_announcement_embed(msg):

@@ -26,6 +26,7 @@ class ConnectionsConfig:
 class AnnouncementConfig:
     text_announcements: bool
     voice_announcements: bool
+    map: bool
 
 @dataclass
 class HttpConfig:

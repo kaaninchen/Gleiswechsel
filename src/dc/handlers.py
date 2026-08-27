@@ -28,7 +28,8 @@ async def rename_vc(bot: discord.Bot, voice_channel, from_scheduler: bool = Fals
         logger(f"Failed to select route after {max_attempt} attempts", "fatal")
         return False
 
-    generate_static_map(trip["stops"], trip["mode"], trip["agency"], trip["route_color"])
+    if config.announcements.map:
+        generate_static_map(trip["stops"], trip["mode"], trip["agency"], trip["route_color"])
     
     arrival = trip["arrival"]
     channel_name = trip["channel_name"]
@@ -70,7 +71,7 @@ async def announcer(announcement: str, voice_channel: discord.VoiceChannel, dest
                     embed = None
 
             if embed:
-                if image:
+                if image and config.announcements.map:
                     await voice_channel.send(file=image, embed=embed)
                 else:
                     await  voice_channel.send(embed=embed)

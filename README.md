@@ -4,7 +4,7 @@ Gleiswechsel [ˈɡlaɪsvɛksəl] (german for "platform change") is a selfhostabl
 ![Example Channel](.github/preview_kanal.png)
 
 ## Features
-- [International support](https://transitous.org/sources/) for countries as well as and cities
+- [International support](https://transitous.org/sources/) for countries as well as cities
 - Support for various types of transportations, including but not limited to Subways, Busses, Funiculars, Trams and Trains
 - Multi language support (+ option to easily add more languages)
 - Announcements, including the option to join the voice chat and play an audio file while arriving at a specific station
@@ -179,6 +179,10 @@ To reduce spam, the bot will only send announcements if someone is in the voice 
 The bot can join the voice chat, play an audio file, and disconnect from the voice chat, at various points of your trip. You have to have [FFmpeg](https://www.ffmpeg.org/) installed for this to work.
 
 Place the audio file of your desired station in [src/data/announcements](src/data/announcements/) with the EXACT name of the station. The bot will automatically check if an audio file with the stations name exists, and if it does, play it. 
+
+#### `map:`
+The bot can generate a map of your route in the `/info` embed. Set `map` to `true` to enable. 
+
 #### http
 
 - `"user_agent"`: The user agent of the bot for the API. If you don't know what that is, then you shouldn't have to change that. Modify the contact URL (in my case, the github repo) if you change a lot of the code, so that transitous can contact you in case of any issues

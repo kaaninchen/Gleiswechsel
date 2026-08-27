@@ -217,22 +217,12 @@ def generate_static_map(stops: dict, mode: str, operator: str, route_color: str)
     
     context = staticmaps.Context()
 
-    context.set_tile_provider(
-        staticmaps.TileProvider(
-            "carto-voyager",
-            url_pattern=(
-                "https://$s.basemaps.cartocdn.com/"
-                "rastertiles/voyager/$z/$x/$y.png"
-            ),
-            shards=["a", "b", "c", "d"],
-            attribution="",
-        )
+    context.set_tile_provider(staticmaps.tile_provider_OSM)
         # It is against the law (and against your morals...) to not give
-        # OSM and carto credits for their great work
+        # the tileprovider attributions for their great work
         # I only removed the attribution text because I really dislike the
         # ugly white box that py-staticmaps adds. Credits are still visible in the
         # embeds footer
-    )
 
     stop_coords = [
         staticmaps.create_latlng(
@@ -246,7 +236,7 @@ def generate_static_map(stops: dict, mode: str, operator: str, route_color: str)
         staticmaps.Line(
             stop_coords,
             color=white,
-            width=20,
+            width=15,
         )
     )
 
@@ -279,38 +269,6 @@ def generate_static_map(stops: dict, mode: str, operator: str, route_color: str)
                         size=12
                     )
                 )
-
-    lats = [c.lat().degrees for c in stop_coords]
-    lons = [c.lng().degrees for c in stop_coords]
-    lat_span = max(lats) - min(lats)
-    lon_span = max(lons) - min(lons)
-
-    MIN_SPAN = 0.01 
-
-    if lat_span < MIN_SPAN or lon_span < MIN_SPAN:
-        center_lat = (max(lats) + min(lats)) / 2
-        center_lon = (max(lons) + min(lons)) / 2
-        pad = MIN_SPAN / 2
-
-        context.add_object(
-            staticmaps.Circle(
-                staticmaps.create_latlng(center_lat + pad, center_lon + pad),
-                radius_km=0.01,
-                fill_color=staticmaps.TRANSPARENT,
-                color=staticmaps.TRANSPARENT,
-                width=0,
-            )
-        )
-        context.add_object(
-            staticmaps.Circle(
-                staticmaps.create_latlng(center_lat - pad, center_lon - pad),
-                radius_km=0.01,
-                fill_color=staticmaps.TRANSPARENT,
-                color=staticmaps.TRANSPARENT,
-                width=0,
-            )
-        )
-
     try:
         image = context.render_cairo(400, 300)
         image.write_to_png("src/data/assets/current_map.png")
