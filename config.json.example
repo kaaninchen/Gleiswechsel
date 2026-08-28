@@ -1,8 +1,8 @@
 {
   "discord": {
     "token": "",
-    "server": ,
-    "vc": ,
+    "server": "",
+    "vc": "",
     "lang": "de",
     "formatting": "┇",
     "emojis": true
@@ -14,8 +14,7 @@
       "Helsinki"
     ],
     "IDs": [],
-    "priority: "{
-    }",
+    "priority": {},
     "blacklist": [
       "OTHER",
       "RIDE_SHARING"
@@ -32,5 +31,5 @@
   },
   "http": {
     "user_agent": "Gleiswechsel-Discord-Bot/1.0 (https://github.com/kaaninchen/Gleiswechsel)"
-  }
+   }
 }
