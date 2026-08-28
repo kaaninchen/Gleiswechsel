@@ -180,6 +180,8 @@ The bot can join the voice chat, play an audio file, and disconnect from the voi
 
 Place the audio file of your desired station in [src/data/announcements](src/data/announcements/) with the EXACT name of the station. The bot will automatically check if an audio file with the stations name exists, and if it does, play it. 
 
+You don't have to restart the bot after placing new audio files in the folder.
+
 #### `map:`
 The bot can generate a map of your route in the `/info` embed. Set `map` to `true` to enable. 
 

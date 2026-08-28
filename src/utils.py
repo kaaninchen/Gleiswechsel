@@ -218,11 +218,6 @@ def generate_static_map(stops: dict, mode: str, operator: str, route_color: str)
     context = staticmaps.Context()
 
     context.set_tile_provider(staticmaps.tile_provider_OSM)
-        # It is against the law (and against your morals...) to not give
-        # the tileprovider attributions for their great work
-        # I only removed the attribution text because I really dislike the
-        # ugly white box that py-staticmaps adds. Credits are still visible in the
-        # embeds footer
 
     stop_coords = [
         staticmaps.create_latlng(
